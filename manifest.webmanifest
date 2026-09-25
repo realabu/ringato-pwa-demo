@@ -1,0 +1,17 @@
+{
+  "name": "Ringató Virággal",
+  "short_name": "Ringató",
+  "start_url": "./app.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#fffaf4",
+  "theme_color": "#e9536f",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
