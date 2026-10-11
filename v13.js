@@ -5,7 +5,8 @@ const now=()=>new Date();
 const isoToday=()=>new Date().toISOString().slice(0,10);
 const localDate=d=>new Intl.DateTimeFormat('hu-HU',{year:'numeric',month:'long',day:'numeric'}).format(new Date(d));
 const safe=s=>String(s??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
-const kv=(id)=>JSON.stringify(id);
+// Inline HTML event-handler argument: encode quotes so the browser keeps the entire onclick attribute.
+const kv=(id)=>JSON.stringify(id).replace(/\"/g,'&quot;');
 const exampleMedia = {
  hinta:{type:'audio'},csip:{type:'video',ratio:'landscape'},este:{type:'audio'},utazas:{type:'audio'},
  furdes:{type:'video',ratio:'portrait'},nyugi:{type:'video',ratio:'portrait'},
