@@ -202,7 +202,10 @@ def make_docx():
     for i,(name,title,screen,setup,desc,nav) in enumerate(SC,1):
         d.add_heading('7.'+str(i)+' '+title,2)
         t=d.add_table(rows=1,cols=2);t.autofit=False;t.columns[0].width=Inches(2.35);t.columns[1].width=Inches(3.85)
-        t.cell(0,0).paragraphs[0].add_run().add_picture(str(IMG/(name+'.png')),width=Inches(2.10))
+        shot=IMG/(name+'.png')
+        with Image.open(shot) as im: w,h=im.size
+        width_in=min(2.10,6.12*w/h)
+        t.cell(0,0).paragraphs[0].add_run().add_picture(str(shot),width=Inches(width_in))
         t.cell(0,1).text='Funkció / állapot:\n'+desc+'\n\nNavigáció:\n'+nav+'\n\nPrototípus: '+(setup or screen)
         trPr=t.rows[0]._tr.get_or_add_trPr();trPr.append(OxmlElement('w:cantSplit'))
         d.add_paragraph()
