@@ -5,6 +5,7 @@ on:
     paths:
       - 'app.html'
       - 'app.js'
+      - 'v13.js'
       - 'docs/build_spec.py'
       - '.github/workflows/specification.yml'
   workflow_dispatch:
@@ -26,19 +27,23 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install playwright python-docx Pillow
           python -m playwright install --with-deps chromium
+      - name: Check JavaScript syntax
+        run: |
+          node --check app.js
+          node --check v13.js
       - name: Build real app screenshots and specifications
         run: python docs/build_spec.py
       - name: Check generated deliverables
         run: |
           test -s docs/specification.html
-          test -s docs/Ringato_V1_2_specifikacio.docx
-          test "$(find docs/screens -name '*.png' | wc -l)" -eq 18
+          test -s docs/Ringato_V1_3_specifikacio.docx
+          test "$(find docs/screens -name '*.png' | wc -l)" -eq 28
       - name: Commit generated files
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add docs/specification.html docs/Ringato_V1_2_specifikacio.docx docs/screens/
+          git add docs/specification.html docs/Ringato_V1_3_specifikacio.docx docs/screens/
           if ! git diff --cached --quiet; then
-            git commit -m 'docs: publish V1.2 specification and prototype screenshots [skip ci]'
+            git commit -m 'docs: publish V1.3 specification and prototype screenshots [skip ci]'
             git push
           fi
