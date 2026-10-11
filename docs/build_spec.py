@@ -112,6 +112,7 @@ QUESTIONS=[
 class Server(http.server.SimpleHTTPRequestHandler):
     def log_message(self,*args): pass
 def capture():
+    for obsolete in IMG.glob('*.png'): obsolete.unlink()
     serve=http.server.ThreadingHTTPServer(('127.0.0.1',8826),functools.partial(Server,directory=str(ROOT)))
     threading.Thread(target=serve.serve_forever,daemon=True).start()
     try:
