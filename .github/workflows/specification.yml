@@ -6,6 +6,7 @@ on:
       - 'app.html'
       - 'app.js'
       - 'v13.js'
+      - 'docs/smoke_test.py'
       - 'docs/build_spec.py'
       - '.github/workflows/specification.yml'
   workflow_dispatch:
@@ -31,6 +32,8 @@ jobs:
         run: |
           node --check app.js
           node --check v13.js
+      - name: Smoke-test real browser clicks
+        run: python docs/smoke_test.py
       - name: Build real app screenshots and specifications
         run: python docs/build_spec.py
       - name: Check generated deliverables
