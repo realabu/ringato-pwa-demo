@@ -28,7 +28,7 @@ def test():
             page.evaluate('hideModal()')
             # FAVORITES: real heart press must persist a favorite.
             page.locator('#content .card .heart').first.click()
-            assert page.evaluate('"hinta" in state.favorites'), f"Favorite was not saved. favorites={page.evaluate('state.favorites')} onclick={page.locator('#content .card .heart').first.get_attribute('onclick')} pageErrors={failures}"
+            assert page.evaluate('state.favorites.includes("hinta")'), f"Favorite was not saved. favorites={page.evaluate('state.favorites')} onclick={page.locator('#content .card .heart').first.get_attribute('onclick')} pageErrors={failures}"
             page.evaluate('go("library")')
             expect(page.locator('#mediaList .listrow')).to_have_count(8)
             # Media row click, and a second favorite via its nested icon.
@@ -36,7 +36,7 @@ def test():
             expect(page.locator('#sheet')).to_contain_text('Hinta, palinta')
             page.evaluate('hideModal()')
             page.locator('#mediaList .listrow').nth(1).locator('button').click()
-            assert page.evaluate('"csip" in state.favorites'), 'Library heart press failed'
+            assert page.evaluate('state.favorites.includes("csip")'), 'Library heart press failed'
             page.get_by_role('button',name='Kedvencek',exact=False).click()
             expect(page.locator('#sheet')).to_contain_text('Hinta, palinta')
             expect(page.locator('#sheet')).to_contain_text('Csip-csip csóka')
