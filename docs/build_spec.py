@@ -10,7 +10,7 @@ from docx.oxml import OxmlElement
 from PIL import Image
 ROOT=Path(__file__).resolve().parent.parent
 DOC=ROOT/'docs';IMG=DOC/'screens';IMG.mkdir(parents=True,exist_ok=True)
-DATE='2026. október 11.';VER='V1.2'
+DATE='2026. október 11.';VER='V1.3'
 F=[
 ('F01','Belépés, profil','WP felhasználói fiók, saját adatok, jogosultságok. A demóban Anna fiktív fiókja látszik.'),
 ('F02','Kezdőlap','Ajánlott médiák, közelgő programok, bérlet és előfizetés státusz.'),
@@ -151,33 +151,33 @@ figcaption h3{margin:0 0 8px}.navline{background:#fff2d1;border-left:4px solid #
 def tbl(headers,rows):
     return '<div style="overflow-x:auto"><table><tr>'+''.join('<th>'+html.escape(h)+'</th>' for h in headers)+'</tr>'+''.join('<tr>'+''.join('<td>'+html.escape(str(v))+'</td>' for v in row)+'</tr>' for row in rows)+'</table></div>'
 def make_html():
-    b=['<!doctype html><html lang="hu"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ringató PWA · V1.2 specifikáció</title><style>'+CSS+'</style></head><body>']
-    b+=['<header><span class="badge">EGYEZTETÉSI SPECIFIKÁCIÓ · V1.2</span><h1>Ringató Virággal<br>Mobil PWA</h1><p>'+DATE+' · funkciók, adatmodell, folyamatok és állapotfüggő képernyőképek</p><p><a style="color:white" href="../app.html">Interaktív prototípus megnyitása →</a></p></header>']
+    b=['<!doctype html><html lang="hu"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ringató PWA · V1.3 specifikáció</title><style>'+CSS+'</style></head><body>']
+    b+=['<header><span class="badge">EGYEZTETÉSI SPECIFIKÁCIÓ · V1.3</span><h1>Ringató Virággal<br>Mobil PWA</h1><p>'+DATE+' · funkciók, adatmodell, folyamatok és állapotfüggő képernyőképek</p><p><a style="color:white" href="../app.html">Interaktív prototípus megnyitása →</a></p></header>']
     anchors=[('overview','Cél és hatókör'),('features','Funkciók'),('entities','Entitások'),('states','Állapotok'),('flows','Folyamatok'),('video','Videó'),('screens','Képernyők'),('integration','Integráció'),('decisions','Nyitott kérdések')]
     b+=['<main><nav>'+''.join('<a href="#'+x+'">'+y+'</a>' for x,y in anchors)+'</nav>']
-    b+=['<section id="overview"><h2>01 · Cél és hatókör</h2><p>Az alkalmazás a meglévő WordPress/WooCommerce weboldalhoz kapcsolódó, mobilra telepíthető PWA. <b>Nem külön webshop és nem külön adminrendszer.</b></p><p>Vásárláskor az összes aktuálisan megvásárolható WooCommerce-terméket listázni kell, továbbá a külön <b>8 000 Ft/hó Ringató App előfizetést</b>, automatikus megújulással és lemondással. A korábbi Online Ringató kivezetésre kerül. Nincs Kuponjaim funkció, nincs olcsóbb rövid hozzáférés.</p><p class="note"><b>A jelenlegi GitHub Pages demó</b> nem végez valós fizetést, foglalást, bérletlevonást vagy üzenetküldést; a terméklista mintakínálat. Az éles rendszerben WordPress/WooCommerce a kizárólagos adatforrás.</p></section>']
+    b+=['<section id="overview"><h2>01 · Cél és hatókör</h2><p>Az alkalmazás a meglévő WordPress/WooCommerce weboldalhoz kapcsolódó, mobilra telepíthető PWA. A családi jegy 3 hónapig egyszer használható, a bérlet az első használattól 8 hónapig érvényes. A foglalás családonként egy helyet foglal. Az értesítések manuálisan küldött push-ok egyéves előzményei. <b>Nem külön webshop és nem külön adminrendszer.</b></p><p>Vásárláskor az összes aktuálisan megvásárolható WooCommerce-terméket listázni kell, továbbá a külön <b>8 000 Ft/hó Ringató App előfizetést</b>, automatikus megújulással és lemondással. A korábbi Online Ringató kivezetésre kerül. Nincs Kuponjaim funkció, nincs olcsóbb rövid hozzáférés.</p><p class="note"><b>A jelenlegi GitHub Pages demó</b> nem végez valós fizetést, foglalást, bérletlevonást vagy üzenetküldést; a terméklista mintakínálat. Az éles rendszerben WordPress/WooCommerce a kizárólagos adatforrás.</p></section>']
     b+=['<section id="features"><h2>02 · Funkciólista</h2>'+tbl(['ID','Funkció','Leírás'],F)+'</section>']
     b+=['<section id="entities"><h2>03 · Kezelt entitások és kapcsolatok</h2>'+tbl(['Entitás','Fő tulajdonságok','Kapcsolat'],E)+'</section>']
     b+=['<section id="states"><h2>04 · Állapotok</h2>'+tbl(['Terület','Állapotgép'],ST)+'</section>']
     b+=['<section id="flows"><h2>05 · Üzleti folyamatok és navigáció</h2>'+''.join('<h3>'+html.escape(x)+'</h3><p>'+html.escape(y)+'</p>' for x,y in FLOWS)+'</section>']
-    b+=['<section id="video"><h2>06 · Álló és fekvő videó – kötelező</h2><p>Vegyes <b>16:9 fekvő</b> és <b>9:16 álló</b> videók, amelyek <b>álló és fekvő telefonhelyzetben</b> is torzítás és képkivágás nélkül lejátszhatók. Mind a négy kombinációt külön kell tesztelni. A böngésző tájolásváltásakor a lejátszás folytatódik, a kezelőgombok láthatók maradnak.</p>'+tbl(['Média × telefon','Követelmény'],VIDEO)+'<p><b>Műszaki alapelv:</b> eredeti képarány, object-fit: contain, playsinline, megfelelő fullscreen, mobil-kompatibilis streaming, védett média-URL és jól látható vezérlők.</p></section>']
+    b+=['<section id="video"><h2>06 · Álló és fekvő videó – kötelező</h2><p>Audio és vegyes <b>16:9 fekvő</b> és <b>9:16 álló</b> videók, amelyek <b>álló és fekvő telefonhelyzetben</b> is torzítás és képkivágás nélkül lejátszhatók. Mind a négy videó/telefon kombinációt külön kell tesztelni; nincs képarány-váltó, csak fullscreen. A böngésző tájolásváltásakor a lejátszás folytatódik, a kezelőgombok láthatók maradnak.</p>'+tbl(['Média × telefon','Követelmény'],VIDEO)+'<p><b>Műszaki alapelv:</b> eredeti képarány, object-fit: contain, playsinline, megfelelő fullscreen, mobil-kompatibilis streaming, védett média-URL és jól látható vezérlők.</p></section>']
     b+=['<section id="screens"><h2>07 · Képernyők – több állapotban</h2><p>A képernyőképek az aktuális prototípus tényleges böngésző-rendereléséből készülnek. A funkciók demóadatokon működnek.</p>']
     for i,(name,title,screen,setup,desc,nav) in enumerate(SC,1):
         b+=['<figure id="'+name+'"><img loading="lazy" src="screens/'+name+'.png" alt="'+html.escape(title)+'"><figcaption><p style="font-size:12px;color:#7e6652">KÉPERNYŐ '+str(i).zfill(2)+'</p><h3>'+html.escape(title)+'</h3><p>'+html.escape(desc)+'</p><p class="navline"><b>Navigáció és összefüggés:</b><br>'+html.escape(nav)+'</p><p style="font-size:12px">Prototípus állapot: '+html.escape(setup or screen)+'</p></figcaption></figure>']
     b+=['</section>']
     b+=['<section id="integration"><h2>08 · Architekturális és nem-funkcionális követelmények</h2><h3>Integráció</h3><p>WordPress-fiók és admin; WooCommerce-terméktörzs, rendelés, előfizetés és fizetés; Barion recurring engedélyezett integrációval. Ringató WP plugin REST API: program, foglalás, bérlet, jegy, jogosultság, média, üzenet, push. PWA ajánlottan ugyanazon domain /app útvonalán. Média biztonságos CDN-ről.</p><h3>Tranzakciók és jogok</h3><p>Webhook idempotencia, sikertelen fizetés esetén nem készül végleges foglalás. Kapacitást szerveroldali zárolás védi. QR-ben nincs személyes adat; staff jogosultság és auditnapló. Az előfizetés lejáratát szerver ellenőrzi.</p><h3>Minőség és biztonság</h3><p>HTTPS, auth + capability check, CSRF, GDPR adatminimalizálás, tartalomvédelem, mentések, staging környezet, regressziós WooCommerce/Barion tesztek. iOS/Android PWA, négy videóorientáció, fizetési hiba, kapcsolatszakadás és több eszköz tesztelendő.</p></section>']
-    b+=['<section id="decisions"><h2>09 · Nyitott döntések</h2>'+tbl(['Téma','Egyeztetés'],QUESTIONS)+'</section></main><footer style="max-width:1100px;margin:30px auto;padding:20px;color:#786c64">Ringató Virággal · V1.2 · egyeztetési tervezet, nem éles integráció · '+DATE+'</footer></body></html>']
+    b+=['<section id="decisions"><h2>09 · Nyitott döntések</h2>'+tbl(['Téma','Egyeztetés'],QUESTIONS)+'</section></main><footer style="max-width:1100px;margin:30px auto;padding:20px;color:#786c64">Ringató Virággal · V1.3 · egyeztetési tervezet, nem éles integráció · '+DATE+'</footer></body></html>']
     (DOC/'specification.html').write_text(''.join(b),encoding='utf-8')
 def make_docx():
     d=Document();sec=d.sections[0];sec.top_margin=Inches(.75);sec.bottom_margin=Inches(.72);sec.left_margin=Inches(.75);sec.right_margin=Inches(.75)
     d.styles['Normal'].font.size=Pt(9);d.styles['Normal'].font.name='Aptos'
     for x,size in [('Title',27),('Heading 1',17),('Heading 2',12)]:
         st=d.styles[x];st.font.name='Aptos Display';st.font.size=Pt(size);st.font.color.rgb=RGBColor(169,0,18)
-    h=sec.header.paragraphs[0];h.text='RINGATÓ VIRÁGGAL / V1.2 FUNKCIONÁLIS SPECIFIKÁCIÓ';h.alignment=WD_ALIGN_PARAGRAPH.RIGHT
+    h=sec.header.paragraphs[0];h.text='RINGATÓ VIRÁGGAL / V1.3 FUNKCIONÁLIS SPECIFIKÁCIÓ';h.alignment=WD_ALIGN_PARAGRAPH.RIGHT
     d.add_paragraph('Ringató Virággal – Mobil PWA',style='Title');d.add_paragraph('Funkcionális specifikáció · '+DATE)
     d.add_heading('1. Cél, scope és termékszabályok',1)
     d.add_paragraph('Meglévő WordPress/WooCommerce rendszer kiegészítése; az app nem külön webshop vagy teljes admin. Az összes aktív megvásárolható termék listázása éles WooCommerce-adatokból; külön 8 000 Ft/hó automatikusan megújuló Ringató App-előfizetés, mely lemondható. Az Online Ringató kivezetésre kerül. Nincs Kuponjaim funkció és nincs rövid idejű hozzáférés.')
-    d.add_paragraph('A GitHub Pages demó statikus, fizetés és foglalás nem valós. A képernyőképek a jelenlegi prototípusból készültek, mintadatokkal.')
+    d.add_paragraph('A GitHub Pages demó statikus, fizetés, beléptetés és push nem valós; a képek és lejátszás is minta. Élesben minden jogosultság szerveroldalról ellenőrzött. A képernyőképek a jelenlegi prototípusból készültek, mintadatokkal.')
     def table(headers,rows):
         t=d.add_table(rows=1,cols=len(headers));t.style='Light Shading Accent 1'
         for i,x in enumerate(headers):t.rows[0].cells[i].text=x
@@ -212,7 +212,136 @@ def make_docx():
     d.add_heading('8. Architekturális, biztonsági és elfogadási elvek',1)
     d.add_paragraph('WordPress/WooCommerce egyetlen termék- és rendelésforrás. Ringató WP REST plugin kezeli az egyedi eseményeket, foglalásokat, jegyeket, bérleteket és médiákat. Barion recurring jogosultságot ellenőrizni kell. Szerveroldali idempotens webhookok, kapacitászár, staff-belépés és audit QR-levonás. Privát média-CDN és hitelesített hozzáférés. HTTPS, GDPR, staging, rollback és regressziós tesztek szükségesek.')
     d.add_heading('9. Nyitott kérdések',1);table(['Téma','Egyeztetendő'],QUESTIONS)
-    out=DOC/'Ringato_V1_2_specifikacio.docx';d.save(out)
+    out=DOC/'Ringato_V1_3_specifikacio.docx';d.save(out)
     print('Created',out, out.stat().st_size)
+
+# V1.3: pontosított üzleti szabályok, képernyők és integrációs döntések
+F=[
+('F01','Felhasználói profil','WordPress ügyfélfiók, saját jogosultságok és rendelési előzmények.'),
+('F02','Főoldal','A legközelebbi lejáratú, még használható családi jegy vagy aktív bérlet előre sorolása.'),
+('F03','Hang- és videotár','Audio vagy video médiák, kategóriák, keresés, jogosultságok.'),
+('F04','Egyedi lejátszás','Tárból vagy kedvencekből választott egyetlen tartalom játszódik le, automatikus továbblépés nélkül.'),
+('F05','Lejátszási sor','Külön elérhető lista, fel/le átrendezés, tetszőleges elemről indítás, automatikus következő elem, végén megáll.'),
+('F06','Videolejátszás','Natív képarány 16:9 vagy 9:16, nincs képarányváltó; fullscreen, orientációkezelés álló és fekvő telefonon.'),
+('F07','Kedvencek','Fiókhoz rendelt kedvenc média, közvetlen egyedi lejátszással.'),
+('F08','Havi app-előfizetés','8 000 Ft/hó; WooCommerce- és Barion-alapú, engedélyezett automatikus megújulás.'),
+('F09','Előfizetés lemondása','Megújulás leáll, hozzáférés a kifizetett időszak végéig.'),
+('F10','Webshop termékei','Az összes aktív, megvásárolható WooCommerce-termék; megszűnt Online Ringató nem értékesíthető.'),
+('F11','Családi jegy','Egyszeri belépés bármely nem külön áras programra; 3 hónapig érvényes vásárlástól.'),
+('F12','Bérlet','8 alkalom; első felhasználáskor induló 8 hónapos érvényesség; beléptetéskor csökken.'),
+('F13','Jegy és bérlet QR','Saját jogosultság QR-je; érvényesség, felhasználtság és lejárat megjelenítése.'),
+('F14','Egyszer használható jegy','Staff mobilos QR-ellenőrzés, atomikus beváltás; ugyanaz a jegy más programra sem használható.'),
+('F15','Programrészletek','Időpont, helyszín, leírás, naptárhoz adás; foglalás vagy vásárlás előtt és után is.'),
+('F16','Rendszeres program','Nem létszámlimites, nem foglalós; érvényes családi jeggyel vagy bérlettel látogatható.'),
+('F17','Limitált alapdíjas program','Külön családonként 1 hely foglalása szükséges, valamint belépéskor jegy/bérlet.'),
+('F18','Limitált külön áras program','A speciális WooCommerce eseményjegy vásárlása a foglalás; nem váltható be más rendezvényen.'),
+('F19','Családi férőhely','1 család = 1 foglalási kapacitásegység, a gyermekek számától függetlenül.'),
+('F20','Vásárlási előzmények','Rendeléshez kapcsolt jegy/bérlet státusz: használható, felhasznált, lejárt, következő lejárat.'),
+('F21','Push kampánykezelés','Virág dönti el, kinek és mit küld; egyéni címzés, saját ügyfélcsoportok szerkesztése.'),
+('F22','Push előzmények','A felhasználó által kapott push-ok 365 napos listája, utolsó panelmegnyitás óta új jelzéssel.'),
+('F23','Üzenetek','WordPress Better Messages vizsgálat: ingyenes AJAX frissülés; opcionális licencelt WebSocket.'),
+('F24','Virág staff beléptetés','Rendszeres/limitált/eseményjegy jogosultságok ellenőrzése, egyszeri beváltás és napló.'),
+('F25','WordPress admin','Termékek, programok, címzett csoportok, push kampányok a WP adminban.'),
+('F26','Nincs a V1-ben','Kuponjaim, Online Ringató új értékesítése, rövid idejű olcsó médiacsomag.')
+]
+E=[
+('WP User','id, név, email, szerepkör, push-hozzájárulás','Rendelések, család, üzenet, célcsoport tagság'),
+('Family / Booking Unit','id, user_id, megjelenített családnév, 1 kapacitásegység','Programfoglalás egy családnak, nem személyenként'),
+('WC Product','id, név, ár, aktív, elérhetőség, típus, event_id?','Jegy, bérlet, külön esemény, előfizetés'),
+('WC Order / Item','id, user_id, items, amount, currency, paid_at, status','Ticket / Pass / Subscription jogosultság keletkeztetése'),
+('Subscription','id, user_id, plan_id, state, period_end, renewal_enabled','8 000 Ft/hó, WooCommerce subscription + Barion recurring'),
+('Payment Transaction','id, provider_reference, order_id, status, verified_at, idempotency_key','Barion webhook, csak sikeres fizetés véglegesít'),
+('Program / Event','id, type(open,reservation,paid), title, start,end,venue, description, capacity_families?, product_id?','Programrészletek; naptár .ics'),
+('Reservation','id, user_id, event_id, family_unit=1, status, created_at','Limitált alapdíjas program, külön belépési jogosultsággal'),
+('Family Ticket','id, order_item_id, purchased_at, expires_at=purchase+3mo, used_at?, event_used_id?','Egyszeri belépés bármely nem külön áras programra'),
+('Special Event Ticket','id, order_item_id, event_id, used_at?, status','Csak az adott külön áras eseményre'),
+('Pass','id, order_item_id, 8 initial_uses, remaining, first_used_at?, expiry_at=first_used+8mo','Nem külön áras program, első használattal aktiválódik'),
+('Entry / Redemption','id, entitlement_type/id, event_id, family_id, staff_id, timestamp, unique_key','Atomikus ticket status vagy pass-alkalom változás, audit'),
+('Media','id, title, category, type(audio/video), aspect_ratio?, duration, source, premium, artwork','Audio/videó lejátszás és jogosultság'),
+('Favorite','id, user_id, media_id, added_at','Felhasználó kedvence'),
+('Play Queue / Item','id, user_id, media_id, position, updated_at','Átrendezett elemek és autoplay'),
+('Message / Thread','id, thread_id, sender_id, recipient_id, text, sent_at, read_at','WP Better Messages vagy egyedi adapter'),
+('Push Campaign','id, sender_id, body, audience_type, scheduled_at?, sent_at, status','Virág manuális címzés'),
+('Push Group / Membership','group_id, title, user_id, membership_status','Egyéni csoportos címzés'),
+('Push Receipt','id, campaign_id, recipient_id, sent_at, delivered_at?, clicked_at?','1 éves értesítési előzmény'),
+('Notification Read Cursor','user_id, last_panel_opened_at','ÚJ jelölés a megnyitás óta érkezett push-oknál')
+]
+ST=[
+('Családi jegy','megvásárolt → érvényes 3 hónapig → egyszer felhasznált VAGY lejárt; felhasznált nem aktiválható újra'),
+('Bérlet','megvásárolt / még nem indult → első beléptetés (8 hónap indul) → maradék csökken → elfogyott VAGY lejárt'),
+('Külön áras jegy','rendelés függőben → fizetett / eseményhez foglalt → eseményen felhasznált; más eseményen érvénytelen'),
+('Alap program','rendszeres → nincs foglalás → ticket/pass beléptetés'),
+('Korlátozott program','hely elérhető → 1 családi foglalás → részletek újra megtekinthetők → ticket/pass beléptetés'),
+('Előfizetés','inaktív → recurring engedély és fizetés → aktív → megújuló / lemondott időszak vége → lejárt'),
+('Média','audio/video → önálló lejátszás → szünet / fullscreen videó / orientációváltás'),
+('Lejátszási sor','üres → elem hozzáadása / sorrend módosítás → kiválasztott kezdőelem → automatikus következő → sor vége'),
+('Push','célközönség csoportjai → Virág manuális kiküldése → felhasználó 365 napos listája → új / már látott'),
+('Üzenet','elküldött → megérkezett → olvasott; AJAX rövid késleltetés vagy WebSocket realtime')
+]
+FLOWS=[
+('1. Jegy vásárlás és életciklus','WooCommerce jegy → fizetett rendelés → családi jegy. Lejárat: vásárlástól 3 naptári hónap. Egyetlen beléptetés bármely nem külön áras programra; QR érvénytelenítés szerveren atomikus és minden programra globális. Korábbi vásárlások listájában felhasználható / felhasznált / lejárt.'),
+('2. Bérlet','WooCommerce bérlet → 8 felhasználható alkalom; első beléptetés indítja a 8 naptári hónapot. Minden beváltás 1 alkalom. Nem külön áras foglalkozásokon érvényes, kötelező foglalás esetén a foglalást külön kell intézni.'),
+('3. Rendszeres foglalkozás','Programok → részletek → időpont, helyszín, leírás, naptárhoz adás. Nincs kapacitás és foglalás. A helyszínen családi jegy vagy bérlet szükséges.'),
+('4. Limitált alapdíjas program','Programok → részletek → 1 család = 1 foglalható hely → foglalás. A részletoldal utána is elérhető. Helyszínen a foglaláson felül külön jegy/bérlet kell.'),
+('5. Külön áras program','Programok → részletek → WooCommerce eseményjegy → sikeres fizetés foglalja a családi helyet → részletoldal továbbra is megnyitható → staff pontosan az adott eseményre váltja be a jegyet.'),
+('6. Főoldali ajánlás','Az érvényes, még be nem váltott jegyeket és aktív bérleteket lejárati dátum szerint rendezni; a legkorábban lejáró a főoldali kártya. Bérlet első felhasználás nélkül nyitott végű, ezért a már lejáró jegy előnyt élvez.'),
+('7. Egyedi és soros média','Tár/kedvenc → audio/videó → csak egy tartalom. Sorhoz adás → sor lista + fel/le átrendezés → tetszőleges elem lejátszása → következő automatikusan → sor végén leáll. Zárolt média előtt jogosultságellenőrzés.'),
+('8. Videó és mobil','A forrás videó képaránya rögzített (16:9 vagy 9:16). A lejátszó contain módban alkalmazkodik a telefon portré/tájkép nézetéhez, fullscreen gombbal. Nincs felhasználói képarányváltó. Audio saját lejátszó UI-t kap.'),
+('9. Push kiküldés','Virág WP admin → egyéni felhasználó / csoport / mindenki kijelölése → szöveg → ellenőrzés → manuális küldés. Fogadó fiók listája az utolsó 1 év beérkezett push-aiból; ÚJ jelző, ha az előző panelnyitás után érkezett.'),
+('10. Üzenetküldés','WordPress Better Messages illeszthető: free AJAX polling (rövid késéssel közel valós idejű), külön licencelt WebSocket az azonnali üzenetekhez. Tárhely- és PWA-integrációs teszt szükséges.'),
+('11. App-előfizetés','WooCommerce Subscriptions + megfelelő Barion recurring jóváhagyás; 8 000 Ft/hó automatikus terhelés; lemondáskor megszűnik a következő terhelés, de a már fizetett periódusig megmarad a médiahozzáférés.')
+]
+VIDEO=[
+('Hang / Audio','Külön hang-lejátszó: play/pause, seek, soros folytatás. Nincs képarány.'),
+('16:9 videó + álló telefon','Teljes fekvő képkocka letterbox-szal, object-fit:contain; torzítás és crop nélkül.'),
+('9:16 videó + álló telefon','Középre rendezett álló videó, képkocka teljes magasságban látható.'),
+('16:9 videó + fekvő telefon','Nagyméretű / fullscreen, safe-area és érintővezérlők láthatók.'),
+('9:16 videó + fekvő telefon','Teljes álló képkocka oldalsó sávokkal. Nincs kikényszerített fekvő vágás.'),
+('Fullscreen és forgatás','Csak fullscreen gomb; NINCS képarányváltó. Forgatáskor playback position és play/pause megmarad. iOS natív video fullscreen API / Android Fullscreen API.'),
+('Streaming és védelem','HTML5 audio/video + HLS vagy adaptív, playsinline, preload stratégiák; szerveroldali premium entitlement és rövid életű média URL.')
+]
+QUESTIONS=[
+('WooCommerce termékkatalógus','Az éles Store API minden aktív megvásárolható terméket, például eseményjegyeket is visszaadjon. CORS/ugyanazon domain megoldandó.'),
+('Családi jegy részletei','A három hónapos lejárat a vásárlás időpontjához képest; helyi időzóna és naptári hónapok kezelése.'),
+('Bérlet lejárata','8 hónap az első érvényes beléptetéstől; nem kell-e más napi használati korlát?'),
+('Családi kapacitás','A család pontos definíciója és egy foglalás maximális részvételi összetétele.'),
+('Korlátozott program','Várólista? Lemondási határidő? Túlfoglalás kizárása szerveroldali tranzakcióval.'),
+('Jegy-beléptetés','QR opaque token és staff capability, egyetlen beváltás minden rendezvényre globálisan, audit.'),
+('Push csoportok','Kezdeti csoportok, címzettség, hozzájárulás és manuális kampány előnézet.'),
+('Üzenetek','Better Messages ingyenes AJAX teszt vagy licencelt WebSocket, WP REST/UI/PWA beágyazhatóság.'),
+('Média','Valódi audio/video feltöltés, CDN, iPhone landscape fullscreen, HLS és automatikus sor.'),
+('Program részletek','Valós WordPress program metaadatok és eseményhez kapcsolt naptár export.')
+]
+SC=[
+('01-home','Főoldal – legkorábban lejáró belépés','home','','A legkorábban lejáró még érvényes családi jegy vagy bérlet jelenik meg elsőként.','Főoldal → Jegyeim → QR; Média / Programok'),
+('02-library','Médiatár – audio és videó','library','','Az audio és video típus elkülönül; keresés, kategória, Kedvencek és Sor link.','Tár → önálló lejátszó / Sor / Kedvencek'),
+('03-audio','Audio – egyedi lejátszás','library','openContent("hinta")','Hangfelvétel saját kezelőkkel; nem indul el automatikusan másik elem.','Tár/Kedvencek → Audio → Vissza'),
+('04-video-landscape','Videó – fekvő 16:9','library','ACTIVE;openContent("mesel")','Fekvő videó eredeti 16:9 arányban és teljes képernyő gombbal. Nincs képarányváltó.','Tár → Videó → Fullscreen'),
+('05-video-portrait','Videó – álló 9:16','library','ACTIVE;openContent("furdes")','Álló videó; telefon elforgatásakor teljes képkocka, contain.','Tár → Videó → Fullscreen'),
+('06-favorites','Kedvencek','library','state.favorites=["hinta","furdes"];save();showFavorites()','Bármely kedvenc egyesével indítható; elérhető mellette a Sor.','Tár → Kedvencek → Tartalom'),
+('07-queue','Sor – átrendezés','library','queue("hinta");queue("csip")','Fel/le rendezés; bármely tételről indítás, sor végén megáll.','Tár/Kedvencek → Sor → Sor lejátszása'),
+('08-queue-playing','Sor – lejátszás közben','library','state.queue=["hinta","nepdal"];save();playQueue(0)','Szimuláltan a következő tartalom automatikusan indul.','Sor → tétel → következő automatikusan'),
+('09-events','Programlista – három programtípus','calendar','','Rendszeres, családonként limitált foglalós és külön áras program.','Programok → Részletek'),
+('10-open-detail','Szokásos program részletei','calendar','eventDetails("regular1")','Időpont, helyszín, leírás, naptárhoz adás, belépés jeggyel/bérlettel.','Programok → részletek → jegyek / naptár'),
+('11-free-detail','Foglalható program – előtte','calendar','eventDetails("limited")','Egy család = egy hely; belépéshez külön jegy vagy bérlet szükséges.','Részletek → családi hely foglalása'),
+('12-free-booked','Foglalható program – utána','calendar','state.bookings.push("limited");eventDetails("limited")','Foglalás után is megnyitható részletoldal, naptár és lemondás.','Foglalásaim → részletek → lemondás'),
+('13-paid-detail','Külön áras esemény – előtte','calendar','eventDetails("concert")','Eseményhez kötött jegy WooCommerce-vásárlása foglal helyet.','Programok → részletek → jegyet veszek'),
+('14-paid-booked','Külön áras esemény – utána','calendar','state.paidBookings.push("concert");state.eventTickets.push({id:"EV-DEMO",eventId:"concert",orderId:"WC-DEMO-EV",usedAt:null});eventDetails("concert")','Jegyvásárlás után is megtekinthetők a programrészletek.','Jegyeim / Programok → részletek'),
+('15-shop','Vásárlás – termékek és előfizetés','store','','WooCommerce termékek és külön 8 000 Ft-os havi app-előfizetés.','Vásárlás → termék / előfizetés'),
+('16-subscription','Aktív havi előfizetés','store','ACTIVE','Automatikusan megújuló médiatár-előfizetés.','Vásárlás → megújulás lemondása'),
+('17-sub-ending','Lemondott előfizetés','store','ACTIVE;ENDING','Már kifizetett időszak végéig elérhető a médiatár.','Előfizetésem → lemondás → státusz'),
+('18-wallet','Jegyek, bérlet és rendelések','passes','','Külön látható a használható/felhasznált/lejárt családi jegy; bérlet és rendelések.','Vásárlás → Jegyeim / előzmények'),
+('19-ticket-valid','Családi jegy – felhasználható','passes','showTicket("CS-1032")','A vásárlástól 3 hónapig egyetlen nem külön áras programon váltható be.','Jegyeim → QR'),
+('20-ticket-used','Családi jegy – felhasznált','passes','showTicket("CS-0914")','Már beváltott jegy: további programokon nem használható.','Korábbi vásárlásaim → státusz'),
+('21-ticket-expired','Családi jegy – lejárt','passes','showTicket("CS-0403")','Három hónap után beváltás nélkül is lejárt státusz.','Korábbi vásárlásaim → státusz'),
+('22-pass','Bérlet – aktív','passes','showPassId("BER-0842")','Első használattól 8 hónapig, fennmaradó alkalomszám.','Jegyeim → bérlet → QR'),
+('23-checkin','Staff – QR/bérlet ellenőrzés','checkin','scan()','Családi jegy egyszer érvényes; bérlet egy alkalommal csökken; külön eseményjegy kötött.','Virág / beléptetés → ellenőrzés → beváltás'),
+('24-ticket-scanned','Beváltott jegy státusza','passes','redeem("ticket","CS-1032","regular1");showTicket("CS-1032")','QR beváltás után a jegy többé nem használható, más eseményen sem.','Staff → érvénytelenítés → Jegyeim'),
+('25-notifications','Push előzmények – új jelölés','home','showNotifications()','365 nap történeti lista, előző megnyitás óta érkezett értesítések ÚJ jelzéssel.','Fejléc csengő → előzmények'),
+('26-push-admin','Virág push – célcsoportok','checkin','staffNotificationModal()','Manuális egyéni vagy csoportos címzés és üzenet; csak demonstráció, véglegesen WP admin.','Staff demo → push kampány / célcsoport'),
+('27-messages','Üzenetek Virággal','messages','','WordPress Better Messages AJAX / licencelt WebSocket lehetséges.','Üzenetek ↔ Virág'),
+('28-profile','Profil / navigáció','home','showProfile()','Előfizetés, jegyek, sor, értesítések, üzenetek kezelése.','Fejléc profil → fiókfunkciók')
+]
+
 if __name__=='__main__':
     capture();make_html();make_docx()
