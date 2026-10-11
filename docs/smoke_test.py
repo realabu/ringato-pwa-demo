@@ -28,7 +28,7 @@ def test():
             page.evaluate('hideModal()')
             # FAVORITES: real heart press must persist a favorite.
             page.locator('#content .card .heart').first.click()
-            assert page.evaluate('"hinta" in state.favorites'), 'Favorite was not saved'
+            assert page.evaluate('"hinta" in state.favorites'), f"Favorite was not saved. favorites={page.evaluate('state.favorites')} onclick={page.locator('#content .card .heart').first.get_attribute('onclick')} pageErrors={failures}"
             page.evaluate('go("library")')
             expect(page.locator('#mediaList .listrow')).to_have_count(8)
             # Media row click, and a second favorite via its nested icon.
