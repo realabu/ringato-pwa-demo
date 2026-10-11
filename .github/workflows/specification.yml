@@ -1,0 +1,44 @@
+name: Build illustrated Ringató specification
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'app.html'
+      - 'app.js'
+      - 'docs/build_spec.py'
+      - '.github/workflows/specification.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  documentation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install playwright python-docx Pillow
+          python -m playwright install --with-deps chromium
+      - name: Build real app screenshots and specifications
+        run: python docs/build_spec.py
+      - name: Check generated deliverables
+        run: |
+          test -s docs/specification.html
+          test -s docs/Ringato_V1_2_specifikacio.docx
+          test "$(find docs/screens -name '*.png' | wc -l)" -eq 18
+      - name: Commit generated files
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/specification.html docs/Ringato_V1_2_specifikacio.docx docs/screens/
+          if ! git diff --cached --quiet; then
+            git commit -m 'docs: publish V1.2 specification and prototype screenshots [skip ci]'
+            git push
+          fi
