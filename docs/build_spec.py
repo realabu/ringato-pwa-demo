@@ -121,8 +121,8 @@ def capture():
             page=br.new_page(viewport={'width':414,'height':900},device_scale_factor=1)
             page.goto('http://127.0.0.1:8826/app.html')
             for filename,title,screen,setup,description,nav in SC:
-                page.evaluate("() => {localStorage.removeItem('ringato-v1'); location.reload();}")
-                page.wait_for_load_state('load')
+                page.evaluate("() => {localStorage.removeItem('ringato-v1');}")
+                page.reload(wait_until='load')
                 page.wait_for_timeout(130)
                 if 'ACTIVE' in setup:
                     page.evaluate("() => {state.subscription={status:'active',renew:true,next:'2026.11.11.'};state.plus=true;save();}")
