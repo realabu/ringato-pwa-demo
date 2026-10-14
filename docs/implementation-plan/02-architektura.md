@@ -19,8 +19,8 @@ flowchart LR
   Admin[Virág WP admin] --> CoreAdmin[Ringató Core admin]
   CoreAdmin --> Tables
   CoreAdmin --> Legacy
-  Checkout --> WC[WooCommerce és Subscriptions]
-  WC --> Pay[Barion egyszeri gateway + recurring bridge]
+  Checkout --> WC[WooCommerce rendelések]
+  WC --> Pay[Barion egyszeri fizetés]
   Pay --> WC
   WC --> Outbox[Idempotens eseményfeldolgozás]
   Outbox --> Tables
@@ -39,12 +39,12 @@ A szolgáltató tényleges domainje telepítési beállítás. A példabeli éle
 | Core plugin | Domain service-ek, REST, saját adatmodell, jogosultság, admin, migráció, jobs | Kártyaadat-kezelés, második WC rendelésrendszer |
 | WC adapter | Termék, rendelés, fizetett állapot és refund olvasás, HPOS CRUD | WC-táblák közvetlen írása |
 | Event adapter | Meglévő CPT/meta → normalizált esemény; saját PWA-kiegészítés | Meglévő naptár újraírása |
-| Subscriptions adapter | Kifizetett periódus és megújulás; lemondás | Böngészőbeli aktív/inaktív kapcsoló |
-| Barion recurring bridge | Consent/token/renewal/verified payment egyeztetés | Subscriptions teljes helyettesítése |
+| Prémium-hozzáférési adapter (MVP) | Kifizetett havi időszak, lejárat, újravásárlás; fizetési módtól független | Automatikus kártyaterhelés |
+| Későbbi kész recurring adapter (feltételes) | Jóváhagyott, külső kész integráció előfizetési státuszának leképezése a közös hozzáférésre | Saját recurring gateway/bridge fejlesztés a jelenlegi projektben |
 | Better Messages adapter | Szülő–Virág beszélgetés, DTO, transport | Új üzenettároló BM mellett |
 | Média adapter | Forrásazonosító → lejáró CDN hozzáférés | Publikus prémium MP4 feltöltés |
 
-Ajánlott Core belső rétegek: `Domain` (állapot és invariáns), `Application` (use case), `Infrastructure` (WP/WC/CDN/BM repository), `Http` (REST schema + permission), `Admin`, `Jobs`, `Migrations`. Egy moduláris plugin, nem mikroszolgáltatások. A fizetési bridge külön plugin, hogy a domain API a gateway frissítéstől függetlenül karbantartható legyen.
+Ajánlott Core belső rétegek: `Domain` (állapot és invariáns), `Application` (use case), `Infrastructure` (WP/WC/CDN/BM repository), `Http` (REST schema + permission), `Admin`, `Jobs`, `Migrations`. Egy moduláris plugin, nem mikroszolgáltatások. A prémium-jogosultságot elválasztjuk a fizetési modelltől, hogy az MVP egyszeri WooCommerce-vásárlásairól később kész előfizetési integrációra lehessen váltani, **saját recurring bridge fejlesztése nélkül**.
 
 ## 2. Az eredeti oldal megőrzése
 
@@ -119,13 +119,13 @@ A végleges hely fizetéstől keletkezik, de **átmeneti hold** szükséges a fi
 
 Lejárt hold után beérkező sikeres fizetés: ugyanazon eseményzár mellett új hely megszerzése; ha nincs hely, `paid_capacity_conflict`, staff ügyintézés és visszatérítés. Ilyenkor nem keletkezik érvényes jegy és nem jelenhet meg „foglalás megerősítve”. A pénzügyi státusz fizetett marad, a teljesítési állapot külön hibás. A normál webhook és a helyreállító job közös idempotens szolgáltatást használ.
 
-## 5. Előfizetés
+## 5. Havi prémium-hozzáférés – D09 elfogadott MVP
 
-WooCommerce Subscriptions kezeli a ciklust, lemondást és renewal rendelést. Barion az ügyfél által engedélyezett fizetési eszköz terhelését. A Barion API nem önálló havi ütemező. [Barion subscriptions](https://docs.barion.com/Subscriptions%3A_set_up_recurring_billing)
+**MVP:** új, havonta **manuálisan ismételten megvásárolható** WooCommerce-termék és a meglévő egyszeri Barion-fizetés. Az ügyfél weben vagy PWA-ból ugyanazon WC pénztáron keresztül, **bejelentkezett fiókkal** vásárol. Nincs automatikus terhelés, WooCommerce Subscriptions-licenc és recurring gateway nem szükséges az MVP-hez. Egyes vásárlások hiteles sikeres fizetése idempotens szerveroldali hozzáférési időszakot eredményez; az időszak számítását, az előre vásárlás és átfedés szabályait az implementálás előtt pontosítani kell. A meglévő régi Online Ringató-termékek ettől külön termékszabályok.
 
-A bridge csak az app-előfizetés gateway-útvonalára kerül; a meglévő egyszeri Barion fizetés megmarad. Nem kapcsolunk be pusztán egy `subscriptions` supports flaget: inicializáló recurring consent, token tárolás, scheduled renewal, hibák, kártyacsere és lemondási konkurencia tényleges implementáció kell. A gateway szerződés részletei a [03](03-bovitmenyek-es-fuggosegek.md) dokumentumban.
+**Változatlan hozzáféréselv:** a médiához való hozzáférés a hitelesen **kifizetett időszak végéig** él. Nem elegendő pusztán egy WC order „completed” felirata vagy kliensállapot; refund/chargeback külön revocation üzleti szabályt igényel. A lejáró hozzáférést a rendszer jelzi, a hosszabbítást a felhasználó új vásárlással végzi. **A manuális időszakot nem lehet lemondandó automatikus előfizetésnek mutatni.**
 
-A médiahozzáférés a **sikeresen kifizetett időszak végéig** él. A subscription „active” szövege vagy következő terhelési dátuma önmagában nem hozzáférési bizonyíték. Sikertelen renewal nem hosszabbít; visszaterhelt/refundált időszakhoz külön revocation politika. Lemondás új terhelést nem indíthat, a kifizetett hozzáférést nem törli.
+**Későbbi, feltételes fázis:** ár/érték és teljes licenc/tranzakciós/üzemeltetési költség szerint kiválasztott, kész és működésében igazolt WooCommerce-kompatibilis recurring megoldás, kizárólag kifejezett megrendelői költségvállalás után. A meglévő Barion gateway recurring funkciója **nem igazolt**; a Barion API maga sem havi ütemező. [Barion subscriptions](https://docs.barion.com/Subscriptions%3A_set_up_recurring_billing). Saját fizetési bridge **nem része a jelenlegi projektkeretnek**. Az adaptercsere nem módosítja a Core paid-through jogosultsági szerződését, a meglévő hozzáféréseket migrálni/összefésülni kell. Később a megújulás/lemondás/kártyacsere/retry külön elfogadási teszt.
 
 ## 6. Média, push és üzenet
 
