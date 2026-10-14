@@ -31,7 +31,7 @@ Ez a csomag **terv**, nem működő alkalmazás. Nem telepítettünk bővítmén
 
 ## A megvalósítás indításának kapui
 
-- **G1:** Online Ringató kivezetés és „eredeti oldal változatlan” közötti ütközés eldöntése. Addig csak a PWA-ban történő kizárás tervezhető; a teljes webshopban való tiltás nincs engedélyezve.
+- **G1 / D01 – ELFOGADVA (2026-10-15):** Egységes WooCommerce-kínálat a weben és PWA-ban; régi Online Ringató termékek is maradhatnak, az új app-előfizetés és eseménytermékek weben is megvásárolhatók. App-előfizetést weben csak belépve lehet venni. Opcionális „csak webshopban” kivétel csak egyszerű WC-alapbeállítás esetén; a belépett webes fiókélményt fel kell mérni, webes átalakítása külön megbízás. A korábbi F26 online-értékesítés tiltása üzletileg felülírva; technikai ellenőrzés továbbra is szükséges.
 - **G2:** Barion merchant recurring jóváhagyás és Subscriptions-kompatibilis integráció sandbox bizonyítéka. Enélkül az automatikus havi előfizetés nem kiadható.
 - **G3:** A papírjegyek/bérletek korábbi felhasználásának ellenőrzött átvezetése. A fizetett rendelés nem bizonyítja, hogy a belépés még felhasználható.
 - **G4:** Better Messages API/licenc, privát médiatároló és tárhely/cron/reverse proxy alkalmasság.
