@@ -79,8 +79,8 @@ Az alábbi F-azonosítók **a DOCX F01–F26 listájára** hivatkoznak. A `build
 | F05 | Sor, fel/le rendezés, tetszőleges kezdés, végén stop | QueueService + lejátszó | T05 |
 | F06 | Natív képarány, 4 mobilkombináció, fullscreen | HTMLMediaElement + HLS | T06 |
 | F07 | Fiókhoz kötött kedvencek | FavoritesService | T07 |
-| F08 | 8 000 Ft/hó automatikus előfizetés | WCS + Barion bridge | T08 |
-| F09 | Lemondás, hozzáférés paid-through végéig | Subscription adapter | T09 |
+| F08 | Havi prémium-hozzáférés; a V1.3 automatikus megújítási elvárását D09 az MVP-ben manuálisan újravásárolható WooCommerce-termékre cseréli | Core paid-through + meglévő Barion egyszeri checkout; későbbi kész recurring adapter feltételes | T08; D09 |
+| F09 | Kifizetett időszak végéig hozzáférés; a V1.3 automatikus megújítás lemondása csak későbbi, jóváhagyott recurring esetén értelmezett | Prémium-hozzáférési adapter; manuális MVP lejárat/újravásárlás | T09; D09 |
 | F10 | Élő WC-katalógus, minden támogatott terméktípus | Catalog adapter + web checkout | T10; G1 |
 | F11 | Egyszeri családi jegy, 3 naptári hónap | EntitlementService | T11 |
 | F12 | 8 alkalom, első használattól 8 hónap | PassService | T12 |
@@ -98,6 +98,8 @@ Az alábbi F-azonosítók **a DOCX F01–F26 listájára** hivatkoznak. A `build
 | F24 | Staff ellenőrzés, beváltás, napló | Staff capability + scanner | T24 |
 | F25 | WP admin kezeli a termék/program/push adatokat | Core admin + meglévő admin | T25 |
 | F26 | A „Kuponjaim” és a rövid médiacsomag V1-beli kezelése a specifikáció szerint; a régi Online Ringató értékesítésének tiltását a 2026-10-15-i D01 döntés felülírta | Route-kezelés; egységes katalógus D01 szerint | T26; D01 |
+
+**D09 specifikációs eltérés (2026-10-15):** az F08–F09 szerinti automatikus havi fizetés és lemondás nem MVP-kiadási feltétel. Az új, bejelentkezéshez kötött manuálisan havonta újravásárolható prémiumterméket külön kell kezelni a meglévő RINGI04 terméktől. Kész, ár/értékben megfelelő recurring integráció csak igazolt kompatibilitás és megrendelői költségvállalás után válhat következő fázissá; egyedi fizetési bridge nem része a projektnek. A DOCX következő változatába átvezetendő.
 
 **Kiegészítés P01:** „Virág kérdezi” szavazás a prototípusban és a generáló scriptben szerepel, de az 1.3-as DOCX F01–F26 és entitáslistájában nincs. Teljes tervezési opcióként szerepel, de V1-scope döntést igényel; nem elrejtett kötelező funkció.
 
