@@ -9,7 +9,7 @@ Ez a **megvalósítandó** Ringató API, nem a jelenlegi WordPress végpontjaina
 - Sikeres egyedi válasz `{data: DTO, meta:{request_id,server_time}}`; lista `{data: DTO[], meta:{next_cursor,has_more,request_id,server_time}}`. Kivétel az ICS, raw vendor API és bootstrap.
 - Listák `limit` alap 20, max 100; opaque `cursor`, stabil idő+ID rendezés. Search max 120 karakter. Privát adatok `Cache-Control: private,no-store`.
 - Mutációkon `X-WP-Nonce`, megfelelő JSON content type, same-origin. Publikus üzleti mutáció nincs; az ingyenes média playback grant POST-ja a végponttáblában jelölt, rate-limitelt kivétel, nem módosít kereskedelmi állapotot.
-- `Idempotency-Key` kötelező checkout intent, reservation create/cancel, subscription cancel, staff redeem, message send és opcionális poll response esetén. UUID/szűk karakterkészlet, max 128 byte. Ugyanazon user+route+key és request hash replay ugyanazt a status/body-t adja; eltérő body 409. Ajánlott általános replay 24h; kereskedelmi/beváltási unique domain index tartósan megakadályozza a duplikációt.
+- `Idempotency-Key` kötelező checkout intent, reservation create/cancel, **csak ha később enabled: recurring subscription cancel**, staff redeem, message send és opcionális poll response esetén. UUID/szűk karakterkészlet, max 128 byte. Ugyanazon user+route+key és request hash replay ugyanazt a status/body-t adja; eltérő body 409. Ajánlott általános replay 24h; kereskedelmi/beváltási unique domain index tartósan megakadályozza a duplikációt.
 - Kedvenc PUT/DELETE önmagában idempotens; sorhoz `If-Match: "revision"` szükséges. Cursor mark monoton.
 - 200 olvasás/update/replay; 201 új objektum; 202 provisioning/kampányfolyamat elfogadva; 204 body nélküli sikeres törlés; 400 schema, 401 session, 403 jogosultság, 404 saját szűrés után nem elérhető, 409 állapot/kapacitás/verzió, 410 lejárt token, 422 üzleti input, 429 rate limit, 503 átmeneti providerhiba.
 
@@ -53,8 +53,8 @@ A login/logout/reset/regisztráció a meglévő WordPress/WC útvonalakon tört�
 | GET `/entitlements` | U | kind?, state?, cursor, limit | Saját jegyek/bérletek aktuális szerverállapota |
 | GET `/entitlements/{id}` | U | – | EntitlementDetail, redemption history minimális staff-adattal |
 | POST `/entitlements/{id}/qr` | U | body `{}` | QRPayload: opaque payload, expires_at; csak használható saját entitlement |
-| GET `/subscription` | U | – | SubscriptionSummary vagy null; paid_through és renewal_enabled |
-| POST `/subscription/{id}/cancel-renewal` | U | body `{}`; idempotency | WCS lemondás, hozzáférés időszak végéig; már lemondottnál ugyanaz a státusz |
+| GET `/subscription` | U | – | PremiumAccessSummary vagy null; MVP: `mode=manual_monthly`, `paid_through`, `access_active`, `renewal_enabled=false`, újravásárlás; később `mode=recurring` |
+| POST `/subscription/{id}/cancel-renewal` | U | body `{}`; idempotency | **Csak későbbi recurring feature flag esetén** elérhető, ha a kész integráció tényleges lemondást támogat. MVP manuális vásárlásnál nincs ilyen művelet (feature off) |
 | GET `/staff/events` | S | from?, to? | Hozzárendelt/scannelhető programok |
 | POST `/staff/checkins/inspect` | S | event_id, qr_payload | Eligibility: eligible, reason_code, minimal family/entitlement, revision; nincs levonás |
 | POST `/staff/checkins/redeem` | S | event_id, qr_payload; idempotency | Redemption + entitlement_after; teljes újraellenőrzés és tranzakció |
@@ -103,7 +103,7 @@ Opcionális P01 végpontok: GET `/polls/current`, POST `/polls/{id}/responses` (
 | Entitlement | id, kind (`family_ticket`,`pass`,`event_ticket`), state (`unactivated`,`active`,`used`,`exhausted`,`expired`,`revoked`,`legacy_review_required`), source_order_id/item_id, purchased_at, expires_at?, event_id?, total_uses, remaining, first_used_at?, used_at?, display_status |
 | EntitlementDetail | Entitlement + redemption_history:[{id,event_id,redeemed_at,consumed_units}], next_action; nincs nyers QR hash/token |
 | OrderSummary | id, created_at, paid_at?, wc_status, total_money, items:[{item_id,product_id,title,quantity,entitlement_ids,provisioning_state}], summary_status |
-| SubscriptionSummary | id, plan_product_id, status, renewal_enabled, paid_through?, next_payment_at?, price_money, access_active, cancellable |
+| PremiumAccessSummary (korábban SubscriptionSummary) | id?, plan_product_id, mode (`manual_monthly`,`recurring`), status, paid_through?, price_money, access_active, renewal_enabled, next_payment_at?, cancellable; MVP `renewal_enabled=false`, `next_payment_at=null`, `cancellable=false` |
 | MediaSummary | id, title, type (`audio`,`video`), category_ids[], duration_seconds, premium, artwork?, aspect_ratio (video 16:9/9:16; audio null) |
 | PlaybackGrant | media_id, protocol (`audio_file`,`mp4`,`hls`), playback_url, expires_at, refresh_after, subtitles[], authorization_mode (`signed_url`,`signed_cookie`,`provider_token`); nincs provider secret |
 | Queue | revision integer, items:[{media_id,position,media,availability}], ETag header; nincs kliensoldali jogosultságengedély |
