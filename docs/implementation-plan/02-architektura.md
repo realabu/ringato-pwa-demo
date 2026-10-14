@@ -54,7 +54,7 @@ Ajánlott Core belső rétegek: `Domain` (állapot és invariáns), `Application
 - REST `/wp-json/ringato/v1/`, adatbázis `{prefix}ringato_*`, CSS appban CSS Modules, PHP `Ringato\...`, job/capability `ringato_*` névtér.
 - SW fájl `/app/sw.js`, regisztráció és scope `/app/`; nincs `Service-Worker-Allowed: /` szélesítés, nincs root SW. Meglévő idegen cache-t vagy SW-t a kód nem töröl.
 - SPA fallback csak `/app/` navigációra; `/wp-json/`, `/wp-admin/`, pénztár és minden régi útvonal érintetlen. `/app/assets/...` hiányzó fájl 404, nem HTML-fallback.
-- Pluginaktiváláskor nem változik meglévő termék státusza, ár, készlet, checkout, e-mail vagy oldal. Új apptermékek webes láthatósága külön döntés: ajánlott katalógusban rejtett app-előfizetés, amelyet a saját API explicit engedélyezett termékként listáz.
+- Pluginaktiváláskor nem változik meglévő termék státusza, ár, készlet, checkout, e-mail vagy oldal. **D01 elfogadott döntés:** a WooCommerce webes és PWA-termékkínálata egységes; az új előfizetés- és eseménytermékek a weben is megjelennek és megvásárolhatók. Nem rejtjük el alapból az app-előfizetést. Opcionális „csak webshopban” kivétel csak egyszerű, alap WooCommerce kategória/címke alapú jelölés technikai igazolása után lehet.
 - Az apptermékekre/eseményekre vonatkozó kapacitás- és fizetési hookok termékazonosító alapján szűrtek. A meglévő termékek működése csak a tudatosan felvett digitális jogosultság-naplóval egészül ki.
 - Változatlan pénztár = ugyanaz a kereskedelmi szabály és felület. Az app és web ugyanazt a WC kosarat használja; az app nem üríti ki vagy cseréli le csendben a meglévő kosarat.
 
@@ -64,7 +64,7 @@ Backend- és adatbővítések hatása regressziós teszttel igazolandó. Éles p
 
 ### Döntés: WordPress session cookie + REST nonce
 
-A böngésző a WordPress bejelentkezést használja. A login/elfelejtett jelszó a meglévő WP/WC folyamat biztonságos visszatérési URL-lel; új React jelszó-kezelő backend nem kell. Regisztráció: meglévő WC My Account beállítás vizsgálata; ha nincs engedélyezve, a V1 account-creation módja döntési pont. Vendég publikus médiakatalógust/programot láthat, saját jegyet/foglalást/premiumot nem.
+A böngésző a WordPress bejelentkezést használja. A login/elfelejtett jelszó a meglévő WP/WC folyamat biztonságos visszatérési URL-lel; új React jelszó-kezelő backend nem kell. Regisztráció: meglévő WC My Account beállítás vizsgálata; ha nincs engedélyezve, a V1 account-creation módja döntési pont. Vendég publikus médiakatalógust/programot láthat, saját jegyet/foglalást/premiumot nem. **D01:** app-előfizetést a webes checkouton is csak belépett felhasználó vásárolhat, szerveroldali rendelésvalidációval; a jogosultság ugyanahhoz a WP-fiókhoz kötődik.
 
 1. `/app/` shell a WP betöltése után felismeri a session cookie-t, és minimális bootstrapot ad: API base, build/API verzió, WP REST nonce, user summary, engedélyezett feature-ek. Nem tesz bele rendelést, QR-t vagy fizetési tokent.
 2. A privát REST kérések `credentials: same-origin` és `X-WP-Nonce` mellett mennek. A nonce **CSRF-védelem, nem önálló hitelesítés**. Szerveren minden végpont saját permission callbacket és objektumtulajdonosi ellenőrzést kap. [WP dokumentáció](https://developer.wordpress.org/rest-api/using-the-rest-api/authentication/)
@@ -111,7 +111,7 @@ Az app egyszerre egy kiválasztott termékfolyamatot indít; a webes kosár töb
 
 Egyedi típus (pl. ajándékutalvány): a katalógus `purchase_mode=web_configurator` és termék-URL. Az eredeti konfigurátor állítja össze a kosártételt; nem próbáljuk simple termékként hozzáadni. Változó terméknél érvényes variation és attribute adatok kellenek; szállítandó termékek teljes checkoutja a webshopban marad. Nem támogatott új típust listázunk webes útvonallal, nem veszítjük el csendben.
 
-Publikus Store API hasznos, de a láthatóság/egyedi terméktípusok/új app-előfizetés miatt a kliens egységes `/products` adaptert kap. A WC REST admin API kulcsai nem kerülnek frontendbe. A natív Store API checkout alternatíva külön kompatibilitási próbát igényel. [Store API](https://developer.woocommerce.com/docs/category/store-api), [cart token](https://developer.woocommerce.com/docs/apis/store-api/cart-tokens)
+Publikus Store API hasznos, de az egyedi terméktípusok és az opcionális, natív WC-jelölésre épülő „csak webshopban” kivétel miatt a kliens egységes `/products` adaptert kap. A WC REST admin API kulcsai nem kerülnek frontendbe. A natív Store API checkout alternatíva külön kompatibilitási próbát igényel. [Store API](https://developer.woocommerce.com/docs/category/store-api), [cart token](https://developer.woocommerce.com/docs/apis/store-api/cart-tokens)
 
 ### Fizetett külön esemény: kapacitás és késő fizetés
 
