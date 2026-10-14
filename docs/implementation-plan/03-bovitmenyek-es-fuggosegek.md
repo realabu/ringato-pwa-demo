@@ -7,13 +7,13 @@
 | WordPress + meglévő egyedi téma | Megtartás; publikus oldal változatlan | A jelentett helyi verzióra és éles tárhelyre teszt |
 | WooCommerce | Megtartás; termék, rendelés, kosár, checkout, HPOS | Meglévő; minden rendeléskezelés WC CRUD |
 | Meglévő Barion gateway | Egyszeri fizetés megtartása | A 3.10.2 gateway `products`,`refunds` képességet deklarál, recurringot nem |
-| Billingo | Meglévő számlázás megtartása | Subscription renewal/refund bizonylat és dupla számla kizárása próbával |
-| WooCommerce Subscriptions | **Új kötelező bővítmény** havi előfizetéshez | Kereskedelmi licenc; aktuális ajánlat/licencfeltétel beszerzéskor ellenőrzendő |
+| Billingo | Meglévő számlázás megtartása | Manuálisan vásárolt havi termék és refund bizonylat; később csak jóváhagyott recurring esetén renewal számlázás |
+| WooCommerce Subscriptions vagy más kész recurring opció | **Nem MVP-kötelező; feltételes későbbi beszerzés** | A legjobb ár/értékű kompatibilis megoldás teljes licenc-/éves-/tranzakciós költségét és üzemeltetését fel kell mérni; megrendelői vállalás kell |
 | Better Messages | **Új integrációs jelölt** szülő–Virág chathez | V1 free AJAX/polling vizsgálat; WebSocket opcionális fizetős licenc |
 | Ringató Core | **Saját plugin szükséges** | REST, admin, domainmodell, kapacitás, jegy/bérlet, média, push, BM adapter |
 | Ringató App Shell | **Saját vékony plugin szükséges** | Build kiszolgálása `/app/`, bootstrap, origin/scope, release verzió |
-| Ringató Barion Subscriptions Bridge | **Várhatóan saját fejlesztés szükséges** | Másik igazolt kompatibilis gateway helyettesítheti, ha ugyanazt a követelményt bizonyítja |
-| Action Scheduler | WC/WCS meglévő ütemezőjének használata | Nem telepítünk újabb független schedulert; elérhetőséget/verziót vizsgálni |
+| Saját Barion recurring bridge | **NEM része a jelenlegi projektnek** | Egyedi fizetési fejlesztés a rendelkezésre álló keretbe nem fér bele; kész igazolt integráció vagy manuális havi MVP |
+| Action Scheduler | WooCommerce meglévő ütemezőjének használata | MVP-ben jogegyeztető munkákhoz; recurring scheduler csak későbbi kész integrációval |
 | SMTP, WAF, cache | Meglévő éles szolgáltatásokhoz illesztés | API/auth/cron kivételek, app-origin e-mail regresszió |
 | GiftRocket | Megtartás, konfigurátorhoz webes útvonal | `wxgiftcard` nem simple termék; licenc/Store API integráció ellenőrzése |
 | CookieYes | Meglévő oldal consentjének megőrzése | PWA adatkezelés/consent külön illesztés; nem feltételezett automatikus átvétel |
@@ -22,7 +22,7 @@
 
 ### Core plugin modulok és átadandó elemek
 
-- `Catalog` + termékmapping admin: minden megvásárolható típus DTO-ja, PWA tiltások, ticket/pass/event/subscription besorolás és snapshot.
+- `Catalog` + termékmapping admin: minden megvásárolható típus DTO-ja, a D01 szerint kivételes PWA-szűrés, ticket/pass/event/manual_monthly_access/későbbi recurring besorolás és snapshot.
 - `Events` + meglévő CPT adapter: új PWA metaadatok, end/timezone/capacity/event product mapping, ICS.
 - `Commerce` és outbox: fizetési esemény feldolgozás, order-item/idempotency, refund/revocation, helyreállítás; minden mapped rendelési csatorna.
 - `Entitlements`, `Reservations`, `Checkin`: own tables, atomikus beváltás/foglalás, staff scope, audit és indokolt admin korrekció.
@@ -34,15 +34,23 @@
 
 Átadáskor plugin forrás, migrációk, admin használati leírás, OpenAPI fájl, szerződéstesztek, staging konfigurációs minta titkok nélkül, kiadási/rollback runbook szükséges.
 
-## 2. Barion recurring integrációs munkacsomag
+## 2. D09: MVP havi egyszeri vásárlás, későbbi kész recurring megoldás felmérése
 
-A Barion SDK recurring mezőinek jelenléte **nem jelenti**, hogy a telepített WooCommerce gateway támogatja a WCS automatikus megújulását. A helyi gateway deklarációjában nincs `subscriptions`, és a vizsgált pluginban nem találtunk WCS renewal hookot. [WCS gateway követelmények](https://woocommerce.com/document/subscriptions/payment-gateways/)
+**A jelenlegi projektben nincs saját Barion recurring integráció fejlesztése.** Az MVP egyszeri, bejelentkezéshez kötött WooCommerce-termékvásárlásokkal működik; a sikeresen kifizetett havi időszakot a Ringató Core kezeli. WooCommerce Subscriptions és Barion recurring jogosultság nem szükséges az MVP indításához.
 
-### Beszerzés vagy saját bridge
+**Beszerzési/megvalósíthatósági feladat a következő fázisra:**
+1. Felkutatni a ténylegesen karbantartott, kész WooCommerce-kompatibilis automatikus megújítást (Barionnal, ha bizonyított, vagy más vállalható kész fizetési útvonallal).
+2. Összevetni a teljes életciklus költségeit: bővítmény/licenc, évenkénti megújítás, gateway/tranzakció, konfiguráció és teszt, támogatás, szükséges megrendelői kereskedői jogosultság, későbbi migráció.
+3. Sandboxban igazolni a fizetési folyamatot, sikeres megújulást, hibát és lemondást, a webes/PWA közös hozzáférést. Nem elég a termékleírás szerinti kompatibilitás.
+4. **Megrendelői költségvállalás** után lehet külön későbbi fázis. Ha nincs jó ajánlat vagy költségvállalás, marad a kézi havi vásárlás.
 
-Először igazolt, karbantartott Barion–WCS kompatibilis extension vizsgálata, sandboxpróbával. Pusztán „Barion kompatibilis” marketingállítás nem elegendő. Ha nincs megfelelő csomag, külön bridge fejlesztése szükséges a meglévő egyszeri gateway módosítása nélkül.
+A Barion SDK recurring mezői önmagukban nem bizonyítják a telepített gateway automatikus megújítási képességét; a helyi gateway `subscriptions` supportot nem deklarál. [WCS gateway követelmények](https://woocommerce.com/document/subscriptions/payment-gateways/)
 
-A bridge minimális felelőssége:
+### Korábbi egyedi bridge-technikai ellenőrzőlista – csak tájékoztató, jelenlegi scope-on kívül
+
+Az alábbiak **nem fejlesztési feladatok az MVP-ben**, hanem a választandó kész integráció elfogadási kontrolljai. Saját bridge készítése csak külön, későbbi szerződéses projektben merülhetne fel.
+
+A recurring integráció vizsgálandó felelősségei:
 
 1. Külön gatewayazonosító az app-előfizetéshez, csak megvalósított WCS supports képességekkel. A hagyományos `barion` egyszeri fizetés megmarad.
 2. Merchant recurring engedély/jóváhagyás; ügyfél hozzájárulás összege, periódusa, feltétele és verziózott elfogadása. Sandbox recurring engedély nem éles jóváhagyás.
@@ -56,7 +64,7 @@ A bridge minimális felelőssége:
 
 A Subscriptions integrációs lépésekhez a [hivatalos gateway guide](https://woocommerce.com/document/subscriptions/develop/payment-gateway-integration/) az alap. A Barion nem ütemezi automatikusan a díjakat; a kereskedő rendszerének kell indítani az engedélyezett terhelést. [Barion subscriptions](https://docs.barion.com/Subscriptions%3A_set_up_recurring_billing)
 
-**Kill criterion:** ha a recurring jóváhagyás vagy kompatibilitás nem bizonyítható, F08 kiadása megáll. Egyszeri havi kézi vásárlás nem helyettesíti az automatikus megújulás követelményét.
+**D09 kiadási szabály:** ha nincs igazolt és a megrendelő által finanszírozott kész recurring megoldás, **csak az automatikus megújulás későbbi fázisa nem indítható**. A manuálisan, havonta újravásárolható hozzáférésű MVP ettől függetlenül kiadható. A V1.3 F08 automatikus megújulási követelményét az új D09 üzleti döntés az MVP-re felülírja.
 
 ## 3. React/TypeScript csomagjavaslat
 
@@ -89,7 +97,7 @@ Arculat: a projektgyökér `docs/design/tokens.json`, `tokens.css`, saját fonto
 
 | Elem | Használat |
 |---|---|
-| Composer autoload + saját namespace | Core és bridge modulok, determinisztikus build |
+| Composer autoload + saját namespace | Core modulok, determinisztikus build; recurring bridge nincs a jelenlegi scope-ban |
 | `minishlink/web-push` | VAPID alapú Web Push; PHP/OpenSSL/cURL kompatibilitást tárhelyen igazolni |
 | `sabre/vobject` (feltételes) | ICS generálás/validálás; elhagyható, ha szigorúan tesztelt kicsi ICS-serializer készül |
 | Média provider SDK (feltételes) | Csak a kiválasztott storage/CDN szükséges minimális kliens; titkok backendben |
@@ -97,17 +105,17 @@ Arculat: a projektgyökér `docs/design/tokens.json`, `tokens.css`, saját fonto
 | PHPCS + WordPress Coding Standards, PHPStan | WP kódminőség, HPOS/escaping/schema ellenőrzések |
 | WP-CLI (fejlesztés/üzemeltetés) | Idempotens migráció, dry-run import, reconciliation riport |
 
-A meglévő Barion SDK-t nem szerkesztjük vendor fájlban. Bridge SDK-hozzáférést verziózott interfészen vagy saját, ellenőrzött SDK-függőséggel oldunk meg; mindkettőnél névtér/dupla verzió ütközést vizsgálni kell. A WP-ben minden Composer függőségnél ugyanilyen ütközési teszt szükséges.
+A meglévő Barion SDK-t nem szerkesztjük vendor fájlban. Az MVP a meglévő egyszeri gateway-t használja, saját recurring SDK-integráció nélkül. Ha később kész bővítményt vezetünk be, a névtér/dupla verzió ütközéseket és a WC/Barion kompatibilitást tesztelni kell. Minden WP Composer-függőségnél ugyanez a szabály.
 
 ## 5. Szükséges szolgáltatások és költséghelyek
 
 - Meglévő WordPress tárhely, HTTPS, deploy hozzáférés, staging és DB-backup. `/app/` útvonal vagy plugin rewrite támogatás, megfelelő PHP/DB erőforrás.
 - Privát média objektumtár + CDN/streaming/transzkódolás: signed HLS/MP4/audio, bélyegkép, tartomány/CORS, titkos storage. A választás előtt tényleges forgalom/tárhely/átviteli igény becslése kell.
-- WooCommerce Subscriptions licenc, opcionális Better Messages WebSocket licenc; saját plugin/bridge fejlesztési és karbantartási költség.
-- Barion merchant recurring jóváhagyás és sandbox hozzáférés, Billingo tesztüzem, SMTP tesztcímek.
+- MVP: opcionális Better Messages WebSocket licenc, Ringató Core/App Shell saját fejlesztés és karbantartás. **Recurring csak feltételes:** több kész megoldás teljes licenc-/éves-/tranzakciós-/üzemeltetési költségének összehasonlítása és megrendelői vállalása; saját fizetési bridge nem tervezett.
+- Meglévő Barion egyszeri fizetés sandboxellenőrzése, Billingo tesztüzem, SMTP tesztcímek. Barion merchant recurring jóváhagyás **csak későbbi automatikus opció esetén**.
 - VAPID kulcspár backendben; nincs kötelező fizetős push SaaS. A push szolgáltatói végpontok eléréséhez tárhely egress kell.
 - Valós rendszer-cron és Action Scheduler workerfuttatás; napi mentés, monitoring, hibariasztás.
 - Teszteszköz: iPhone Safari/telepített PWA és Android Chrome/telepített PWA; a desktop emuláció nem elég.
 - Üzemeltető, Virág/staff, fejlesztő, üzleti döntéshozó és adatkezelési felelős a döntési táblához.
 
-Pontos licenc-/CDN-/fejlesztési összeg most nem állapítható meg ellenőrzött használati volumen, tárhelyadat és szolgáltatóválasztás nélkül. Beszerzési lista igen, fiktív árajánlat nem része a tervnek.
+Pontos licenc-/CDN-/fejlesztési összeg ellenőrzött szolgáltatóajánlat és használati igény nélkül nem állapítható meg; a D09 alapján a recurring opciók **valós, összehasonlítható költségfelmérése külön kötelező döntés-előkészítő feladat**, nem azt jelenti, hogy már meg is vásároltuk vagy jóváhagytuk a bővítményt.
