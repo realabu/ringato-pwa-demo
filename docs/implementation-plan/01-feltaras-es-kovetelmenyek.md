@@ -57,14 +57,14 @@ A helyi mu-plugin tiltja az e-mail-küldést; WP-Cron letiltott. A Barion/Billin
 |---|---|---|---|---|
 | 4382 | RINGI01 / simple | Családi jegy | 2 990 Ft | `family_ticket`, 1 belépés, fizetéstől 3 hónap |
 | 4386 | RINGI02 / simple | Ringató 8 alkalmas bérlet | 19 990 Ft | `pass`, 8 alkalom, első használattól 8 hónap |
-| 4385 | RINGI06 / simple | Helyszíni + online Ringató jegy | 4 990 Ft | Régi kombinált; új PWA-értékesítés tiltva a javaslat szerint, régi helyszíni jogosultság auditálandó |
-| 4384 | RINGI05 / simple | Ringató jegy online foglalkozásra | 2 290 Ft | Kivezetendő régi online termék; PWA nem ad rá új médiatár-hozzáférést |
-| 4387 | RINGI04 / simple | Ringató bérlet online, 1 hónap | 8 200 Ft | Kivezetendő régi online termék; nem az új 8 000 Ft/hó app-előfizetés |
+| 4385 | RINGI06 / simple | Helyszíni + online Ringató jegy | 4 990 Ft | Régi kombinált; D01 szerint tovább értékesíthető weben és PWA-ban; régi helyszíni/online jogosultság auditálandó |
+| 4384 | RINGI05 / simple | Ringató jegy online foglalkozásra | 2 290 Ft | D01 szerint egyelőre megtartható és mindkét csatornán értékesíthető; nem ad automatikusan új PWA-médiatár-hozzáférést |
+| 4387 | RINGI04 / simple | Ringató bérlet online, 1 hónap | 8 200 Ft | D01 szerint egyelőre megtartható és mindkét csatornán értékesíthető; nem az új 8 000 Ft/hó app-előfizetés |
 | 6448 | nincs SKU / wxgiftcard | Ajándékutalvány | alaptermék ára üres | Megjelenítendő; árkonfiguráció a meglévő webes termékoldalon |
 
 Mind a hat publikált termék helyileg `purchasable=true`, `instock`, `virtual=true`, `visible`. Az árak pillanatfelvétel; a kliens éles árat API-ból kap. Az ID-k kizárólag helyi példák, az éles megfeleltetés adminbeállítás és SKU/termékazonosító audit alapján történik. A témában szereplő `RINGI03` a jelenlegi publikált listában nem szerepel.
 
-**Követelményütközés:** F10 „összes aktív megvásárolható termék” és F26 „nincs Online Ringató új értékesítés” nem teljesíthető együtt a jelenlegi változatlan katalógussal. Ajánlat: PWA-katalógus = publikált + megvehető + appban engedélyezett, a régi online termékek kizárásával; ez F10 dokumentált kivételét igényli. Teljes webes kivezetés külön engedélyezett webshopváltozás lenne. A döntésig a termékmodul kiadását blokkoljuk, nem változtatjuk meg a webshopot.
+**D01 döntés (2026-10-15):** Az egységes WooCommerce-termékkínálat az irányadó: az aktív, publikus, megvásárolható webshoptermékek a PWA-ban is láthatók és megvásárolhatók, ideértve a régi Online Ringató termékeket, valamint az új előfizetés- és eseménytermékeket. Az eredeti F10–F26 ütközés üzletileg feloldva **F10 javára**: a régi Online Ringató értékesítését tiltó F26-rész új üzleti döntéssel felülírt, a következő specifikációverzióban frissítendő. Opcionális, meglévő WooCommerce alapbeállításra épülő „csak webshopban” jelölés technikailag vizsgálandó; enélkül nincs csatorna szerinti termékkizárás. Webes app-előfizetés csak bejelentkezve vásárolható; a belépett vásárló webes fiók-/előfizetésélményét fel kell mérni, de annak esetleges átdolgozása a PWA-projekt keretén kívüli, külön egyeztetendő munka.
 
 ## 4. V1.3 követelménymegfeleltetés
 
@@ -97,7 +97,7 @@ Az alábbi F-azonosítók **a DOCX F01–F26 listájára** hivatkoznak. A `build
 | F23 | Aszinkron szöveges üzenet Virágnak | Better Messages adapter | T23 |
 | F24 | Staff ellenőrzés, beváltás, napló | Staff capability + scanner | T24 |
 | F25 | WP admin kezeli a termék/program/push adatokat | Core admin + meglévő admin | T25 |
-| F26 | Nincs Kuponjaim/új Online/rövid médiacsomag | Route- és termékszűrés | T26; G1 |
+| F26 | A „Kuponjaim” és a rövid médiacsomag V1-beli kezelése a specifikáció szerint; a régi Online Ringató értékesítésének tiltását a 2026-10-15-i D01 döntés felülírta | Route-kezelés; egységes katalógus D01 szerint | T26; D01 |
 
 **Kiegészítés P01:** „Virág kérdezi” szavazás a prototípusban és a generáló scriptben szerepel, de az 1.3-as DOCX F01–F26 és entitáslistájában nincs. Teljes tervezési opcióként szerepel, de V1-scope döntést igényel; nem elrejtett kötelező funkció.
 
