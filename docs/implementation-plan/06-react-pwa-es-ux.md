@@ -26,7 +26,7 @@ ringato-pwa/                     # tervezett, még nem létrehozott app
 wordpress-plugins/              # tervezett saját pluginek
   ringato-core/
   ringato-app-shell/
-  ringato-barion-subscriptions/
+  # recurring gateway plugin NINCS az MVP-ben; később csak külső kész megoldás
 contracts/openapi.yaml          # M0-ban készülő gépi API-szerződés
 ```
 
@@ -48,7 +48,7 @@ Minden alábbi útvonal `/app` prefix alatt. Mobil elsődleges nav: Főoldal, T�
 | `/events` | Három típus, foglalásaim | 09-events |
 | `/events/:id` | Részlet, ICS, foglalás/lemondás/vásárlás | 10-open-detail – 14-paid-booked |
 | `/shop` | Élő katalógus + app-előfizetés | 15-shop |
-| `/subscription` | Aktív/lemondott/lejárt, megújulás lemondása | 16-subscription, 17-sub-ending |
+| `/subscription` | MVP: havi prémium aktív/lejárt, kifizetett időszak, újravásárlás CTA; **nincs lemondás vagy automatikus megújulás**. Később recurring módhoz feltételes lemondás | 16-subscription, 17-sub-ending (recurring design csak később) |
 | `/checkout/:intentId` | Szerver payment/provisioning státusz | Új valós folyamatképernyő |
 | `/wallet` | Jegyek, bérletek, rendeléselőzmény | 18-wallet |
 | `/wallet/:id` | Érvényesség, QR, beváltási történet | 19-ticket-valid – 22-pass |
