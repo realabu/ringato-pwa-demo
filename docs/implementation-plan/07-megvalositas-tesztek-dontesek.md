@@ -39,7 +39,7 @@ A „kész” állapot tényleges backenddel és indokolt negatív esetekkel iga
 | T07 – Kedvenc | Userenként elkülönül, több eszközön látszik, idempotens PUT/DELETE; törölt média biztonságos kezelése |
 | T08 – Előfizetés | 8 000 Ft/hó kezdeti sandbox fizetés + valódi scheduled renewal; siker hosszabbít, failure nem; token/consent/merchant approval; timeout/dupla callback nem dupla terhelés |
 | T09 – Lemondás | Renewal leáll, paid-through végéig lejátszható; utána nem; cancel/renewal verseny dokumentált; már lemondott ismétlése idempotens |
-| T10 – Katalógus | Jóváhagyott app-termékhalmaz és élő ár/készlet; ajándékutalvány konfigurátor; variable/új/custom típus fallback; G1 szerinti Online szabály |
+| T10 – Katalógus | Egységes web/PWA terméklista és élő ár/készlet; régi Online Ringató és új előfizetés/event termékek; opcionális alap-WC „csak webshopban” jelölés; ajándékutalvány konfigurátor; variable/custom fallback; előfizetés webes vásárlása csak belépve |
 | T11 – Jegy | Fizetéstől 3 naptári hónap; jan31→apr30, szökőév, DST, napvége határ; egyetlen globális beváltás |
 | T12 – Bérlet | 8 alkalom, first_used_at csak sikeres redeemnél; 8 naptári hónap; egy scan=egy decrement; remaining nem negatív; exhausted/expired tiltás |
 | T13 – QR | Saját valid/unactivated joghoz QR; token TTL/revocation/owner; idegen token/lejárt screenshot tiltás; QR megnyitás nem aktivál bérletet |
@@ -77,7 +77,7 @@ A „javaslat” nem elfogadott üzleti döntés. A felelős a megvalósítás k
 
 | ID | Döntés | Javasolt alap | Felelős / mikorra |
 |---|---|---|---|
-| D01 / G1 | Online kivezetés vs változatlan weboldal és minden aktív termék | Csak PWA-ban kizárt RINGI04/05/06; F10 explicit kivétel; webshop változatlan. Teljes kivezetés külön engedély | Üzleti tulajdonos, M0/M5 előtt |
+| D01 / G1 | **ELFOGADVA (2026-10-15):** egységes web/PWA termékkínálat | Régi Online Ringató megmaradhat; új app-előfizetés és eseménytermék weben is kapható, előfizetés csak bejelentkezve. Opcionális csak-webshop jelölés alap WooCommerce funkcióval vizsgálandó. Bejelentkezett felhasználó webes élménye feltárandó, de webes UI-módosítás külön scope | Üzleti döntés lezárva; technikai és scope-ellenőrzés M0/M5 alatt |
 | D02 | Vásárlási idő és lejárat határa | Hiteles paid_at, Europe/Budapest célhónap utolsó napjára clamp, nap végéig; exclusive timestamp | Virág + backend, M3 előtt |
 | D03 | Egy programon bérlet többször levonható? Napi korlát? | Egy entitlement/family/event egyszer; külön alkalom külön ID. Re-entry read-only | Virág, M3 előtt |
 | D04 | Családi fiók és több jegy/átadás | V1 user=family, nincs átruházás, event max1/family; több család kézi ügyintézés | Üzleti tulajdonos, M4/M5 előtt |
@@ -91,7 +91,7 @@ A „javaslat” nem elfogadott üzleti döntés. A felelős a megvalósítás k
 | D12 | Domain, tárhely, cron, regisztráció, retention | Same-origin/app; meglévő WP login/account; valós cron; consent és audit/chat retention külön policy | Üzemeltető + adatkezelési felelős, M0/M1/M8 előtt |
 | D13 | Prototípus „Virág kérdezi” része V1? | Opcionális P01, alap V1-scope-ban nincs, csak igen döntéssel | Üzleti tulajdonos, M0 előtt |
 
-Új app-előfizetés/event product katalógusláthatósága D01 része; ajánlott hidden WC catalog + explicit saját API, hogy ne jelenjen meg váratlan új blokk a webshopban. Az app összes elérhető terméket így csak a jóváhagyott PWA-termékhalmazban garantálja.
+A D01 üzleti döntés alapján **nincs alapértelmezett PWA-specifikus termékszűrés vagy webes elrejtés**: az új előfizetés-/eseménytermékek és a régi Online Ringató termékek mindkét csatornán szerepelhetnek. A „csak webshopban” kivételt csak akkor vezetjük be, ha egyszerű WooCommerce-alapbeállítással megoldható. Külön tesztelendő a webes előfizetés szerveroldali, belépéshez kötött megvásárlása, az egységes fiók/jogosultság és a már belépett vásárló fiók-/előfizetésnézete. Az esetleges webes felületmódosítás a jelenlegi webmester vagy külön megbízás tárgya; nem automatikus PWA-feladat.
 
 ## 4. Kockázatok és kezelések
 
