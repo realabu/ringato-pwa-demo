@@ -6,19 +6,19 @@ Ez implementációs backlog, nem most végrehajtott fejlesztés. Az alapmodulok 
 
 | Csomag | Előfeltétel | Konkrét feladat és átadandó eredmény | Kész definíció |
 |---|---|---|---|
-| M0 – Döntések és integrációs próbák | Jelen terv | Éles leltár; D01–D13 lezárás szükség szerint; Barion/WCS sandbox, BM REST, CDN média, HPOS és cron próbák; teljes OpenAPI 3.1, DTO-fixture | G1–G4 bizonyíték és jóváhagyott, verziózott szerződés; negatív tesztek is |
+| M0 – Döntések és integrációs próbák | Jelen terv | Éles leltár; D01–D13 lezárás szükség szerint; meglévő egyszeri Barion fizetés ellenőrzése; recurring kész megoldások ár/érték, teljes licenc/üzemeltetési költség és kompatibilitási feltárása (nem MVP-blokkoló); BM REST, CDN média, HPOS és cron próbák; OpenAPI 3.1/DTO | MVP-hez szükséges kapuk és negatív tesztek; G2 recurring jóváhagyás csak automatikus fázis előtt |
 | M1 – Projekt és izoláció | M0 origin/auth | React/TS/Vite skeleton, app shell plugin, `/app/` routing, bootstrap/session, own SW, design token; CI/lint/build | Publikus oldal ugyanaz, `/app/` telepíthető, nonce/session működik |
 | M2 – Core és olvasó adapterek | M1 | Core rétegek, migrációk, admin capability, event/catalog/order adapter, termékrule admin, média metadata, `/config/me/home` | HPOS saját rendeléshez hozzáférés és cross-user tiltás bizonyított |
 | M3 – Jogosultság és staff | M2 + D02/D03/D07 | Order-item provisioning/outbox, családi jegy/bérlet/QR, atomikus checkin, audit és korrekció | Dupla callback és párhuzamos scan nem dupláz; dátumtesztek |
 | M4 – Program és foglalás | M2/M3 + D04/D05 | Event config, inventory, alapdíjas reservation, paid hold minden checkout csatornára, ICS, late-payment handling | Utolsó hely konkurens tesztje és kapacitáskonfliktus visszajelzése |
 | M5 – App vásárlás | M2/M4 + G1 | Terméktípus DTO-k, handoff, meglévő web kosár/pénztár, intent státusz, rendelés/jogosultság nézet | Simple/custom/variable/mixed cart útvonal, nincs kliensoldali paid flag |
-| M6 – Havi előfizetés | M0 recurring bizonyíték + M3/M5 | WCS licenc és plan, gateway/bridge, paid-through, cancel, renewal failure/retry, Billingo | Sandbox initial+renewal+cancel+refund, dupla terhelés kizárt; éles merchant engedély |
+| M6 – Havi prémium-hozzáférés (MVP) | M3/M5 + D09 | Bejelentkezve egyszeri WC/Barion havi termék mindkét csatornán; kifizetett hozzáférési időszak, lejárat, újravásárlás, ismételt vásárlás/idempotencia; fizetési módtól független adapter | Sikeres/failure/refund tesztek, paid-through helyes, nincs automatikus terhelés; web/PWA közös fiók |
 | M7 – Média és preferenciák | M2 + CDN döntés | Privát stream, single/queue player, favorites, queue revision, prémium access, natív fullscreen | T03–T07/T06 eszközmátrix, signed segment/key védelem |
 | M8 – Push és chat | M0 BM + M2 | Csoport/kampány WP admin, receipts/cursor, device/VAPID/jobs, PWA push; BM adapter + polling | Több eszköz, denied/unsupported, cross-thread tiltás, cursor verseny |
 | M9 – Migráció és regresszió | M3–M8 + G3 | Papírjogok leltára, dry-run/claim/import, valós teszt tartalom, staging E2E/perf/security, backup/rollback próba | G5 és minden kötelező T teszt bizonyíték; hibás legacy jog nem kap QR-t |
 | M10 – Élesítés és átadás | M9 + kapuk | Fokozatos feature flags, korlátozott ügyfélpilot, monitoring, staff oktatás, admin/runbook | Piloteredmény, napi egyeztetés, incidens/rollback felelős; release jegyzőkönyv |
 
-M6, M7 és M8 belső fejlesztése szerződéslezárás után egymástól részben független; ez ütemezési lehetőség, nem szükségszerű több-agent feladat. Az implementálónak nem kell a teljes monetizációt megvárnia az app shell/core olvasó felület felépítéséhez.
+M6 (manuális havi hozzáférés), M7 és M8 belső fejlesztése szerződéslezárás után egymástól részben független; ez ütemezési lehetőség, nem szükségszerű több-agent feladat. Az MVP automatikus megújulás nélkül élesíthető. **Külön, opcionális M6+ fázis:** kész és támogatott WCS/Barion vagy más megfelelő rendszer összköltség-összevetése, megrendelői jóváhagyása, sandbox, migráció és a megújulás/lemondás bevezetése; saját recurring bridge fejlesztés nincs a projektben.
 
 ### Későbbi fejlesztőnek átadandó minimum
 
@@ -37,8 +37,8 @@ A „kész” állapot tényleges backenddel és indokolt negatív esetekkel iga
 | T05 – Sor | Fel/le/remove, tetszőleges index, autoplay next és sorvégi stop; zárolt következőnél stop; másik eszköz revision conflict |
 | T06 – Videó | 16:9 és 9:16 × portré és landscape iOS/Android; teljes képkocka, fullscreen/forgatás pozíció megmarad; play rejection használható |
 | T07 – Kedvenc | Userenként elkülönül, több eszközön látszik, idempotens PUT/DELETE; törölt média biztonságos kezelése |
-| T08 – Előfizetés | 8 000 Ft/hó kezdeti sandbox fizetés + valódi scheduled renewal; siker hosszabbít, failure nem; token/consent/merchant approval; timeout/dupla callback nem dupla terhelés |
-| T09 – Lemondás | Renewal leáll, paid-through végéig lejátszható; utána nem; cancel/renewal verseny dokumentált; már lemondott ismétlése idempotens |
+| T08 – Havi prémium MVP | Aktuális jóváhagyott árú manuálisan újravásárolható termék egyszeri Barion checkouttal, csak belépve; hiteles paid státusz ad hozzáférést, lejárat/újravásárlás és dupla callback biztonságos; nincs automatikus terhelés |
+| T09 – Hozzáférési időszak | MVP-ben nincs automatikus renewal vagy lemondás; a már kifizetett prémium a paid-through végéig elérhető, utána nem; web/PWA azonos státusz, lejárat és újravásárlás felkínálva. A recurring cancel/renewal verseny csak M6+ teszt |
 | T10 – Katalógus | Egységes web/PWA terméklista és élő ár/készlet; régi Online Ringató és új előfizetés/event termékek; opcionális alap-WC „csak webshopban” jelölés; ajándékutalvány konfigurátor; variable/custom fallback; előfizetés webes vásárlása csak belépve |
 | T11 – Jegy | Fizetéstől 3 naptári hónap; jan31→apr30, szökőév, DST, napvége határ; egyetlen globális beváltás |
 | T12 – Bérlet | 8 alkalom, first_used_at csak sikeres redeemnél; 8 naptári hónap; egy scan=egy decrement; remaining nem negatív; exhausted/expired tiltás |
@@ -67,7 +67,7 @@ A „kész” állapot tényleges backenddel és indokolt negatív esetekkel iga
 
 Kiinduló baseline ugyanazon staging backupból: főoldal, Rólam, Helyszínek, rendezvény/eseménynaptár, jegy/bérlet terméklista, simple termékrészlet, ajándékutalvány konfigurátor, kosár, checkout, account, meglévő URL-ek és mobilmenü. 375/711/1440px screenshot/DOM/asset ellenőrzés; dinamikus részek maszkolhatók, layout/kritikus CTA nem.
 
-Checkout: korábbi webes kosár mellett app handoff; változatlan adó/címmező/szállítás/gateway; teszt-Barion siker/failure, Billingo sandbox számla/refund, meglévő SKU-alapú completed e-mail egyszer és változatlan tartalommal. App-előfizetés e-mailjéhez külön scoped adapter szükséges lehet, de nem globális theme e-mail csere. GiftRocket és legacy kombinált termék külön eset.
+Checkout: korábbi webes kosár mellett app handoff; változatlan adó/címmező/szállítás/gateway; teszt-Barion siker/failure, Billingo sandbox számla/refund, meglévő SKU-alapú completed e-mail egyszer és változatlan tartalommal. Az új **manuális havi prémiumtermék** e-mailjéhez külön scoped adapter szükséges lehet, de nem globális theme e-mail csere. GiftRocket és legacy kombinált termék külön eset.
 
 A jelenlegi helyi mail/cron/gateway inaktivitás miatt ezekhez dedikált staging konfiguráció és **tesztfiókok** kellenek. Éles merchant terhelést vagy ügyféllevelet tesztadat helyett nem használunk.
 
@@ -85,7 +85,7 @@ A „javaslat” nem elfogadott üzleti döntés. A felelős a megvalósítás k
 | D06 | „Kapott push” és címzettcsoport/consent | Receipt minden admin-címzettnek, transport külön; egy fiók egy lista,365nap; kezdeti csoportokat Virág adja | Virág + adatkezelési felelős, M8 előtt |
 | D07 | Refund/chargeback/részleges és használt jegy szabály | Fel nem használt jog revocation; paid-event hely felszabadít; használt/összeg-only partial admin review; nincs automatikus visszaalkalom | Üzleti tulajdonos + pénzügy, M3/M6 előtt |
 | D08 / G3 | Korábbi papírbérlet és vendégrendelés átvezetés | Bizonyított first-use/remaining/used; ismeretlen legacy review; igazolt claim; cutoff után automatikus | Virág + üzemeltető, M9 előtt |
-| D09 / G2 | Barion recurring extension/bridge, merchant jog | Igazolt extension előnyben, enélkül külön bridge; automatikus renewal kötelező | Üzemeltető + pénzügy + gateway fejlesztő, M0/M6 előtt |
+| D09 / G2 | **ELFOGADOTT IRÁNY (2026-10-15):** manuális havi MVP, később feltételes automatikus megújulás | Kész kompatibilis opciók teljes licenc/tranzakció/üzemeltetési költségét és ár/értékét felmérjük; ha a megrendelő vállalja és teszt sikeres, automatikus módra váltunk. Addig egyszeri termék minden hónapban; nincs saját recurring bridge. Átállásra felkészített Core jogosultság | Üzleti irány lezárt; árajánlat, licenc, technikai igazolás, megrendelői döntés nyitott; recurring nem MVP-kapu |
 | D10 / G4 | Média CDN és valódi tartalom | Privát signed HLS/audio/MP4, segmentvédelem; cover/ratio/hossz/felirat, volumenkalkuláció | Tartalomgazda + fejlesztő, M7 előtt |
 | D11 / G4 | Better Messages free AJAX vagy WS | Free AJAX REST spike,10s aktív polling; websocket opcionális külön licenc/adapterpróba | Virág + fejlesztő, M0/M8 előtt |
 | D12 | Domain, tárhely, cron, regisztráció, retention | Same-origin/app; meglévő WP login/account; valós cron; consent és audit/chat retention külön policy | Üzemeltető + adatkezelési felelős, M0/M1/M8 előtt |
@@ -97,7 +97,7 @@ A D01 üzleti döntés alapján **nincs alapértelmezett PWA-specifikus terméks
 
 | Kockázat | Hatás | Kezelés |
 |---|---|---|
-| Barion gateway nem WCS-kompatibilis | Havi üzleti modell blokkolódik | M0 sandbox/merchant kapu, külön bridge terv és becslés |
+| Barion gateway nem WCS-kompatibilis | Automatikus megújulás később nem indítható | Manuális havi termék működik; kész alternatívák költsége/kompatibilitása és megrendelői jóváhagyás szükséges; saját bridge nem MVP-feladat |
 | Weboldal kódja témában hordoz domainlogikát | Pluginhook/e-mail/regresszió | Témát nem szerkesztjük; szűk adapter, baseline regresszió |
 | Papírbérlet használata ismeretlen | Dupla belépési jog | Legacy review, leltár, cutoff, auditált import |
 | Több fizetés utolsó helyre / késő callback | Túlfoglalás vagy fizetett teljesítési hiba | Tranzakciós hold minden csatornán, konfliktus/refund workflow |
