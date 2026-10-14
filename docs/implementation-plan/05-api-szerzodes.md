@@ -31,7 +31,7 @@ A kliens code alapján magyar UX-üzenetet mutat; nem a provider raw hiba-/stack
 | GET `/me` | U | – | UserProfile: id, display_name, email, family, capabilities, subscription_summary |
 | PATCH `/me` | U | display_name, family_display_name | Saját megjelenítési adatok; e-mail/jelszó módosítás webes WP/WC folyamat |
 | GET `/home` | U | – | next_admission, subscription, featured_media, upcoming_events, unread_count; opcionális poll |
-| GET `/products` | P | cursor, limit, search?, category? | Product[] a jóváhagyott PWA-katalógusszabály szerint |
+| GET `/products` | P | cursor, limit, search?, category? | Product[]: alapból ugyanazok az aktív, weben látható és megvásárolható WC-termékek (régi Online Ringató és új app-előfizetés/eseménytermék is); opcionális „csak webshopban” kivétel D01 szerint |
 | GET `/products/{id}` | P | – | Product + variations/configurator információ |
 | GET `/orders` | U | cursor, limit | Saját OrderSummary[], jogosultságokkal; vendég claim nélküli rendelés nincs |
 | GET `/orders/{id}` | U | – | Saját OrderDetail; nem más ügyfél/számla adatai |
