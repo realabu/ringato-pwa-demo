@@ -2,7 +2,7 @@
 
 ## 1. Adatforrások és konvenciók
 
-WP User: egyetlen fiókazonosító. WC Product/Variation, Order/Item és Subscription: WC/WCS saját tároló és CRUD. Meglévő `event` CPT/meta: programleírás és időpont. Új `ringato_media` CPT + `ringato_media_category`: médiametadata, WordPress adminnal. Better Messages: üzenet/thread adatforrás. A Core saját táblái az egyedi tranzakciós nyilvántartást tárolják.
+WP User: egyetlen fiókazonosító. Az MVP-ben WC Product/Variation és Order/Item az eredeti WooCommerce tároló és CRUD; WC Subscription és WCS csak feltételes jövőbeli kész recurring integráció esetén adatforrás. Meglévő `event` CPT/meta: programleírás és időpont. Új `ringato_media` CPT + `ringato_media_category`: médiametadata, WordPress adminnal. Better Messages: üzenet/thread adatforrás. A Core saját táblái az egyedi tranzakciós nyilvántartást tárolják.
 
 Táblanévprefix az aktív `$wpdb->prefix`; nem hardcode-olt `wp_`. Saját táblák InnoDB, utf8mb4. ID `BIGINT UNSIGNED`; az API stringként serializál, JS számkorlát miatt. Időpontok UTC, ISO 8601 `Z` API-formátumban; budapesti üzleti időzóna külön mező. Pénz API-ban egész minor unit string + deviza + minor unit skála, nem lebegőpontos Ft. A kliens sosem számol kereskedelmi összeget.
 
@@ -15,7 +15,7 @@ A mezők tervezett logikai sémát írnak le. Az implementáció első backendmu
 | Tábla | Fő mezők | Kulcs / index / invariáns |
 |---|---|---|
 | `ringato_families` | user_id, display_name, status | UNIQUE user_id; V1 egy fiók = egy család |
-| `ringato_product_rules` | product_id, variation_id (0=base), kind, app_enabled, event_id?, uses?, validity_months?, rule_version | UNIQUE product_id+variation_id; kind: ordinary/family_ticket/pass/event_ticket/subscription/legacy_excluded |
+| `ringato_product_rules` | product_id, variation_id (0=base), kind, app_enabled?, event_id?, uses?, validity_months?, rule_version | UNIQUE product_id+variation_id; kind: ordinary/family_ticket/pass/event_ticket/manual_monthly_access/future_recurring; app_enabled csak D01 szerinti egyszerű, indokolt kivétellel; régi Online termékek nem alapból kizártak |
 | `ringato_event_config` | event_id, app_enabled, type, end_local?, timezone, capacity_families?, product_id?, checkin_from/to?, cancellation_deadline?, revision | UNIQUE event_id; `open` kapacitás NULL, `paid` product kötelező |
 | `ringato_staff_event_access` | staff_user_id, event_id, active | UNIQUE staff+event; capability mellett eseményhatókör; admin globális scope külön explicit beállítás |
 | `ringato_event_inventory` | event_id, capacity, confirmed_units, held_units, version | UNIQUE event_id; zárolható sor, 0 <= confirmed+held <= capacity |
@@ -25,8 +25,8 @@ A mezők tervezett logikai sémát írnak le. Az implementáció első backendmu
 | `ringato_entitlements` | owner_id, family_id, kind, source_order_id, source_item_id, unit_index, product_id, rule_snapshot, purchased_at, expires_at?, event_id?, total_uses, remaining, first_used_at?, used_at?, state, qr_version | UNIQUE source_item_id+unit_index+kind; owner+state+expires_at; egy tétel darabszámonként külön jegy/bérlet |
 | `ringato_qr_tokens` | entitlement_id, token_hash, expires_at, revoked_at?, token_version | UNIQUE token_hash; index entitlement; nyers token csak kiállításkor, rövid életű |
 | `ringato_redemptions` | entitlement_id, event_id, family_id, staff_id, consumed_units=1, before/after snapshot, redeemed_at, idempotency_id | UNIQUE entitlement_id+event_id (V1 egy belépés/család/program); UNIQUE idempotency_id |
-| `ringato_subscription_access` | wc_subscription_id, owner_id, paid_through, renewal_enabled, state, source_renewal_order_id, revision | UNIQUE subscription ID; sikeres kifizetésből számított read model; WCS a forrás |
-| `ringato_payment_attempts` | renewal_order_id, gateway, attempt_key, provider_payment_id?, state, amount, currency, last_verified_at | UNIQUE gateway+attempt_key; provider_payment_id ha nem NULL UNIQUE; nem kártyaadattár |
+| `ringato_subscription_access` | owner_id, access_source_type (`manual_order` vagy későbbi `recurring`), paid_through, state, source_order_id?, wc_subscription_id?, renewal_enabled? (MVP null/false), revision | Egy hozzáférési állapot/fiók; az MVP-ben hitelesen fizetett egyszeri WC rendeléstételek a források. WCS ID csak későbbi opcionális recurring adapterrel; nincs kötelező WCS-függés |
+| `ringato_payment_attempts` (későbbi recurring) | renewal_order_id, gateway, attempt_key, provider_payment_id?, state, amount, currency, last_verified_at | **Nem MVP kötelező**; csak kész recurring integráció bevezetésekor, ha a csatlakozó ezt igényli. Az MVP WC rendelés/idempotens provisioning alapján működik |
 | `ringato_favorites` | user_id, media_id, added_at | UNIQUE user+media |
 | `ringato_queues` | user_id, revision | UNIQUE user_id; revision optimistic lock |
 | `ringato_queue_items` | queue_id, media_id, position | UNIQUE queue+media, UNIQUE queue+position; V1 nincs duplikált média |
@@ -117,7 +117,9 @@ Fizetési input: `woocommerce_payment_complete` és szükséges állapotváltás
 
 Refund: teljes visszatérítés visszavonja a még használható kapcsolt jogot és külön eseménynél felszabadítja a helyet. Részleges refund item/quantity alapján kezelendő; összeg nélküli/mennyiség nélküli arányos refund nem mappelhető automatikusan, admin review. Már beváltott jog és kapacitásváltozás külön auditált üzleti kivétel; nem generálunk automatikusan új alkalmat. Chargeback hozzáférés-revocation és staff ügyintézés. Ezek D07-ben pontosítandók.
 
-Subscription access read model: kezdő és sikeres renewal időszakokból `paid_through`. Lemondás `renewal_enabled=false`, WCS megfelelő pending-cancel életciklussal; hozzáférés `now < paid_through`. Nincs alapértelmezett fizetetlen grace period. WCS dátumot használunk ciklushoz, nem kliensoldali +30 napot. Refund/chargeback visszavonhat adott kifizetett periódust a jóváhagyott szabály szerint. Lemondás/fizetés párhuzamosság és válaszvesztés nem okozhat dupla terhelést.
+D09 MVP: a `ringato_subscription_access` a **manuálisan újravásárolt havi prémium-hozzáférést** is tárolja, bár nincs WooCommerce Subscriptions rekord. A sikeresen kifizetett WC rendeléstétel azonosítható forrása a hozzáférési időszaknak; az ismételt callback nem hosszabbítja meg kétszer. Hozzáférés csak `now < paid_through` esetén. Havi időszak, előrevásárlás, átfedés és lejárati értesítés részletszabályai még jóváhagyandók; nincs önkényes, kliensoldali +30 nap. Az ügyfél maga vásárol új időszakot, **nincs automatikus renewal, subscription cancel vagy fizetési token**. Refund/chargeback a jóváhagyott szabály szerint módosíthatja a hozzáférést.
+
+Későbbi recurring adapter (kizárólag külön jóváhagyott kész szolgáltatással): sikeres kezdeti/renewal fizetésekből ugyanebbe a fiókalapú `paid_through` nézetbe vezetjük át a jogosultságot, a meglévő manuális időszak megőrzésével és ütközés/átfedés kezelésével. WCS/egyéb kész rendszer a recurring ütemezés és lemondás forrása, nem az app; sikertelen megújítás nem ad plusz hozzáférést.
 
 WooCommerce és own tables nem egy végtelen, külső API-t tartalmazó DB-tranzakció. Hiteles WC paid event után outbox/retry, event capacity + entitlement saját tranzakciója, majd processed jelzés. Crash utáni reconciliation ugyanazokat a unique key-ket használja; az app `paid_processing` állapotot mutat, amíg minden domainírás kész.
 
