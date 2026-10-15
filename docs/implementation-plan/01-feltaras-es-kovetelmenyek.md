@@ -105,7 +105,7 @@ Az alábbi F-azonosítók **a DOCX F01–F26 listájára** hivatkoznak. A `build
 
 **D13 / P01 – ELFOGADVA (2026-10-15): „Virág kérdezi” szavazás az első éles verzió kötelező része.** A prototípusban szerepel, de a V1.3-as DOCX történeti F01–F26 listájában és entitáslistájában még nincs; **új, önálló P01 V1-követelményként** fel kell venni a specifikáció következő kiadásába. Tervezett minimum: Virág WordPress adminból kezel szavazásokat, bejelentkezett PWA-felhasználók válaszolhatnak, a szerver biztosítja a szavazatonkénti felhasználói egyediséget és az aktív időablakot, eredményláthatóság konfigurálható. Válaszmódosítás, egyidejű aktív szavazások és az eredmények pontos üzleti szabályai részletezendők.
 
-| P01 / D13 | „Virág kérdezi” – **kötelező V1** szavazás, WP admin kezelés, PWA szavazás/állapot/eredmény | PollService + saját táblák + REST + admin + React | TP01 (korábban opcionális) |
+**P01 követelménymegfeleltetés:** „Virág kérdezi” – **kötelező V1** szavazás, WP-admin kezelés és PWA szavazás/állapot/eredmény; megvalósítás: PollService + saját táblák + REST + admin + React; elfogadási teszt: **TP01**.
 
 ## 5. Prototípus értelmezése
 
