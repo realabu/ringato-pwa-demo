@@ -64,11 +64,19 @@ Eredeti kérdés: Bekerüljön-e a „Virág kérdezi” szavazás az első verz
 
 **Specifikációs hatás:** a V1.3 DOCX F01–F26 listájában ez nem szerepel; most új, önálló **P01 kötelező V1-követelményként** kell nyilvántartani. A következő üzleti specifikáció-verzióba átvezetendő, az eredeti DOCX történeti példánya változatlan.
 
-**D10 – Média**
+**D10 – Média és streaming – ELFOGADOTT DÖNTÉSI ELJÁRÁS (2026. október 16.), SZOLGÁLTATÓ NYITOTT**
 
-Megválaszolandó kérdés: Melyik privát tárhely/CDN szolgáltatja a tartalmakat? Mennyi audio- és videóanyaggal, várható forgalommal és költségkerettel számolunk? **A D12 alapján külön vizsgálandó, mennyi egyidejű streamet képes kiszolgálni a meglévő PWA-képes tárhely, és indokolt-e külön streaming-szolgáltató.**
+**Döntés:** A jelenlegi tárhely streamingkapacitását először **valós, dokumentált teszttel megmérjük**, a helyben történő kiszolgálás és a szóba jöhető külső streaming/CDN opciók **teljes költségét és ár/érték arányát** összehasonlítjuk, és csak ezután választunk. **Sem külső szolgáltató, sem a meglévő tárhely nem kapott még végleges jóváhagyást médiaforrásként.** A D12 szerinti PWA-kiszolgálási alkalmasság nem azonos az audio-/videostreaming kapacitásával.
 
-A terv javaslata: Jogosultságvédett prémium médiatárolás és rövid életű, aláírt hozzáférés. A prémium tartalom ne kerüljön védtelenül a WordPress publikus feltöltési könyvtárába. A konkrét szolgáltatóról terhelési teszt, várható párhuzamos nézőszám és teljes költség alapján döntsünk, ne automatikusan.
+**Mérési és összehasonlítási feladat:**
+1. A tartalomgazdával becsülni kell az audio- és videóanyagok számát, méretét, bitrate-jét, formátumát, népszerűségét, csúcsban várt párhuzamos lejátszások számát és havi adatforgalmát. A feltételezett terhelési profil legyen dokumentált, ne kitalált kapacitásérték.
+2. A meglévő tárhelyen, lehetőleg a rendelkezésre álló tesztdomaines környezetben, **az üzemeltetővel egyeztetett biztonságos korlátok között** kell reprezentatív, fokozatos párhuzamos audio- és videolejátszást mérni. Követendő: sikeres/hibás kérések, indítási késés, pufferelés/akadás, kiszolgált sávszélesség, kapcsolat- és erőforrásigény (CPU, memória, lemez/I/O), adatforgalmi korlát, mobilos HLS/range viselkedés és az ugyanott működő WooCommerce válaszideje. Az éles webshop működését nem veszélyeztethetjük kontrollálatlan terheléssel.
+3. Össze kell vetni legalább a **meglévő tárhelyen megvalósítható védett kiszolgálás** és a **külső, jogosultságvédett streaming/CDN** megoldások költségeit (tárhely, forgalom, transzkódolás, licencek, beállítás/fejlesztés, üzemeltetés, támogatás), teljesítményét, méretezhetőségét és biztonsági korlátait.
+4. A fejlesztő eredmény- és költségösszefoglalót készít a megrendelőnek; ez alapján külön döntés születik az éles médiakiszolgáló helyéről és az esetleges szolgáltatói költség vállalásáról.
+
+**Választástól független minimum:** a prémium audio/video nem lehet közvetlen, nyilvános WordPress uploads URL-en jogosultságellenőrzés nélkül elérhető. A szerver minden lejátszási hozzáférést ellenőriz, a média/segment/kulcs hozzáférés jogosultsághoz kötött és rövid élettartamú vagy azzal egyenértékűen védett. A megoldás legyen cserélhető szolgáltatóadapterrel, hogy ne kössük előre a React-alkalmazást egy CDN-hez.
+
+**Státusz:** a **mérés → költség/alkalmasság-összevetés → szolgáltatóválasztás** folyamata jóváhagyott. **Mérési eredmény, streamlimit, szolgáltató, szerződés és végleges költség még nincs igazolva vagy kiválasztva.** A médiamodul éles kiadása előtt a kiválasztott megoldást jogosultsági, mobil lejátszási és terhelési teszten igazolni kell (M7/T03/T06/T30/G4).
 
 **D11 – Chat**
 
