@@ -122,11 +122,17 @@ A média és a chat végleges megoldása később is lezárható, de a megvalós
 
 **Státusz:** a D03 üzleti döntés lezárt; az adatmodell, a staff API, a felület és a családi jegy/bérlet/külön eseményjegy regreszsziós tesztje az MF07–MF08 / M3–M4 megvalósítás része. A D05 időablak-/foglalásszabályait ez nem írja felül.
 
-**D04 – Családmodell**
+**D04 – Családmodell – ELFOGADOTT V1 DÖNTÉS (2026. október 16.)**
 
-Megválaszolandó kérdés: Egy fiók egy családot jelent? Használhat két szülő külön fiókot ugyanahhoz a családhoz? Lehet jegyet átadni vagy más családnak vásárolni?
+**Döntés:** Az első verzióban **egy WordPress/WooCommerce ügyfélfiók egy családot képvisel**. A család egy önálló belső `family_id` azonosítót kap, amelyhez a jegyek, bérletek, eseményjegyek és foglalások kapcsolódnak. A felhasználói hozzáférés és a vásárláshoz kapcsolódó tulajdonosi jog a V1-ben az egyetlen jogosult fióké.
 
-A terv javaslata: V1-ben egy fiók egy család, nincs jegyátruházás, és eseményenként legfeljebb egy családi foglalás lehet. Több család kezelése kézi ügyintézéssel történjen.
+- **Nincs automatikus családi fiókösszekapcsolás:** két szülő külön WordPress-fiókja nem fér hozzá magától ugyanahhoz a családi jegy-/foglalásállományhoz; közös többfiókos családadminisztráció nem V1-funkció.
+- **Nincs ügyféloldali jegy-/bérletátruházás**, és nem épül több család egy fiókból történő önkiszolgáló kezelése. Ha több család vásárlása, jogosultság áthelyezése vagy családi fiókhelyzet javítása szükséges, azt Virág/jogosult munkatárs **kézi, ellenőrzött ügyintézéssel** rendezi. Ez nem jelent automatikus tömeges vásárlást, kéretlen családegyesítést vagy publikus átadási API-t; a kézi korrekció részleteit az admin jogosultsági és naplózási szabályok szerint kell megvalósítani.
+- **Egy család egy konkrét eseményre legfeljebb egy aktív családi foglalással/foglalt kapacitásegységgel rendelkezhet.** A foglaláskor mindig a szerver által, a bejelentkezett fiókból feloldott `family_id` számít, nem egy kliens által beküldött családazonosító.
+- **Későbbi bővíthetőség:** a család mint külön entitás és a jegyek/foglalások `family_id` kapcsolata maradjon elkülönítve a WordPress `user_id`-tól. V1-ben minden családnak egy fióktulajdonosa van. A későbbi, külön jóváhagyandó több szülős megoldáshoz külön családtag-/fióktagsági kapcsolattábla és jogosultságmodell csatlakoztatható, a meglévő családazonosítók és jogok tömeges átírása nélkül; **ezt a közös családhozzáférési funkciót most nem fejlesztjük le**.
+- A családtagok részletes személyes adatainak gyűjtése, közös szülői felhasználómenedzsmentje nem szükséges V1-ben; a korábbi vendégvásárlások fiókhoz igazolása külön D08 kérdés, önmagában e-mail-egyezés alapján nincs automatikus hozzárendelés.
+
+**Státusz:** üzleti döntés lezárva. A `family_id`-alapú hozzáférés, foglalási egyediség, manuális korrekció jogosultság- és auditkövetelménye és a későbbi tagság lehetőségének fenntartása implementációs/tesztelési feladat az MF07–MF08 modulokban. A D05 foglalási időablakai, a D07 visszatérítés és a D08 legacy átvezetés külön nyitott döntések.
 
 **D05 – Foglalási és beléptetési szabályok**
 
