@@ -84,8 +84,8 @@ Az alábbi F-azonosítók **a DOCX F01–F26 listájára** hivatkoznak. A `build
 | F08 | Havi prémium-hozzáférés; a V1.3 automatikus megújítási elvárását D09 az MVP-ben manuálisan újravásárolható WooCommerce-termékre cseréli | Core paid-through + meglévő Barion egyszeri checkout; későbbi kész recurring adapter feltételes | T08; D09 |
 | F09 | Kifizetett időszak végéig hozzáférés; a V1.3 automatikus megújítás lemondása csak későbbi, jóváhagyott recurring esetén értelmezett | Prémium-hozzáférési adapter; manuális MVP lejárat/újravásárlás | T09; D09 |
 | F10 | Élő WC-katalógus, minden támogatott terméktípus | Catalog adapter + web checkout | T10; G1 |
-| F11 | Egyszeri családi jegy, 3 naptári hónap | EntitlementService | T11 |
-| F12 | 8 alkalom, első használattól 8 hónap | PassService | T12 |
+| F11 | **D02 elfogadva:** családi jegy hiteles sikeres fizetéstől 3 naptári hónap (WP-terméktípusból konfigurálható), budapesti lejárati nap végéig | EntitlementService + termékszabály snapshot + szerver dátumszámítás | T11; D02 |
+| F12 | **D02 elfogadva:** 8 alkalmas bérlet 8 naptári hónap az első sikeres beváltástól (WP-terméktípusból konfigurálható), magyar helyi lejárati nap végéig | PassService + `first_used_at` + termékszabály snapshot | T12; D02 |
 | F13 | Saját QR és szerveroldali státusz | QR token + wallet | T13 |
 | F14 | Globálisan egyszer beváltható jegy | EntryService + tranzakció | T14 |
 | F15 | Programrészlet, naptár előtte/utána | Event adapter + ICS | T15 |
@@ -100,6 +100,8 @@ Az alábbi F-azonosítók **a DOCX F01–F26 listájára** hivatkoznak. A `build
 | F24 | Staff ellenőrzés, beváltás, napló | Staff capability + scanner | T24 |
 | F25 | WP admin kezeli a termék/program/push adatokat | Core admin + meglévő admin | T25 |
 | F26 | A „Kuponjaim” és a rövid médiacsomag V1-beli kezelése a specifikáció szerint; a régi Online Ringató értékesítésének tiltását a 2026-10-15-i D01 döntés felülírta | Route-kezelés; egységes katalógus D01 szerint | T26; D01 |
+
+**D02 jóváhagyott pontosítás (2026-10-16):** `Europe/Budapest` szerinti célhelyi nap végéig tartó lejárat, naptári hónap hozzáadás hiányzó célnapnál a hónap utolsó napjával; technikai exclusive UTC `expires_at` a következő helyi nap 00:00-ja. Példa: január 31-i jegy → április 30.; január 31-i első bérletbeváltás → szeptember 30. A jegy 3 és bérlet 8 hónapja a WordPressben terméktípus-szabály szerint beállítható, order-item pillanatkép véd a retroaktív átírástól. Ez nem módosítja az eseményjegy vagy a D09 havi prémium jogszabályait. A DOCX következő specifikációs kiadásában az időpont és konfiguráció pontosítását át kell vezetni.
 
 **D09 specifikációs eltérés (2026-10-15):** az F08–F09 szerinti automatikus havi fizetés és lemondás nem MVP-kiadási feltétel. Az új, bejelentkezéshez kötött manuálisan havonta újravásárolható prémiumterméket külön kell kezelni a meglévő RINGI04 terméktől. Kész, ár/értékben megfelelő recurring integráció csak igazolt kompatibilitás és megrendelői költségvállalás után válhat következő fázissá; egyedi fizetési bridge nem része a projektnek. A DOCX következő változatába átvezetendő.
 
