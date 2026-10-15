@@ -82,11 +82,17 @@ Eredeti kérdés: Bekerüljön-e a „Virág kérdezi” szavazás az első verz
 
 **Státusz:** a **mérés → költség/alkalmasság-összevetés → szolgáltatóválasztás** folyamata jóváhagyott. **Mérési eredmény, streamlimit, szolgáltató, szerződés és végleges költség még nincs igazolva vagy kiválasztva.** A médiamodul éles kiadása előtt a kiválasztott megoldást jogosultsági, mobil lejátszási és terhelési teszten igazolni kell (M7/T03/T06/T30/G4).
 
-**D11 – Chat**
+**D11 – Chat – ELFOGADOTT V1 IRÁNY (2026. október 16.)**
 
-Megválaszolandó kérdés: Megfelel-e a Better Messages ingyenes REST/AJAX megoldása, vagy szükséges a fizetős WebSocket változat?
+Megválaszolandó eredeti kérdés: Megfelel-e a Better Messages ingyenes REST/AJAX megoldása, vagy szükséges a fizetős WebSocket változat?
 
-A terv javaslata: Korai integrációs próba az ingyenes megoldással; aktív chatképernyőn 10 másodperces frissítés. A WebSocket opcionális.
+**Jóváhagyott döntés:** a V1-hez az **ingyenes Better Messages REST/AJAX-integrációval indulunk**, **az aktív chatképernyőn körülbelül 10 másodperces üzenetfrissítéssel**. Az alkalmazás a háttérben és a chatképernyőről távozás után ne kérdezgesse feleslegesen folyamatosan a szervert; visszatéréskor azonnal frissítsen. A cél aszinkron szöveges üzenetváltás a szülők és Virág között, nem feltétlenül azonnali WebSocket kézbesítés.
+
+**Kötelező staging-integrációs próba:** az ingyenes változat tényleges API- és licenclehetőségei, kétirányú szövegküldés és fogadás, saját beszélgetés/jogosultság, idegen thread és szülő–szülő kommunikáció tiltása, olvasottság, mobilos működés, hibakezelés, retry és duplikált üzenet elleni védelem. A rendszer csak sikeres megfelelőségi próba után fogadható el V1 chatként.
+
+**Fizetős WebSocket:** nem MVP-kötelező és **nincs beszerzésre jóváhagyva**. Csak igazolt használhatósági vagy teljesítménybeli szükség esetén, kompatibilitás- és költségfelmérés, majd **külön megrendelői költségjóváhagyás** után kerülhet be. Ha az ingyenes integráció nem elegendő, annak hiányosságát és a lehetséges alternatívákat külön döntésre kell hozni; saját, költséges chatfejlesztés nem automatikus következmény.
+
+**Státusz:** megvalósítási irány jóváhagyva; a tényleges teszt eredménye még nyitott. A chat adatmegőrzési kérdése a külön D12 adatkezelési döntés része.
 
 A média és a chat végleges megoldása később is lezárható, de a megvalósíthatósági próbájukat már az elején érdemes elvégezni.
 
