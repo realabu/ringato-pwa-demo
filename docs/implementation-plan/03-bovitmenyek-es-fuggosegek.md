@@ -109,8 +109,9 @@ A meglévő Barion SDK-t nem szerkesztjük vendor fájlban. Az MVP a meglévő e
 
 ## 5. Szükséges szolgáltatások és költséghelyek
 
-- Meglévő WordPress tárhely, HTTPS, deploy hozzáférés, staging és DB-backup. `/app/` útvonal vagy plugin rewrite támogatás, megfelelő PHP/DB erőforrás.
-- Privát média objektumtár + CDN/streaming/transzkódolás: signed HLS/MP4/audio, bélyegkép, tartomány/CORS, titkos storage. A választás előtt tényleges forgalom/tárhely/átviteli igény becslése kell.
+- **D12 (2026-10-15):** a meglévő tárhely PWA-kiszolgálásra alkalmas a projektgazda szerint; **tesztdomaines WP példány és fejlesztői lokális környezet már rendelkezésre áll**. A stagingben kell próbálni a `/app/` telepítését/plugint, rewrite/HTTPS/cache/WAF viselkedést, konfigurációt, frissítést és visszaállítást. Ezek sikeres eredménye még nincs dokumentálva. DB-backup/deploy és PHP/DB erőforrás valós ellenőrzés továbbra is szükséges.
+- **D10/D12 nyitott streaming-kapacitás:** a tárhely PWA-képessége nem igazolja, hogy egyszerre hány audio-/videolejátszást képes akadás és a webshop lassulása nélkül kiszolgálni. Reprezentatív párhuzamos streaming teszt: cél nézőszám, kiszolgált bitrate/sávszélesség, HTTP kapcsolatok, CPU/memória/IO, adatforgalmi korlátok, tartós és csúcsterhelés, mobil range/HLS kompatibilitás.
+- Privát, jogosultságvédett médiakiszolgálás szükséges; **külön storage/CDN/streaming szolgáltató választása nem előre eldöntött**. Az eredmények, várható forgalom és teljes szolgáltatási költség alapján hasonlítsuk össze a meglévő tárhelyes és a külső megoldást. Nyilvános WP uploads nem lehet korlátozás nélküli prémium médiatár.
 - MVP: opcionális Better Messages WebSocket licenc, Ringató Core/App Shell saját fejlesztés és karbantartás. **Recurring csak feltételes:** több kész megoldás teljes licenc-/éves-/tranzakciós-/üzemeltetési költségének összehasonlítása és megrendelői vállalása; saját fizetési bridge nem tervezett.
 - Meglévő Barion egyszeri fizetés sandboxellenőrzése, Billingo tesztüzem, SMTP tesztcímek. Barion merchant recurring jóváhagyás **csak későbbi automatikus opció esetén**.
 - VAPID kulcspár backendben; nincs kötelező fizetős push SaaS. A push szolgáltatói végpontok eléréséhez tárhely egress kell.
