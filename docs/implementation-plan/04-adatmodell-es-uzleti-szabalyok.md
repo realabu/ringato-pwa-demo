@@ -16,11 +16,11 @@ A mezők tervezett logikai sémát írnak le. Az implementáció első backendmu
 |---|---|---|
 | `ringato_families` | **id (önálló family_id), owner_user_id, display_name, status** | **D04 V1:** UNIQUE owner_user_id (egy WP fiók = egy család); a család önálló ID, nem azonos a WP user ID-val. A későbbi többfiókos tagság külön kapcsolattáblával bővíthető; V1-ben nincs ilyen kapcsolat/funkció |
 | `ringato_product_rules` | product_id, variation_id (0=base), kind, app_enabled?, event_id?, uses?, validity_months?, validity_start_event? (`paid_at` / `first_successful_redeem`), rule_version | UNIQUE product_id+variation_id; kind: ordinary/family_ticket/pass/event_ticket/manual_monthly_access/future_recurring; **D02 szerint családi jegy alap 3 naptári hónap `paid_at`-tól, bérlet alap 8 hónap első sikeres beváltástól**, a WP adminban terméktípushoz állítható/validált szabály; régi online termékek nem alapból kizártak |
-| `ringato_event_config` | event_id, app_enabled, type, end_local?, timezone, capacity_families?, product_id?, checkin_from/to?, cancellation_deadline?, revision | UNIQUE event_id; `open` kapacitás NULL, `paid` product kötelező |
+| `ringato_event_config` | event_id, app_enabled, type, end_local?, timezone, capacity_families?, product_id?, checkin_from/to?, cancellation_deadline?, revision | UNIQUE event_id; `open` kapacitás NULL, `paid` product kötelező; **D05**: alap beléptetési ablak start−2h / end+2h, WP-adminból eseményenként felülírható; alapdíjas foglalás kezdésig lemondható |
 | `ringato_staff_event_access` | staff_user_id, event_id, active | UNIQUE staff+event; capability mellett eseményhatókör; admin globális scope külön explicit beállítás |
 | `ringato_event_inventory` | event_id, capacity, confirmed_units, held_units, version | UNIQUE event_id; zárolható sor, 0 <= confirmed+held <= capacity |
 | `ringato_reservations` | event_id, family_id, state, units=1, order_item_id?, hold_id?, confirmed_at?, cancelled_at? | UNIQUE event_id+family_id; ugyanazt a sort újrafoglaláskor állítjuk, előzmény auditban |
-| `ringato_holds` | event_id, family_id, checkout_intent_id, order_id?, units=1, state, expires_at | UNIQUE intent+event; index event+state+expires_at; aktív családi foglalás mellett új hold tiltott |
+| `ringato_holds` | event_id, family_id, checkout_intent_id, order_id?, units=1, state, expires_at | UNIQUE intent+event; index event+state+expires_at; **D05:** induló `expires_at=created_at+15 perc` szerveridő; aktív családi foglalás mellett új hold tiltott; lejárat az inventory-zárban újraértékelendő |
 | `ringato_checkout_intents` | user_id, product/variation/quantity snapshot, state, token_hash, expires_at, order_id?, provisioning_state | UNIQUE token_hash; index user+created_at; magas entrópia, hash tárolás |
 | `ringato_entitlements` | owner_id, family_id, kind, source_order_id, source_item_id, unit_index, product_id, rule_snapshot, purchased_at, expires_at?, event_id?, total_uses, remaining, first_used_at?, used_at?, state, qr_version | UNIQUE source_item_id+unit_index+kind; owner+state+expires_at; egy tétel darabszámonként külön jegy/bérlet |
 | `ringato_qr_tokens` | entitlement_id, token_hash, expires_at, revoked_at?, token_version | UNIQUE token_hash; index entitlement; nyers token csak kiállításkor, rövid életű |
@@ -80,6 +80,13 @@ Egy `event` ID V1-ben **egy konkrét időpont**, nem teljes ismétlődő sorozat
 4. Ha nincs férőhely: rollback, 409 `event_full`. Ha van: reservation/hold és counter együtt frissítése.
 5. Audit/outbox INSERT, COMMIT. Utána külső kommunikáció/jobs.
 
+**D05 elfogadva (2026-10-16):**
+- A limitált **alapdíjas** saját foglalás a szerver `event.starts_at` időpontját **megelőzően** lemondható, kezdéskor már nem. Az idempotens lemondás legfeljebb egyszer szabadítja fel a családi férőhelyet; a jegy/bérletet ez nem használja el.
+- A külön áras eseményhez a vásárlás kezdetétől **15 perces** átmeneti hold tartozik. A hold **minden checkout-belépési ponton** (app handoff, webes kosár/pénztár, order-pay) érvényes; az érvényes holdokat és megerősített foglalásokat ugyanazon konzisztens, zárolt inventory számolja. Cronhiba esetén következő releváns tranzakció takarítja a lejárt holdokat, nem csak háttérjob.
+- Ha a hiteles fizetés késve érkezik, a feldolgozó a hold állapotát és a szabad kapacitást **újrazárolt tranzakcióban** ellenőrzi. Ha van szabad hely, megerősíthető a foglalás és az eseményjegy; ha nincs, `paid_capacity_conflict` és **nincs érvényes jegy vagy megerősített hely**, az ügyet manuális pénzügyi/ügyfélszolgálati rendezésre irányítjuk. A visszatérítés pontos szabálya a D07 döntésben marad.
+- A staff **alapértelmezett** beléptetési ideje **start−2 óra → end+2 óra** az esemény valós időpontjai alapján. Ezt jogosult admin WordPressből **eseményenként felülírhatja**, szervervalidációval és naplózással; nem kell minden eseménynél kézzel beírnia. Az ellenőrzés/beváltás a tényleges beállított intervallumon kívül tiltott.
+- V1-ben **nincs várólista**; betelt esemény `event_full` állapotot ad.
+
 Lemondás csak valóban aktív foglalásra szabadít egy helyet; ismételt lemondás nem növeli újra a countert. Az inventory counter helyreállítható a reservation/hold sorokból, és rendszeresen egyeztetendő. Kapacitás csökkentése nem mehet az aktív confirmed+hold alá. Publikált esemény időpont-/ár-/termékmódosítása meglévő foglalás esetén admin figyelmeztetést és auditot igényel.
 
 ## 4. Jegy és bérlet
@@ -94,7 +101,7 @@ Lemondás csak valóban aktív foglalásra szabadít egy helyet; ismételt lemon
 
 ### Külön eseményjegy
 
-`pending_payment → active_for_event → used | expired | revoked`. Fizetéskor ugyanabban a provisioning folyamatban létrejön jegy és reservation. A konfigurált beléptetési időablak végén lejár; a staff időablak ajánlott start−2h és end+2h, de eseményenként adminbeállítás és lezárandó üzleti döntés. Téves eseményre mindig tiltás.
+`pending_payment → active_for_event → used | expired | revoked`. **D05 szerint** csak igazolt sikeres fizetés **és megerősített kapacitás** után keletkezhet érvényes eseményjegy és foglalás. A staff beléptetési időablaka alapértelmezésben start−2h / end+2h, WP-adminból eseményenként módosítható; a tényleges jóváhagyott ablak végével a beléptetés leáll. Téves eseményre mindig tiltás.
 
 ### Naptári hónapok és konfiguráció – D02 ELFOGADVA (2026-10-16)
 
