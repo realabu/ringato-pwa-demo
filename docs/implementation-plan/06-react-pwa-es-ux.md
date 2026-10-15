@@ -55,7 +55,7 @@ Minden alábbi útvonal `/app` prefix alatt. Mobil elsődleges nav: Főoldal, T�
 | `/subscription` | MVP: havi prémium aktív/lejárt, kifizetett időszak, újravásárlás CTA; **nincs lemondás vagy automatikus megújulás**. Később recurring módhoz feltételes lemondás | 16-subscription, 17-sub-ending (recurring design csak később) |
 | `/checkout/:intentId` | Szerver payment/provisioning státusz | Új valós folyamatképernyő |
 | `/wallet` | Jegyek, bérletek, rendeléselőzmény | 18-wallet |
-| `/wallet/:id` | Érvényesség, QR, beváltási történet | 19-ticket-valid – 22-pass |
+| `/wallet/:id` | **D02 szerinti szerver által számolt lejárat**, QR, beváltási történet; bérlet első sikeres használat előtt „még nem indult” | 19-ticket-valid – 22-pass |
 | `/orders/:id` | Saját rendeléstétel és kapcsolt jogosultság | 18-wallet részlet |
 | `/notifications` | 365 nap, ÚJ, deep link | 25-notifications |
 | `/polls` | **D13/P01 kötelező V1** „Virág kérdezi” – aktív kérdés, válaszopciók, saját szavazati státusz, megengedett összesített eredmény; nincs szavazásnál üres állapot | Prototípus „Virág kérdezi” funkció + új hibás/lezárt képernyők |
@@ -64,6 +64,8 @@ Minden alábbi útvonal `/app` prefix alatt. Mobil elsődleges nav: Főoldal, T�
 | `/staff/checkin` | Eseményválasztás, kamera, inspect, redeem | 23-checkin, 24-ticket-scanned |
 
 A `26-push-admin` demonstrációs kampányfelület véglegesen WP adminban valósul meg; nincs hozzá ügyfél/PWA kampányroute. A modalokból valódi deep-linkelhető részletoldal lesz, böngésző Back kompatibilitással. **D13 miatt a „Virág kérdezi” szavazás kötelező V1:** a főoldalon aktív poll összefoglalója/hivatkozása, a `/polls` útvonalon bejelentkezett felhasználói szavazás, eredmény csak jóváhagyott láthatósággal; Virág admin oldali kérdés- és opciókezelést kap. Szerver dönt az egyszeriségről, a kliens csak állapotot mutat; szavazat válaszmódosítása részletszabály még nyitott.
+
+**D02 UI-szabály (2026-10-16):** a kliens nem kalkulál fix 3/8 hónapot és nem írja felül a kapott `expires_at` értéket; a WP-terméktípushoz konfigurált szabály szerinti szerverstátuszt és a `Europe/Budapest` helyi lejárati dátumát jeleníti meg. A bérlet `first_used_at` nélkül még nem aktivált, lejárati nap helyett „első beváltáskor indul” feliratot kap; a tényleges érvényességet a szerver ellenőrzi. A speciális eseményjegy és D09 prémium külön szabályt követ.
 
 Minden adatigényes képernyő: loading skeleton, üres, hálózati hiba+retry, jogosultság/login, offline, success. Vásárlás: pending és paid_processing külön, háttérbe vitt app visszatérésekor frissítés. Staff: „ellenőrzés sikeres” nem azonos a „belépés rögzítve” állapottal.
 
