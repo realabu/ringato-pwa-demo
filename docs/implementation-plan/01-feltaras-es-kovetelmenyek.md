@@ -87,7 +87,7 @@ Az alábbi F-azonosítók **a DOCX F01–F26 listájára** hivatkoznak. A `build
 | F11 | **D02 elfogadva:** családi jegy hiteles sikeres fizetéstől 3 naptári hónap (WP-terméktípusból konfigurálható), budapesti lejárati nap végéig | EntitlementService + termékszabály snapshot + szerver dátumszámítás | T11; D02 |
 | F12 | **D02 elfogadva:** 8 alkalmas bérlet 8 naptári hónap az első sikeres beváltástól (WP-terméktípusból konfigurálható), magyar helyi lejárati nap végéig | PassService + `first_used_at` + termékszabály snapshot | T12; D02 |
 | F13 | Saját QR és szerveroldali státusz | QR token + wallet | T13 |
-| F14 | Globálisan egyszer beváltható jegy | EntryService + tranzakció | T14 |
+| F14 | **D03 elfogadva:** mindhárom típusnál (családi jegy, 8 alkalmas bérlet, külön áras eseményjegy) egy jogosultság konkrét eseményen csak egyszer váltható be; visszatéréskor nincs új levonás. A családi jegy globálisan egyszeri, a külön eseményjegy eseményhez kötött, a bérlet másik eseményen ugyanazon napon újra használható | EntryService + tranzakció + UNIQUE entitlement/event + staff visszatérésjelzés | T14; T17; T18; T24; D03 |
 | F15 | Programrészlet, naptár előtte/utána | Event adapter + ICS | T15 |
 | F16 | Rendszeres program, nincs foglalás | `open` event | T16 |
 | F17 | Limitált alapdíjas: foglalás ÉS jegy/bérlet | ReservationService + EntryService | T17 |
@@ -100,6 +100,8 @@ Az alábbi F-azonosítók **a DOCX F01–F26 listájára** hivatkoznak. A `build
 | F24 | Staff ellenőrzés, beváltás, napló | Staff capability + scanner | T24 |
 | F25 | WP admin kezeli a termék/program/push adatokat | Core admin + meglévő admin | T25 |
 | F26 | A „Kuponjaim” és a rövid médiacsomag V1-beli kezelése a specifikáció szerint; a régi Online Ringató értékesítésének tiltását a 2026-10-15-i D01 döntés felülírta | Route-kezelés; egységes katalógus D01 szerint | T26; D01 |
+
+**D03 jóváhagyott pontosítás (2026-10-16):** családi jegy, bérlet és külön áras eseményjegy ugyanazon konkrét foglalkozásra történő visszatérésnél az első sikeres belépés ellenőrzését kapja, **újabb beváltás/levonás nélkül**. Nincs globális napi limit, de bérletnél másik esemény alkalmat fogyaszt; a már használt egyszeri jegy nem használható újra, és a külön áras jegy csak a saját programján érvényes. Meglévő D05 foglalási és időablak-feltételek érvényben maradnak.
 
 **D02 jóváhagyott pontosítás (2026-10-16):** `Europe/Budapest` szerinti célhelyi nap végéig tartó lejárat, naptári hónap hozzáadás hiányzó célnapnál a hónap utolsó napjával; technikai exclusive UTC `expires_at` a következő helyi nap 00:00-ja. Példa: január 31-i jegy → április 30.; január 31-i első bérletbeváltás → szeptember 30. A jegy 3 és bérlet 8 hónapja a WordPressben terméktípus-szabály szerint beállítható, order-item pillanatkép véd a retroaktív átírástól. Ez nem módosítja az eseményjegy vagy a D09 havi prémium jogszabályait. A DOCX következő specifikációs kiadásában az időpont és konfiguráció pontosítását át kell vezetni.
 
