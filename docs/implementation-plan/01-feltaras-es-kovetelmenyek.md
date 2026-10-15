@@ -6,6 +6,8 @@ A felmérés a 2026-10-12-i mentésből visszaállított **helyi WordPressre** v
 
 A WordPress- és csomagverziók a helyi rendszer által jelentett értékek, nem frissítési ajánlások. Az éles környezet verzió- és konfigurációeltéréseit stagingindításkor külön ellenőrizni kell. A fizetési, számlázási, e-mail és teljes vásárlási folyamatot most nem futtattuk.
 
+**D12 – projektgazdai pontosítás (2026-10-15; nem a korábbi helyi audit következtetése):** a jelenlegi vásárlók vendégként vásárolnak, fiók létrehozása nélkül; a tárhelyen **tesztdomaines WordPress tesztpéldány** rendelkezésre áll, és a fejlesztő **lokális fejlesztői környezetet** is épített. A tesztpéldány alkalmas a telepítési folyamat próbájának helyszínéül, a tényleges sikeres telepítést még tesztelni kell. A tárhely **PWA-kiszolgálásra alkalmasnak megerősített**, de a párhuzamos audio/video streaming kapacitása **nem mért**: terhelési vizsgálat szükséges, és csak az eredmény alapján dönthető el, kell-e külön streaming/CDN (D10). Az új fiókhoz kötött funkciók regisztrációs útvonalát ellenőrizni kell; a meglévő vendégvásárlás megőrzendő.
+
 ## 2. Ellenőrzött helyi állapot
 
 | Terület | Megfigyelés | Következmény |
