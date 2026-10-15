@@ -138,7 +138,7 @@ BM adapter: WP userből determinisztikus saját szülő–Virág thread, résztv
 1. Staging backup; forrás- és HPOS read-only export/aggregáció, nem éles írás.
 2. Termékszabályok admin felvitele és review; régi/Online kombinált termékek külön osztály.
 3. Esemény időadat/típus/end/capacity besorolás; hiányzó adat nem publikus appesemény.
-4. Fiókhoz rendelt vásárlások WC CRUD alapján; guest rendelés **nem automatikusan e-mail-egyezéssel** saját rendelés. Igazolt claim vagy staff hozzárendelés auditálva.
+4. **D12 megerősítés:** a jelenlegi webshopvásárlók fiók nélkül, vendégként rendelnek; a globális vendégvásárlás megőrzendő. A jövőbeli fiókhoz kötött app-/prémiumtermék-vásárlásokhoz WP-regisztráció és bejelentkezés kell. A történeti guest rendelés **nem automatikusan e-mail-egyezéssel** saját rendelés. Igazolt claim vagy staff hozzárendelés auditálva; a D08 átvezetési szabályai később döntendők el.
 5. Papírbérletek/korábbi jegyek használatának leltára: maradék, első használat, régi beváltás, lejárat. Ha nem bizonyítható, `legacy_review_required`, nincs aktív QR. Új vásárlások egy kijelölt élesítési cutoff után automatikusak.
 6. Dry-run riport (darabszám, kihagyás, konfliktus), jóváhagyott valós import batch ID-val. UNIQUE source-item kulcs miatt ismételhető; kontrollcsoporttal egyeztetés.
 7. Core táblák schema verziója WP optionben, expand/contract migráció. Plugin deactivate/uninstall alapból nem törli a kereskedelmi és audit adatot.
