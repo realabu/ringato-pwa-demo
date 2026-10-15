@@ -134,11 +134,16 @@ A média és a chat végleges megoldása később is lezárható, de a megvalós
 
 **Státusz:** üzleti döntés lezárva. A `family_id`-alapú hozzáférés, foglalási egyediség, manuális korrekció jogosultság- és auditkövetelménye és a későbbi tagság lehetőségének fenntartása implementációs/tesztelési feladat az MF07–MF08 modulokban. A D05 foglalási időablakai, a D07 visszatérítés és a D08 legacy átvezetés külön nyitott döntések.
 
-**D05 – Foglalási és beléptetési szabályok**
+**D05 – Foglalási és beléptetési szabályok – ELFOGADOTT V1 DÖNTÉS (2026. október 16.)**
 
-Megválaszolandó kérdés: Meddig mondható le egy foglalás? Mennyi ideig tartjuk fenn a helyet fizetés közben? Mikortól és meddig engedélyezett a beléptetés? Kell-e várólista?
+**Döntés:**
+- **Alapdíjas, korlátozott létszámú esemény:** a saját aktív foglalás **a program kezdetéig**, azaz a szerveren rögzített kezdési időpontot megelőzően lemondható; lemondás esetén pontosan egy családi kapacitásegység szabadul fel. Ismételt lemondás nem szabadíthat fel újabb férőhelyet. A családi jegy/bérlet önmagában nem foglal helyet és a foglalás lemondása nem használja el.
+- **Külön áras esemény fizetés alatti helyfenntartása:** a helyet a vásárlás megkezdésekor létrejövő ellenőrzött foglalási `hold` **15 percig** fenntartjuk, szerveridővel. A korlát minden értékesítési csatornára vonatkozik (PWA, webes kosár/pénztár, rendelésfizetés). Lejáratkor, ha még nincs igazolt és kapacitással egyeztetett fizetés, a hely ismét elérhetővé válhat.
+- **Késő fizetési visszaigazolás:** a lejárt helyfenntartás után érkező sikeres fizetés **sohasem lépheti túl az esemény kapacitását**. Ugyanazon adatbázis-tranzakcióban újra vizsgáljuk, hogy van-e még szabad hely. Ha van, megerősíthető a vásárlás/jegy és foglalás; ha nincs, **nem állítunk ki érvényes belépési jogosultságot**, a rendelés `paid_capacity_conflict` állapotba kerül, és pénzügyi/ügyfélszolgálati rendezést (visszatérítés vagy más megoldás) igényel. A D07 refund-részletszabályai külön döntésben maradnak.
+- **Beléptetés:** a staff alapértelmezésben a foglalkozás kezdete **előtt 2 órával** kezdhet, és a foglalkozás **vége után 2 óráig** végezhet ellenőrzést/beváltást. A valós eseményadatokból szerveroldalon számolt időablak **WordPress adminból eseményenként módosítható**; az alapbeállítás további egyedi beavatkozás nélkül használható. Az ellenőrzés és az új beváltás a D03 szerinti egyszeriséget és családi/event jogosultságokat tiszteletben tartja.
+- **Várólista:** **nem készül az első verzióban**. Betelt foglalkozásnál az alkalmazás világosan jelzi, hogy nincs foglalható hely; a kapacitásversenyt és a többcsatornás fizetést szerveroldali tranzakció védi.
 
-A terv javaslata: Nincs várólista. Az alapdíjas foglalás a program kezdetéig lemondható. Fizetés közben 15 percig tartjuk fenn a helyet. A beléptetés a kezdés előtt 2 órától a befejezés után 2 óráig engedélyezett, eseményenként módosítható beállítással.
+**Megvalósítási/tesztelési szabály:** a WordPressben beállítható kivételes eseményablak, a kezdési határpillanat, a 15 perces holdlejárat, a dupla visszaigazolás, az utolsó helyért folyó párhuzamos vásárlás, valamint a lejárt hold utáni fizetés elutasítása/feloldása kötelezően tesztelendő. A D05 üzleti szabályai lezártak; **a teszteredmények és a D07 szerinti visszatérítési eljárás még nyitottak**.
 
 **D07 – Visszatérítés és chargeback**
 
