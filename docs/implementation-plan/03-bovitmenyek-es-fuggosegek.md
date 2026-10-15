@@ -8,8 +8,8 @@
 |---|---|---|
 | WordPress + meglévő egyedi téma | Megtartás; publikus oldal változatlan | A jelentett helyi verzióra és éles tárhelyre teszt |
 | WooCommerce | Megtartás; termék, rendelés, kosár, checkout, HPOS | Meglévő; minden rendeléskezelés WC CRUD |
-| Meglévő Barion gateway | Egyszeri fizetés megtartása | A 3.10.2 gateway `products`,`refunds` képességet deklarál, recurringot nem |
-| Billingo | Meglévő számlázás megtartása | Manuálisan vásárolt havi termék és refund bizonylat; később csak jóváhagyott recurring esetén renewal számlázás |
+| Meglévő Barion gateway | Egyszeri fizetés és D07 szerinti WooCommerce-ből indított refund megtartása | A 3.10.2 gateway `products`,`refunds` képességet deklarál, de a tényleges teljes/részleges refund és a közvetlen Barionból indított refund WooCommerce-be visszakerülése **nem igazolt**, stagingpróba kell |
+| Billingo | Meglévő számlázás és D07 szerint refund-helyesbítés megtartása | WooCommerce → Barion → Billingo teljes és részleges refund és helyesbítés tesztelendő; később csak jóváhagyott recurring esetén renewal számlázás |
 | WooCommerce Subscriptions vagy más kész recurring opció | **Nem MVP-kötelező; feltételes későbbi beszerzés** | A legjobb ár/értékű kompatibilis megoldás teljes licenc-/éves-/tranzakciós költségét és üzemeltetését fel kell mérni; megrendelői vállalás kell |
 | Better Messages | **D11 elfogadott V1 irány:** ingyenes REST/AJAX változat stagingpróbával | Csak aktív chatnézeten kb. 10 s polling; jogosultság/read/unread/kétirányú kommunikáció igazolandó. Fizetős WebSocket csak indokolt igény és külön megrendelői költségjóváhagyás után |
 | Ringató Core | **Saját plugin szükséges** | REST, admin, domainmodell, kapacitás, jegy/bérlet, média, push, BM adapter |
@@ -36,6 +36,12 @@
 - `Security` és `Operations`: permission callback minden route-hoz, rate limit, migráció, GDPR export/erase integráció, health/admin diagnosztika és reconciliation job. A szavazatadatok hozzáférési, export/törlési és megőrzési szabályai is a D12 adatkezelési döntéshez tartoznak.
 
 Átadáskor plugin forrás, migrációk, admin használati leírás, OpenAPI fájl, szerződéstesztek, staging konfigurációs minta titkok nélkül, kiadási/rollback runbook szükséges.
+
+### D07: Refundfolyamat, meglévő integrációra építve (2026-10-16)
+
+**Nincs saját Barion-visszatérítési API/bridge fejlesztés.** Az ügyintéző alapértelmezetten a WooCommerce-ben indít refundot; a meglévő Barion gateway és Billingo végzi a fizetési/helyesbítési műveleteket, a Ringató Core csak az **ellenőrzött, megfelelő rendeléstételhez rendelt refund eredménye alapján** szűkíti a belépési és prémiumjogot. Teljes, még fel nem használt és egyértelmű jog esetén automatikus revoke, külön eseményjegynél szabad hely egyszeres felszabadítása; részleges/használt/összetett rendelés kézi ellenőrzés. Közvetlen Barion refund és chargeback WooCommerce-be történő szinkronizációját nem feltételezzük; külön egyeztetés/üzemeltetési eljárás.
+
+**Kötelező staging/sandbox ellenőrzés:** teljes és részleges WooCommerce refund → tényleges Barion eredmény → WooCommerce refund rekord és rendeléstétel → Billingo helyesbítő bizonylat; hibás/dupla callback, kézi WooCommerce-only refund pénzmozgás nélkül, közvetlen Barion refund, chargeback, többtermékes/használt jegy és idempotens jog-/helykezelés. Hibánál előbb üzleti/üzemeltetési egyeztetés, nem automatikus saját gateway fejlesztés.
 
 ## 2. D09: MVP havi egyszeri vásárlás, későbbi kész recurring megoldás felmérése
 
