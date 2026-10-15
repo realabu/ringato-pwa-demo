@@ -38,7 +38,7 @@ A kliens code alapján magyar UX-üzenetet mutat; nem a provider raw hiba-/stack
 | POST `/checkout-intents` | U | product_id, variation_id?, quantity, attributes?; idempotency | CheckoutIntent + egyszeri handoff_url; szerverár és férőhely |
 | GET `/checkout-intents/{id}` | U | – | Saját payment_state/provisioning_state/order_id/entitlement_ids; nem token újrakiadás |
 
-A login/logout/reset/regisztráció a meglévő WordPress/WC útvonalakon történik. `GET /app/bootstrap.json` a Shell nem-REST útvonala az auth/nonce frissítéséhez. A `/app/checkout-handoff` a Shell szűk, sessionhöz kötött tokenfelhasználó útvonala; nem általános REST/kosár API.
+A login/logout/reset/regisztráció a meglévő WordPress/WC útvonalakon történik. **D12:** a webshopban jelenleg vendégvásárlás működik és alapból megmarad; a fiókhoz kötött PWA- és havi prémiumtermékhez regisztráció/bejelentkezés szükséges. A prémiumtermék **webes pénztárnál is szerveroldali termékszintű login-korlátot** kap, nem globális guest checkout tiltást. A regisztráció tényleges WooCommerce-beállításai és UX-e stagingben ellenőrizendők. `GET /app/bootstrap.json` a Shell nem-REST útvonala az auth/nonce frissítéséhez. A `/app/checkout-handoff` a Shell szűk, sessionhöz kötött tokenfelhasználó útvonala; nem általános REST/kosár API.
 
 ### Programok és belépési jogosultságok
 
