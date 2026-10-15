@@ -37,13 +37,16 @@ A mezők tervezett logikai sémát írnak le. Az implementáció első backendmu
 | `ringato_push_receipts` | campaign_id, user_id, snapshot_title/body/path, sent_at, transport_state, clicked_at? | UNIQUE campaign+user; index user+sent_at+id; 365 napos appelőzmény |
 | `ringato_push_deliveries` | receipt_id, device_id, state, attempts, next_attempt_at, provider_result | UNIQUE receipt+device; szolgáltató átvétel nem olvasási bizonyíték |
 | `ringato_notification_cursors` | user_id, last_seen_receipt_id, last_panel_opened_at | UNIQUE user; monoton cursor, user több eszközén közös |
+| `ringato_polls` (P01 / V1) | id, question, status (`draft`,`open`,`closed`), opens_at?, closes_at?, results_visibility, created_by, created_at, updated_at | Csak publikált, nyitott időablakban szavazható; WordPress-adminjog a szerkesztéshez |
+| `ringato_poll_options` (P01 / V1) | id, poll_id, label, position | Pollon belüli opció; a közzétett kérdés opcióinak megváltoztatása szavazatok mellett külön ellenőrzést igényel |
+| `ringato_poll_responses` (P01 / V1) | id, poll_id, option_id, user_id, created_at | UNIQUE poll_id+user_id; FK-logikai ellenőrzés: opció ugyanahhoz a pollhoz tartozik; idempotens válaszmentés, lezárt kérdésnél nincs új szavazat |
 | `ringato_outbox` | event_key, type, reference_id, payload_minimal, state, attempts, available_at, processed_at? | UNIQUE event_key; replay/reconciliation ugyanazt a domain service-t használja |
 | `ringato_idempotency` | user_id, route, key_hash, request_hash, response_status/body, state, expires_at | UNIQUE user+route+key_hash; eltérő body ugyanazzal a kulccsal 409 |
 | `ringato_audit` | actor_id, action, target_type/id, reason?, before/after minimal, request_id, happened_at | Append-only üzleti napló; token/üzenet/adatvédelmi titok nélkül |
 
 A push audience snapshot külön recipient lista vagy receipt sorok formájában materializálódik küldéskor; a csoport későbbi módosítása nem változtat egy már elküldött kampány címzettlistáján. Token/body titkok nem kerülhetnek általános debug logba.
 
-**Opcionális P01:** `ringato_polls`, `ringato_poll_options`, `ringato_poll_responses` (UNIQUE poll+user). Egyszeri választás, aktív időablak, összesített eredmény; V1 kötelező táblái közé csak scope-döntéssel kerül.
+**D13 elfogadva (2026-10-15): P01 V1 kötelező.** A fenti három szavazástábla az első verzió adatmodelljének része. A szerver a szavazat rögzítésekor felhasználói azonosítót a hitelesített sessionből veszi, ellenőrzi a szavazás állapotát/időablakát és hogy az opció valóban a pollhoz tartozik; UNIQUE (poll_id,user_id) és tranzakció védi a párhuzamos beküldést. Más felhasználó egyedi szavazata az ügyfél-API-ból nem olvasható. Az összesítés csak jóváhagyott eredményláthatósággal kerül az appba. A szavazat módosítása, aktív szavazások száma és eredmények pontos láthatósága **nem végleges üzleti döntés**, a fejlesztés előtt tisztázandó. A szavazatok megőrzési/exportálási szabályai a külön D12 adatkezelési kérdéshez tartoznak.
 
 ## 3. Programadatok és kapacitás
 
