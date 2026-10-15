@@ -134,7 +134,7 @@ Kampány előzmény: egy receipt fiókonként, akkor is, ha az adott fiók pushe
 
 365 nap a receipt `sent_at` szerveridejétől; lista és napi retention job ugyanazt a szabályt követi. 404/410 push endpoint törlés/inaktiválás, 429/5xx korlátozott backoff, több eszköz nem ad több inbox sort. `delivered_at` csak bizonyított provider állapot, nem kitalált érték; kattintás sem teljes olvasási bizonyíték.
 
-BM adapter: WP userből determinisztikus saját szülő–Virág thread, résztvevőellenőrzés minden olvasás/írás előtt. Thread ID kliensből nem jogosultság. Plain text üzenet, limitált hossz, nincs attachment vagy user-user chat. Polling csak aktív nézeten; BM raw response domain DTO-ra normalizálva, akár HTTP 200-on jelzett üzleti hibát is ellenőrizve.
+**D11 (2026-10-16):** a V1-chat elsődleges adatforrása a **Better Messages ingyenes** integrációja, amennyiben a staging megfelelőségi próba bizonyítja a funkciókat és az engedélyezett API-hozzáférést. A WP userből saját szülő–Virág threadhez kapcsolunk; résztvevőellenőrzés minden olvasás/írás előtt, a kliens által beküldött thread ID nem jogosultsági forrás. Plain text, limitált hossz, nincs attachment vagy user-user chat. **Kb. 10 s polling csak aktív chatképernyőn, háttérben leáll; visszatéréskor azonnali frissítés.** Az ismételt kérés nem okozhat kettős üzenetet; BM raw response domain DTO-ra normalizálva, HTTP 200-nál jelzett üzleti hibát is ellenőrizve. Fizetős WebSocket nincs az MVP függőségei között; csak külön indoklás és jóváhagyott költség esetén.
 
 ## 8. Migráció és személyes adatok
 
