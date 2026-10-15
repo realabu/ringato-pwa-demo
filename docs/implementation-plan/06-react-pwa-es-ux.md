@@ -73,10 +73,10 @@ A source valódi `<audio>`/`<video>`, szerver PlaybackGrant alapján. PlayerCont
 - Sor: kijelölt indexről, `ended` után következő; az utolsó után stop. Külön „sor” üzemmód, globális player nem keveri a single/queue indítást.
 - Következő prémium elem előtt új playback jogosultság. Tiltáskor a sor megáll és előfizetési ajánlat; nem ugrik át és nem játszik cache-ből.
 - Audio play/pause/seek/idő, hiba/retry, kedvenc/sor. Videón ugyanez + natív fullscreen, `playsinline`, `object-fit: contain`, fix source aspect ratio. Nincs képarányváltó.
-- iOS natív HLS támogatás először, más böngészőn feature-detect + dinamikusan importált `hls.js`. MP4/audio esetén range request és megfelelő MIME; CDN CORS és token-cookie modell tényleges tesztje.
+- iOS natív HLS támogatás először, más böngészőn feature-detect + dinamikusan importált `hls.js`. MP4/audio esetén range request és megfelelő MIME; **a D10 során kiválasztandó helyi vagy külső** médiaszolgáltató CORS/range/HLS/token-cookie kompatibilitását valós mobilon tesztelni kell.
 - Forgatáskor ugyanaz a médiaelem marad, a pozíció és play/pause megmarad. Fullscreen eszközfüggő fallback; a vizuális CSS fullscreen nem jelölhető garantált natív fullscreennek.
 - Autoplay a felhasználó korábbi gesztusa után próbálható. `play()` rejection esetén látható Folytatás gomb. iOS background/lockscreen/audio sorfolytatás csak eszközön igazolt támogatásként ígérhető.
-- Signed grant TTL például 10 perc, refresh_after 8 perc; szolgáltató és streammodelltől függ. Lejárat/hosszú videó esetén új grant azonos időpozícióval, ha jogosult. Lemondás/expiry után új grant nem jár; már kiadott token hozzáférési maradványa legfeljebb TTL, szigorú azonnali revocationhoz külön providerképesség.
+- Signed grant TTL például 10 perc, refresh_after 8 perc; ezek **tervezési példák**, a D10-ben még nyitott médiaszolgáltató biztonságos streammodelljétől függenek. Lejárat/hosszú videó esetén új grant azonos időpozícióval, ha jogosult. Lemondás/expiry után új grant nem jár; már kiadott token hozzáférési maradványa legfeljebb TTL, szigorú azonnali revocationhoz külön providerképesség.
 - Navigációkor audio mini-player ajánlott; videó részlet elhagyásakor pause, user újraindítás. Kijelentkezéskor minden lejátszás azonnal leáll, URL/reference törlődik.
 - Sor módosítás több eszközről revision lockkal. Lejátszás közbeni rendezéskor aktuális media ID marad, a következő az új sorból; törölt aktuális elem befejezhető, majd stop. Ez UX-pontosítás, tesztelendő.
 
