@@ -34,6 +34,8 @@ Szerverállapot: React Query, query key user ID/session generációval; logoutko
 
 Kérések: typed fetch + same-origin credentials + nonce; runtime schema, közös error mapping; GET korlátozott retry, mutáció csak idempotens szabály szerint. Entitlement/foglalás/vásárlás után célzott invalidáció: `/home`, wallet, orders, events/reservations, subscription. Backgroundba kerülés után visszatéréskor friss szerverállapot.
 
+**D12 – vendégből regisztrált felhasználó:** a webshop jelenleg fiók nélküli vendégvásárlásra épül; az app publikus felületei vendégként is böngészhetők, de a prémium vásárlás, saját médiák/jegyek/foglalások előtt egyértelmű bejelentkezés/regisztráció felhívás kell a meglévő WP/WooCommerce-fiókfolyamatba. Az éles webes általános vendégvásárlás nem változik; a havi prémium terméket a webes pénztár is csak bejelentkezve engedi. A staging tesztdomaines példány rendelkezésre áll a telepítési és login-visszatérési UX tesztjéhez; a streaming kapacitás ettől külön mérendő (D10).
+
 ## 2. Útvonalak és képernyőmegfeleltetés
 
 Minden alábbi útvonal `/app` prefix alatt. Mobil elsődleges nav: Főoldal, Tár, Programok, Vásárlás, Jegyeim, Üzenet, ahogy a demóban; kis szélességen tap-target és szöveg olvashatóság ellenőrzendő. Fejléc: értesítések és profil. Staff route csak capability alapján látható.
