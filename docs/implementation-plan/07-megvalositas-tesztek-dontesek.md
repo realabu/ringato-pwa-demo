@@ -7,13 +7,13 @@ Ez implementációs backlog, nem most végrehajtott fejlesztés. Az alapmodulok 
 | Csomag | Előfeltétel | Konkrét feladat és átadandó eredmény | Kész definíció |
 |---|---|---|---|
 | M0 – Döntések és integrációs próbák | Jelen terv | Éles leltár; D01–D13 lezárás szükség szerint; meglévő egyszeri Barion fizetés ellenőrzése; recurring kész megoldások ár/érték, teljes licenc/üzemeltetési költség és kompatibilitási feltárása (nem MVP-blokkoló); BM REST, CDN média, HPOS és cron próbák; OpenAPI 3.1/DTO | MVP-hez szükséges kapuk és negatív tesztek; G2 recurring jóváhagyás csak automatikus fázis előtt |
-| M1 – Projekt és izoláció | M0 origin/auth | React/TS/Vite skeleton, app shell plugin, `/app/` routing, bootstrap/session, own SW, design token; CI/lint/build | Publikus oldal ugyanaz, `/app/` telepíthető, nonce/session működik |
+| M1 – Projekt és izoláció | M0 origin/auth; meglévő lokális és tesztdomaines WP példány (D12) | React/TS/Vite skeleton, app shell plugin, `/app/` routing, bootstrap/session, own SW, design token; telepítés, frissítés és visszaállítás próbája a meglévő stagingen; CI/lint/build | Publikus oldal ugyanaz, `/app/` telepíthető, nonce/session működik; staging tényleges próba dokumentálva |
 | M2 – Core és olvasó adapterek | M1 | Core rétegek, migrációk, admin capability, event/catalog/order adapter, termékrule admin, média metadata, `/config/me/home` | HPOS saját rendeléshez hozzáférés és cross-user tiltás bizonyított |
 | M3 – Jogosultság és staff | M2 + D02/D03/D07 | Order-item provisioning/outbox, családi jegy/bérlet/QR, atomikus checkin, audit és korrekció | Dupla callback és párhuzamos scan nem dupláz; dátumtesztek |
 | M4 – Program és foglalás | M2/M3 + D04/D05 | Event config, inventory, alapdíjas reservation, paid hold minden checkout csatornára, ICS, late-payment handling | Utolsó hely konkurens tesztje és kapacitáskonfliktus visszajelzése |
 | M5 – App vásárlás | M2/M4 + G1 | Terméktípus DTO-k, handoff, meglévő web kosár/pénztár, intent státusz, rendelés/jogosultság nézet | Simple/custom/variable/mixed cart útvonal, nincs kliensoldali paid flag |
 | M6 – Havi prémium-hozzáférés (MVP) | M3/M5 + D09 | Bejelentkezve egyszeri WC/Barion havi termék mindkét csatornán; kifizetett hozzáférési időszak, lejárat, újravásárlás, ismételt vásárlás/idempotencia; fizetési módtól független adapter | Sikeres/failure/refund tesztek, paid-through helyes, nincs automatikus terhelés; web/PWA közös fiók |
-| M7 – Média és preferenciák | M2 + CDN döntés | Privát stream, single/queue player, favorites, queue revision, prémium access, natív fullscreen | T03–T07/T06 eszközmátrix, signed segment/key védelem |
+| M7 – Média és preferenciák | M2 + D10 streaming-kiszolgáló döntés | Reprezentatív párhuzamos audio-/videostream terheléses vizsgálat a meglévő tárhelyen, webshop-egyidejűséggel; szükség esetén külön privát streaming/CDN ár/érték összevetés, majd stream, player, favorites, queue revision, prémium access, natív fullscreen | Dokumentált streamkapacitás és választott kiszolgáló, T03–T07/T06 eszközmátrix, signed segment/key védelem |
 | M8 – Push és chat | M0 BM + M2 | Csoport/kampány WP admin, receipts/cursor, device/VAPID/jobs, PWA push; BM adapter + polling | Több eszköz, denied/unsupported, cross-thread tiltás, cursor verseny |
 | M9 – Migráció és regresszió | M3–M8 + G3 | Papírjogok leltára, dry-run/claim/import, valós teszt tartalom, staging E2E/perf/security, backup/rollback próba | G5 és minden kötelező T teszt bizonyíték; hibás legacy jog nem kap QR-t |
 | M10 – Élesítés és átadás | M9 + kapuk | Fokozatos feature flags, korlátozott ügyfélpilot, monitoring, staff oktatás, admin/runbook | Piloteredmény, napi egyeztetés, incidens/rollback felelős; release jegyzőkönyv |
@@ -30,7 +30,7 @@ A „kész” állapot tényleges backenddel és indokolt negatív esetekkel iga
 
 | Teszt | Elfogadási feltétel és lényeges negatív eset |
 |---|---|
-| T01 – Fiók | WP login → app saját profil; logout/session expiry; A user nem olvashatja B order/QR/family adatát; lejárt nonce kontrollált újratöltés |
+| T01 – Fiók | A jelenlegi vendégvásárlásból érkező felhasználó számára regisztráció/belépés, WP login → app saját profil; webes havi prémium vásárlás csak bejelentkezve, más webes termékek vendégvásárlása nem törik; logout/session expiry, cross-user védelem, nonce kontrollált újratöltés |
 | T02 – Főoldal | Legkorábban lejáró, használható ticket/pass; used/expired/revoked kihagyás; unactivated pass utolsó; szerveridő/holmverseny |
 | T03 – Médiatár | Audio/video és kategóriakeresés valós API; publikus metadata nem ad prémium forrást; jogosulatlan playback 403 |
 | T04 – Single player | Egyedi média végén stop; nincs következő elem; loading/seek/error/retry/logout stop |
@@ -59,7 +59,7 @@ A „kész” állapot tényleges backenddel és indokolt negatív esetekkel iga
 | T27 – Oldalmegőrzés | Az alábbi publikus/shop/e-mail regressziós készlet teljesül |
 | T28 – SW és offline | Scope csak /app/; idegen cache megmarad; auth/QR/media/private API nincs CacheStorage-ban; offline nincs mutáció; régi WP útvonal fallback nélkül |
 | T29 – Kiadásbiztonság | Előző kliens/SW új API-val; update prompt nem szakítja meg checkout/redeem műveletet; rollback régi assetekkel működik |
-| T30 – Biztonság és terhelés | Cross-user/CSRF/rate limit/SSRF/HTML sanitization; InnoDB tényleges párhuzamos foglalás és scan; cron outage/reconciliation |
+| T30 – Biztonság és terhelés | Cross-user/CSRF/rate limit/SSRF/HTML sanitization; InnoDB párhuzamos foglalás és scan; cron outage/reconciliation; **D12/D10:** párhuzamos audio/video streaming lépcsőzetes terhelésen: bitrate/sávszélesség, kapcsolat/CPU/memória/IO, buffering és webshopválaszidő; szükséges-e külső szolgáltató? |
 | T31 – Migráció | Ismételt import nem dupláz; papírpass ismeretlen remaining nem aktiválódik; audit batch/cutoff; éles/staging személyes export nem publikus |
 | P01 – Opcionális poll | Ha scope igen: egyszeri válasz DB unique, időablak, saját user, anonim aggregátum és admin eredményláthatóság |
 
@@ -69,7 +69,7 @@ Kiinduló baseline ugyanazon staging backupból: főoldal, Rólam, Helyszínek, 
 
 Checkout: korábbi webes kosár mellett app handoff; változatlan adó/címmező/szállítás/gateway; teszt-Barion siker/failure, Billingo sandbox számla/refund, meglévő SKU-alapú completed e-mail egyszer és változatlan tartalommal. Az új **manuális havi prémiumtermék** e-mailjéhez külön scoped adapter szükséges lehet, de nem globális theme e-mail csere. GiftRocket és legacy kombinált termék külön eset.
 
-A jelenlegi helyi mail/cron/gateway inaktivitás miatt ezekhez dedikált staging konfiguráció és **tesztfiókok** kellenek. Éles merchant terhelést vagy ügyféllevelet tesztadat helyett nem használunk.
+A jelenlegi helyi mail/cron/gateway inaktivitás miatt ezekhez dedikált staging konfiguráció és **tesztfiókok** kellenek. **D12:** a staging WP példány és a lokális fejlesztői környezet már létezik, de a telepítési/fizetési/e-mail és streaming-terhelési vizsgálatok eredményét még rögzíteni kell. Éles merchant terhelést vagy ügyféllevelet tesztadat helyett nem használunk.
 
 ## 3. Döntési napló
 
@@ -86,9 +86,9 @@ A „javaslat” nem elfogadott üzleti döntés. A felelős a megvalósítás k
 | D07 | Refund/chargeback/részleges és használt jegy szabály | Fel nem használt jog revocation; paid-event hely felszabadít; használt/összeg-only partial admin review; nincs automatikus visszaalkalom | Üzleti tulajdonos + pénzügy, M3/M6 előtt |
 | D08 / G3 | Korábbi papírbérlet és vendégrendelés átvezetés | Bizonyított first-use/remaining/used; ismeretlen legacy review; igazolt claim; cutoff után automatikus | Virág + üzemeltető, M9 előtt |
 | D09 / G2 | **ELFOGADOTT IRÁNY (2026-10-15):** manuális havi MVP, később feltételes automatikus megújulás | Kész kompatibilis opciók teljes licenc/tranzakció/üzemeltetési költségét és ár/értékét felmérjük; ha a megrendelő vállalja és teszt sikeres, automatikus módra váltunk. Addig egyszeri termék minden hónapban; nincs saját recurring bridge. Átállásra felkészített Core jogosultság | Üzleti irány lezárt; árajánlat, licenc, technikai igazolás, megrendelői döntés nyitott; recurring nem MVP-kapu |
-| D10 / G4 | Média CDN és valódi tartalom | Privát signed HLS/audio/MP4, segmentvédelem; cover/ratio/hossz/felirat, volumenkalkuláció | Tartalomgazda + fejlesztő, M7 előtt |
+| D10 / G4 | Média tárhely/streaming kiválasztás | **D12 szerint a tárhely PWA-ra alkalmas, de streamingre nem igazolt.** Előbb párhuzamos audio/video terhelés- és forgalommérés a meglévő tárhelyen, majd privát streaming/CDN szükségesség, költség és signed HLS/audio/MP4 védelem eldöntése | Tartalomgazda + fejlesztő, M7 előtt |
 | D11 / G4 | Better Messages free AJAX vagy WS | Free AJAX REST spike,10s aktív polling; websocket opcionális külön licenc/adapterpróba | Virág + fejlesztő, M0/M8 előtt |
-| D12 | Domain, tárhely, cron, regisztráció, retention | Same-origin/app; meglévő WP login/account; valós cron; consent és audit/chat retention külön policy | Üzemeltető + adatkezelési felelős, M0/M1/M8 előtt |
+| D12 (környezet/fiók) | **JÓVÁHAGYOTT IRÁNY (2026-10-15):** közös WP-fiók, éles `/app/`, meglévő staging és lokális környezet | **Projektgazda megerősítette:** a jelenlegi vásárlások vendégként zajlanak; tesztdomaines WP példány és fejlesztői lokális környezet rendelkezésre áll; tárhely PWA-kiszolgálásra alkalmas. **Nyitott:** regisztráció/guest→fiók UX, staging telepítési/rollback-próba, valós cron, párhuzamos streamingkapacitás és esetleges külön szolgáltató (D10). A külön D12 adatmegőrzési kérdés továbbra is nyitott. | Irány elfogadva; mérés és integrációs próbák M0/M1/M7 előtt/folyamán |
 | D13 | Prototípus „Virág kérdezi” része V1? | Opcionális P01, alap V1-scope-ban nincs, csak igen döntéssel | Üzleti tulajdonos, M0 előtt |
 
 A D01 üzleti döntés alapján **nincs alapértelmezett PWA-specifikus termékszűrés vagy webes elrejtés**: az új előfizetés-/eseménytermékek és a régi Online Ringató termékek mindkét csatornán szerepelhetnek. A „csak webshopban” kivételt csak akkor vezetjük be, ha egyszerű WooCommerce-alapbeállítással megoldható. Külön tesztelendő a webes előfizetés szerveroldali, belépéshez kötött megvásárlása, az egységes fiók/jogosultság és a már belépett vásárló fiók-/előfizetésnézete. Az esetleges webes felületmódosítás a jelenlegi webmester vagy külön megbízás tárgya; nem automatikus PWA-feladat.
@@ -125,4 +125,4 @@ DB helyreállítás csak külön incidens- és egyeztetési tervvel: backup utá
 
 Most ellenőrzött: DOCX V1.3 tartalom, prototípus kód és reprezentatív wallet/staff képernyők; helyi WP plugin/verzió/típus/termék/meta/count leltár; gateway támogatásdeklaráció; elsődleges technikai dokumentáció; jelen dokumentumok helyi linkjei és F/T megfeleltetése.
 
-Későbbi bizonyíték: működő React build, OpenAPI contract, összes plugin/gateway/CDN/BM együttműködés, valódi fizetés/renewal/számlázás, konkurencia és jogosultsági teszt, mobil stream/push, éles tárhely/cron/WAF, legacy import. A terv nem állítja, hogy ezek már elkészültek vagy átmentek.
+Későbbi bizonyíték: működő React build, OpenAPI contract, plugin/gateway/választott médiakiszolgáló/BM együttműködés, sandbox egyszeri fizetés és számlázás (recurring csak külön későbbi jóváhagyással, D09), konkurencia és jogosultsági teszt, mobil stream/push, **párhuzamos streamingkapacitás-mérés**, éles tárhely/cron/WAF, staging telepítési és rollback-teszt, legacy import. A D12 szerinti meglévő tesztpéldány és PWA-képes tárhely nem jelenti azt, hogy ezek a tesztek már sikeresek.
