@@ -126,6 +126,8 @@ A végleges hely fizetéstől keletkezik, de **átmeneti hold** szükséges a fi
 
 Lejárt hold után beérkező sikeres fizetés: ugyanazon eseményzár mellett új hely megszerzése; ha nincs hely, `paid_capacity_conflict`, staff ügyintézés és visszatérítés. Ilyenkor nem keletkezik érvényes jegy és nem jelenhet meg „foglalás megerősítve”. A pénzügyi státusz fizetett marad, a teljesítési állapot külön hibás. A normál webhook és a helyreállító job közös idempotens szolgáltatást használ.
 
+**D02 jóváhagyott jegy-/bérlet-élettartam (2026-10-16):** a Core számolja a lejáratot a WordPressben konfigurált terméktípus-szabály alapján, nem a PWA. A családi jegy 3 naptári hónapja a hiteles fizetéstől, a 8 alkalmas bérlet 8 hónapja az első sikeres beváltástól indul. `Europe/Budapest` naptári dátum + célhónapban hiányzó nap esetén utolsó nap; `expires_at` a lejárati napot követő helyi nap 00:00 UTC-re alakítva (exclusive). A szabályt a rendeléstételhez pillanatképként tároljuk; új admin-beállítás régi jogot nem írhat át. A D09 prémium időszámítása külön.
+
 ## 5. Havi prémium-hozzáférés – D09 elfogadott MVP
 
 **MVP:** új, havonta **manuálisan ismételten megvásárolható** WooCommerce-termék és a meglévő egyszeri Barion-fizetés. Az ügyfél weben vagy PWA-ból ugyanazon WC pénztáron keresztül, **bejelentkezett fiókkal** vásárol. Nincs automatikus terhelés, WooCommerce Subscriptions-licenc és recurring gateway nem szükséges az MVP-hez. Egyes vásárlások hiteles sikeres fizetése idempotens szerveroldali hozzáférési időszakot eredményez; az időszak számítását, az előre vásárlás és átfedés szabályait az implementálás előtt pontosítani kell. A meglévő régi Online Ringató-termékek ettől külön termékszabályok.
