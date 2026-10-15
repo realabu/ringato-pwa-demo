@@ -92,7 +92,7 @@ Az alábbi F-azonosítók **a DOCX F01–F26 listájára** hivatkoznak. A `build
 | F16 | Rendszeres program, nincs foglalás | `open` event | T16 |
 | F17 | Limitált alapdíjas: foglalás ÉS jegy/bérlet | ReservationService + EntryService | T17 |
 | F18 | Külön áras: fizetés = családi hely + eseményjegy | Hold + WC paid event | T18 |
-| F19 | 1 család = 1 kapacitásegység | FamilyService + kapacitászár | T19 |
+| F19 | **D04 elfogadva:** V1 egy WP-fiók = egy külön family_id, 1 család = 1 kapacitásegység/foglalkozás; nincs fiókösszekapcsolás vagy önkiszolgáló jegyátadás | FamilyService + szerveroldali családfeloldás + kapacitászár; későbbi tagságra előkészített ID | T19; T20; D04 |
 | F20 | Rendelés és jogosultság státusz együtt | WC order adapter + wallet | T20 |
 | F21 | Virág manuális egyéni/csoportos push | WP admin + PushService | T21 |
 | F22 | 365 nap előzmény, panelmegnyitás óta új | Receipts + ReadCursor | T22 |
@@ -100,6 +100,8 @@ Az alábbi F-azonosítók **a DOCX F01–F26 listájára** hivatkoznak. A `build
 | F24 | Staff ellenőrzés, beváltás, napló | Staff capability + scanner | T24 |
 | F25 | WP admin kezeli a termék/program/push adatokat | Core admin + meglévő admin | T25 |
 | F26 | A „Kuponjaim” és a rövid médiacsomag V1-beli kezelése a specifikáció szerint; a régi Online Ringató értékesítésének tiltását a 2026-10-15-i D01 döntés felülírta | Route-kezelés; egységes katalógus D01 szerint | T26; D01 |
+
+**D04 jóváhagyott családmodell (2026-10-16):** egy WordPress ügyfélfiók egy önálló `family_id`-val rendelkező családot képvisel; a jegyek/bérletek/eseményjegyek/foglalások a családhoz tartoznak, két szülő külön fiókja nincs automatikusan összekapcsolva. Jegyátruházás és több család önkiszolgáló vásárlása nem V1. Kivételes esetek kézi, jogosultság- és auditált ügyintézésben; eseményenként legfeljebb egy aktív családi foglalás. A `family_id` elkülönítése lehetőséget hagy későbbi többfiókos családkezelésre, de azt most nem fejlesztjük. A D08 legacy/guest-claim ettől külön nyitott.
 
 **D03 jóváhagyott pontosítás (2026-10-16):** családi jegy, bérlet és külön áras eseményjegy ugyanazon konkrét foglalkozásra történő visszatérésnél az első sikeres belépés ellenőrzését kapja, **újabb beváltás/levonás nélkül**. Nincs globális napi limit, de bérletnél másik esemény alkalmat fogyaszt; a már használt egyszeri jegy nem használható újra, és a külön áras jegy csak a saját programján érvényes. Meglévő D05 foglalási és időablak-feltételek érvényben maradnak.
 
