@@ -110,11 +110,17 @@ A média és a chat végleges megoldása később is lezárható, de a megvalós
 
 **Státusz:** a D02 üzleti döntés lezárt. A tényleges szerveroldali hónapszámítás és a WordPressben kezelhető termékszabályok megvalósítása/tesztelése M2–M3 és T11/T12 feladat; nem állítjuk, hogy a funkció már elkészült.
 
-**D03 – Beváltás és alkalomlevonás**
+**D03 – Beváltás és alkalomlevonás – ELFOGADOTT DÖNTÉS (2026. október 16.)**
 
-Megválaszolandó kérdés: Ugyanazon programon lehet-e több alkalmat levonni egy bérletből? Van-e napi korlát? Hogyan kezeljük, ha valaki kilép, majd visszatér?
+**Döntés:** Az egyszeri beléptetés és a visszatérés kezelése **egységesen vonatkozik a családi jegyre, a többalkalmas bérletre és a külön áras eseményjegyre is**.
 
-A terv javaslata: Egy jegy/bérlet egy konkrét eseményen egyszer váltható be. Visszatéréskor csak a korábbi belépést ellenőrizzük, új alkalmat nem vonunk le. Külön eseményen új alkalom használható.
+- Egy jogosultságot egy **konkrét eseményen/foglalkozási alkalmon legfeljebb egyszer** lehet érdemben beváltani. Az első sikeres belépés a típusának megfelelő állapotváltást eredményezi: családi jegynél a jegy felhasználása, bérletnél pontosan egy alkalom levonása, külön áras eseményjegynél az **adott eseményre szóló jegy** felhasználása.
+- Ha a család **ugyanarra a konkrét foglalkozásra visszatér**, a beléptető az előző belépés tényét és időpontját mutatja („már belépett – visszatérés”), és **egyik terméktípusnál sem végez újabb beváltást, levonást vagy új jogosultság-felhasználást**. A jogosultságellenőrzés továbbra is szükséges; az ismételt próbálkozás nem jelenhet meg új sikeres beváltásként.
+- **Nincs általános napi limit**: ugyanazon napon **másik, külön eseményazonosítójú foglalkozás** a meglévő termékszabályok szerint látogatható, ha van rá felhasználható jogosultság és a szükséges foglalás teljesül. A bérletből itt újabb egy alkalom levonható. A már elhasznált, egyszeri családi jegy másik eseményre **nem** válik újra használhatóvá; a külön áras eseményjegy **csak a hozzá rendelt eseményen** érvényes, nem használható át másik programra.
+- A szerver minden jegy/bérlet/eseményjegy beváltását tranzakciósan, egyedi `entitlement_id + event_id` kulccsal és idempotens művelettel védi. Párhuzamos ellenőrzés/beváltás nem okozhat duplázást; a QR puszta megnyitása vagy a staff `inspect` művelet nem beváltás.
+- Az újra belépés **felhasználói/staff kijelzési szabály**, nem egy második redemption tranzakció. A beléptető felület jól elkülöníti az első sikeres beváltást, az ugyanazon eseményre történő visszatérést és a tényleges tiltó okokat (lejárt, másik esemény, rossz foglalás).
+
+**Státusz:** a D03 üzleti döntés lezárt; az adatmodell, a staff API, a felület és a családi jegy/bérlet/külön eseményjegy regreszsziós tesztje az MF07–MF08 / M3–M4 megvalósítás része. A D05 időablak-/foglalásszabályait ez nem írja felül.
 
 **D04 – Családmodell**
 
