@@ -9,7 +9,7 @@ Ez a **megvalósítandó** Ringató API, nem a jelenlegi WordPress végpontjaina
 - Sikeres egyedi válasz `{data: DTO, meta:{request_id,server_time}}`; lista `{data: DTO[], meta:{next_cursor,has_more,request_id,server_time}}`. Kivétel az ICS, raw vendor API és bootstrap.
 - Listák `limit` alap 20, max 100; opaque `cursor`, stabil idő+ID rendezés. Search max 120 karakter. Privát adatok `Cache-Control: private,no-store`.
 - Mutációkon `X-WP-Nonce`, megfelelő JSON content type, same-origin. Publikus üzleti mutáció nincs; az ingyenes média playback grant POST-ja a végponttáblában jelölt, rate-limitelt kivétel, nem módosít kereskedelmi állapotot.
-- `Idempotency-Key` kötelező checkout intent, reservation create/cancel, **csak ha később enabled: recurring subscription cancel**, staff redeem, message send és opcionális poll response esetén. UUID/szűk karakterkészlet, max 128 byte. Ugyanazon user+route+key és request hash replay ugyanazt a status/body-t adja; eltérő body 409. Ajánlott általános replay 24h; kereskedelmi/beváltási unique domain index tartósan megakadályozza a duplikációt.
+- `Idempotency-Key` kötelező checkout intent, reservation create/cancel, **csak ha később enabled: recurring subscription cancel**, staff redeem, message send és a **D13 szerinti V1 poll response** esetén. UUID/szűk karakterkészlet, max 128 byte. Ugyanazon user+route+key és request hash replay ugyanazt a status/body-t adja; eltérő body 409. Ajánlott általános replay 24h; kereskedelmi/beváltási unique domain index tartósan megakadályozza a duplikációt.
 - Kedvenc PUT/DELETE önmagában idempotens; sorhoz `If-Match: "revision"` szükséges. Cursor mark monoton.
 - 200 olvasás/update/replay; 201 új objektum; 202 provisioning/kampányfolyamat elfogadva; 204 body nélküli sikeres törlés; 400 schema, 401 session, 403 jogosultság, 404 saját szűrés után nem elérhető, 409 állapot/kapacitás/verzió, 410 lejárt token, 422 üzleti input, 429 rate limit, 503 átmeneti providerhiba.
 
@@ -30,7 +30,7 @@ A kliens code alapján magyar UX-üzenetet mutat; nem a provider raw hiba-/stack
 | GET `/config` | P | – | api_version, minimum_client_version, features, timezone, public support URL; nincs titok |
 | GET `/me` | U | – | UserProfile: id, display_name, email, family, capabilities, subscription_summary |
 | PATCH `/me` | U | display_name, family_display_name | Saját megjelenítési adatok; e-mail/jelszó módosítás webes WP/WC folyamat |
-| GET `/home` | U | – | next_admission, subscription, featured_media, upcoming_events, unread_count; opcionális poll |
+| GET `/home` | U | – | next_admission, subscription, featured_media, upcoming_events, unread_count; **V1 P01 aktív poll összefoglaló / link, ha van** |
 | GET `/products` | P | cursor, limit, search?, category? | Product[]: alapból ugyanazok az aktív, weben látható és megvásárolható WC-termékek (régi Online Ringató és új app-előfizetés/eseménytermék is); opcionális „csak webshopban” kivétel D01 szerint |
 | GET `/products/{id}` | P | – | Product + variations/configurator információ |
 | GET `/orders` | U | cursor, limit | Saját OrderSummary[], jogosultságokkal; vendég claim nélküli rendelés nincs |
@@ -91,7 +91,15 @@ Publikus metadata nem tartalmaz user-specifikus `is_favorite` vagy `can_play_pre
 
 Push endpoint csak valid HTTPS Web Push szolgáltató endpoint: provider allowlist/frissíthető policy, privát/loopback/link-local címek tiltása, redirect/destination ellenőrzés, méretlimit. Backend HTTP-hívásból nem lehet tetszőleges URL-lekérő SSRF. Egy közös böngésző subscription másik fiókra bejelentkezéskor leválasztandó/újrakötendő explicit consenttel, nem küldhet az előző ügyfél tartalmát.
 
-Opcionális P01 végpontok: GET `/polls/current`, POST `/polls/{id}/responses` (`option_id`, idempotency), GET `/polls/{id}/results`; UNIQUE poll+user, aktív időablak, eredményláthatóság adminbeállítás. Nem F01–F26 kötelező API.
+**D13 / P01 – V1 kötelező szavazásvégpontok:**
+
+| Method és útvonal | Auth | Input | Output / hatás |
+|---|---|---|---|
+| GET `/polls/current` | U | – | Aktuális, publikált szavazás(ok) és a saját szavazati státusz; ha nincs, üres állapot |
+| POST `/polls/{id}/responses` | U | `option_id`; idempotency | Szerver ellenőrzi az aktív pollt, az opciót, a sessionből vett usert; UNIQUE poll+user, az ismételt kérés nem dupláz |
+| GET `/polls/{id}/results` | U | – | Összesített, személyes választ nem tartalmazó eredmény, csak ha az admin eredményláthatósági beállítása engedi |
+
+A WordPress-admin szavazás-/opciókezelése szűk capability-vel és auditálással biztosítandó; ez nem publikus ügyfél-írási végpont. A részeredmények megjelenítése és a szavazat utólagos módosítása az implementálás előtt pontosítandó. A V1.3 F01–F26 történeti listájához képest ez **új P01 kötelező API**, nem opcionális.
 
 ## 3. DTO-k minimális mezőszerződése
 
@@ -109,6 +117,8 @@ Opcionális P01 végpontok: GET `/polls/current`, POST `/polls/{id}/responses` (
 | Queue | revision integer, items:[{media_id,position,media,availability}], ETag header; nincs kliensoldali jogosultságengedély |
 | Receipt | id,campaign_id,title,body,internal_path,sent_at,is_new,transport_state; nincs csoporttaglista |
 | Message | id,thread_id,sender_role (`parent`,`staff`),text,sent_at,read_at?,client_message_id? |
+| PollSummary (P01) | id, question, status, options:[{id,label,position}], opens_at?, closes_at?, has_responded, my_option_id?; idegen user választ nem ad vissza |
+| PollResults (P01) | poll_id, total_responses, options:[{option_id,count,percentage}]; csak engedélyezett eredményláthatóság mellett |
 | CheckoutIntent | id,state (`created`,`handed_off`,`pending_payment`,`paid_processing`,`fulfilled`,`failed`,`expired`,`paid_capacity_conflict`), payment_state, provisioning_state, order_id?, entitlement_ids[], hold_expires_at?; handoff_url csak létrehozáskor |
 | Eligibility | eligible,reason_code,family_display_name?,entitlement_summary?,event_id,server_time,revision; read-only tájékoztató |
 | Redemption | id,event_id,entitlement_id,redeemed_at,consumed_units,entitlement_after |
