@@ -29,11 +29,25 @@ Eredeti kérdés: Milyen Barion–WooCommerce Subscriptions megoldással biztos�
 
 **Specifikációs hatás:** a V1.3 F08–F09 eredeti automatikus megújulás/lemondás követelménye az MVP-ben nem kötelező; feltételes későbbi cél, a specifikáció következő kiadásában átvezetendő. A D09 üzleti irány lezárt, a kész megoldás költség- és megvalósíthatósági vizsgálata és megrendelői döntés nyitott.
 
-**D12 – Környezet és fiókkezelés**
+**D12 – Környezet és fiókkezelés – ELFOGADOTT IRÁNY, RÉSZFELADATOK NYITVA (2026. október 15.)**
 
-Megválaszolandó kérdés: Mi a végleges domain, hol lesz a staging tesztkörnyezet, és alkalmas-e a tárhely az alkalmazás működtetésére? Hogyan regisztrálhat új ügyfél?
+Eredeti kérdés: Mi a végleges domain, hol lesz a staging tesztkörnyezet, és alkalmas-e a tárhely a PWA-ra? Hogyan regisztrálhat új ügyfél?
 
-A terv javaslata: A PWA a meglévő weboldallal azonos domainen, az `/app/` útvonalon működjön, a meglévő WordPress/WooCommerce bejelentkezést és fiókkezelést használva. A regisztráció jelenlegi beállításait ellenőrizni kell.
+**Jóváhagyott megoldás és a projektgazda által megerősített kiinduló tények:**
+
+- A PWA az **éles WordPress-weboldallal azonos domainen, az `/app/` útvonalon** működjön, a meglévő WordPress/WooCommerce-fiókrendszert használva; ne legyen külön appos felhasználó-adatbázis. Az éles kanonikus domain/www beállítás a telepítéskor ellenőrzendő.
+- **A jelenlegi vásárlók vendégként, regisztrált fiók létrehozása nélkül vásárolnak.** A jelenlegi webshop általános vendégvásárlását nem tiltjuk le globálisan. Az app fiókhoz kötött funkcióihoz (prémium havi vásárlás és hozzáférés, digitális jegyek, saját adatok) bejelentkezés szükséges; a regisztráció és bejelentkezés konkrét WooCommerce/WordPress útvonalát, UX-ét, e-mailjeit és beállításait ellenőrizni és szükség szerint kialakítani kell. A havi prémiumterméket a webes checkouton sem lehet vendégként megvenni (D01/D09).
+- **A tárhelyen már rendelkezésre áll egy tesztdomainen futó WordPress tesztpéldány**, és **a fejlesztő lokális fejlesztői környezetet is létrehozott**. A tesztpéldányon lehet végigpróbálni a PWA/plugin telepítését, frissítését, visszaállítását, belépést és checkoutot az éles oldal módosítása nélkül. A staging pontos címe és izolációs részletei nem szerepelnek itt, ellenőrizendők.
+- **A tárhely PWA-kiszolgálásra alkalmas** (projektgazdai információ). Ez a PWA/appfájlok kiszolgálására vonatkozik, **nem bizonyítja a párhuzamos média-streaming kapacitást**.
+
+**Nyitott, mérendő technikai feladatok:**
+
+1. Mekkora párhuzamos audio-/videostream-forgalmat visel el a meglévő tárhely elfogadható akadás, válaszidő és erőforrásterhelés mellett? Reprezentatív tartalommal, mobilos és párhuzamos terheléses próbával mérjük a sávszélességet, PHP/HTTP kapcsolatszámot, memória/CPU/IO-terhelést, adatátviteli limiteket és a webshop egyidejű működését.
+2. Eredmények és várható nézőszám, forgalom, szolgáltatási költség alapján **külön privát streaming/CDN szolgáltató szükséges-e**? Erről a **D10 média-döntésnél** kell dönteni; nem rendeljük meg automatikusan, és nem feltételezzük, hogy az alaptárhely elegendő. Prémium média jogosultságvédelmét bármely opciónál biztosítani kell.
+3. Staging–éles eltérés, tesztadatok, biztonságos fizetési/e-mail sandbox és a telepítési/regressziós ellenőrzőlista véglegesítése; a meglévő webes vendégvásárlás ne sérüljön.
+4. Regisztráció/fiók-UX vizsgálata a korábbi vendégvásárlók számára, és a régi vendégrendelések igazolt fiókhoz kapcsolásának külön kezelése (D08). A meglévő weboldal esetleges felületi átdolgozása a D01 szerint külön webmesteri munka vagy ajánlat.
+
+**Státusz:** irány jóváhagyva; **tárhely PWA-szintű alkalmassága és a tesztkörnyezet rendelkezésre állása megerősítve**, de streamingkapacitás, regisztrációs folyamat és staging telepítési/terhelési eredmények még vizsgálandók. **A lenti második „D12 – Adatkezelés és megőrzés” önálló, továbbra is nyitott döntés, nem része ennek a jóváhagyásnak.**
 
 **D13 – A V1 funkciói**
 
@@ -43,9 +57,9 @@ A terv javaslata: Alapból kimarad; csak külön igen döntéssel kerül be.
 
 **D10 – Média**
 
-Megválaszolandó kérdés: Melyik privát tárhely/CDN szolgáltatja a tartalmakat? Mennyi audio- és videóanyaggal, várható forgalommal és költségkerettel számolunk?
+Megválaszolandó kérdés: Melyik privát tárhely/CDN szolgáltatja a tartalmakat? Mennyi audio- és videóanyaggal, várható forgalommal és költségkerettel számolunk? **A D12 alapján külön vizsgálandó, mennyi egyidejű streamet képes kiszolgálni a meglévő PWA-képes tárhely, és indokolt-e külön streaming-szolgáltató.**
 
-A terv javaslata: Privát médiatároló, rövid életű, aláírt hozzáféréssel. A prémium tartalom ne a WordPress publikus feltöltési könyvtárába kerüljön.
+A terv javaslata: Jogosultságvédett prémium médiatárolás és rövid életű, aláírt hozzáférés. A prémium tartalom ne kerüljön védtelenül a WordPress publikus feltöltési könyvtárába. A konkrét szolgáltatóról terhelési teszt, várható párhuzamos nézőszám és teljes költség alapján döntsünk, ne automatikusan.
 
 **D11 – Chat**
 
