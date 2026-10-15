@@ -21,12 +21,12 @@ Ez a csomag **terv**, nem működő alkalmazás. Nem telepítettünk bővítmén
 
 ## Fő javaslatok
 
-1. A PWA helye ugyanazon HTTPS-originen az `/app/` útvonal legyen. Saját manifest és kizárólag `/app/` scope-ú service worker; a WordPress-oldalakon nincs PWA-regisztráció.
+1. **D12 által elfogadott irány:** a PWA a jelenlegi WordPressszel azonos HTTPS-originen az `/app/` útvonalon működjön, a meglévő WP/WC-fiókrendszerrel. Saját manifest és kizárólag `/app/` scope-ú service worker; a WordPress-oldalakon nincs PWA-regisztráció. A **jelenlegi vásárlók vendégként vásárolnak**; a PWA fiókhoz kötött funkcióihoz és a havi prémiumtermékhez bejelentkezés szükséges, miközben az általános vendégvásárlás megmarad.
 2. A React buildet egy vékony **Ringató App Shell** bővítmény szolgálja ki. A **Ringató Core** bővítmény saját `ringato/v1` REST API-t, adminfelületet és üzleti szolgáltatásokat ad. A meglévő témába nem kerül új kód.
 3. A V1 vásárlás a meglévő WooCommerce pénztárra történő biztonságos átadással működjön. A natív React pénztár későbbi, külön projekt; a Store API gateway-támogatása nem feltételezhető.
 4. **D09 – elfogadott MVP:** havi, manuálisan újravásárolható prémium-hozzáférés a meglévő WooCommerce + egyszeri Barion fizetéssel. Az automatikus előfizetés **nem indulási feltétel**: kész, kompatibilis megoldások teljes költségét és ár/értékét fel kell mérni; csak megrendelői költségvállalással és sikeres teszttel vezethető be később. Saját recurring bridge fejlesztése nincs a projektkeretben; az architektúra átállásra készül.
 5. A jegyek, bérletek, foglalások, push-előzmények és saját preferenciák külön, tranzakcióképes táblákba kerülnek. A rendelést és annak fizetési állapotát továbbra is WooCommerce CRUD-on keresztül olvassuk.
-6. Privát média-CDN/storage, szerveroldali jogosultságellenőrzés, rövid életű streamhozzáférés. A WordPress publikus uploads mappa nem prémium médiatároló.
+6. Prémium média szerveroldali jogosultságellenőrzése és védett, rövid életű streamhozzáférés kell. **D10/D12 alapján a külön streaming/CDN szolgáltató szükségességét a meglévő tárhely párhuzamos streaming-terhelésének mérésével és költségösszevetéssel döntjük el**, nem tekintjük előre kötelezőnek. A WordPress publikus uploads mappa nem lehet korlátozás nélküli prémium médiatároló.
 7. Better Messages REST-integráció staging próbával; a V1-hez AJAX/polling elegendő, a WebSocket külön opcionális licenc és illesztési vizsgálat.
 
 ## A megvalósítás indításának kapui
@@ -34,7 +34,8 @@ Ez a csomag **terv**, nem működő alkalmazás. Nem telepítettünk bővítmén
 - **G1 / D01 – ELFOGADVA (2026-10-15):** Egységes WooCommerce-kínálat a weben és PWA-ban; régi Online Ringató termékek is maradhatnak, az új app-előfizetés és eseménytermékek weben is megvásárolhatók. App-előfizetést weben csak belépve lehet venni. Opcionális „csak webshopban” kivétel csak egyszerű WC-alapbeállítás esetén; a belépett webes fiókélményt fel kell mérni, webes átalakítása külön megbízás. A korábbi F26 online-értékesítés tiltása üzletileg felülírva; technikai ellenőrzés továbbra is szükséges.
 - **G2 / D09 – ELFOGADOTT IRÁNY (2026-10-15):** MVP manuális havi egyszeri termékvásárlással; Barion recurring/WCS licenc **nem MVP-kapu**. Későbbi automatikus megújuláshoz: összehasonlított teljes költség, bizonyított kész integráció és kifejezett megrendelői vállalás. Saját fizetési bridge fejlesztés nélkül haladunk. A prémium-hozzáférési logika fizetési módtól független.
 - **G3:** A papírjegyek/bérletek korábbi felhasználásának ellenőrzött átvezetése. A fizetett rendelés nem bizonyítja, hogy a belépés még felhasználható.
-- **G4:** Better Messages API/licenc, privát médiatároló és tárhely/cron/reverse proxy alkalmasság.
+- **D12 – IRÁNY JÓVÁHAGYVA (2026-10-15):** a tárhely a projektgazda szerint PWA-kiszolgálásra alkalmas; **tesztdomaines WP példány és fejlesztői lokális környezet már létezik**, ezekkel vizsgáljuk a telepítést/rollbackot. A jelenlegi vendégvásárlásból az apphoz szükséges fiókregisztráció átmenetét stagingben teszteljük. **A streamkapacitás nincs igazolva**; párhuzamos audio/video terhelési mérés és a külön streaming-szolgáltató szükségességének D10 szerinti értékelése maradt nyitva.
+- **G4:** Better Messages API/licenc, védett médiakiszolgálás, **párhuzamos streamkapacitás**, valós cron/reverse proxy és regisztrációs flow tesztje nyitott; a PWA-tárhely alkalmasságának ténye nem jelent streaming-bizonyítékot.
 - **G5:** Stagingben igazolt weboldal-, webshop- és e-mail-regressziómentesség.
 
 A háttérrendszer bővítése szükséges; a „változatlan oldal” a meglévő publikus felület és működés megőrzését jelenti. A WordPress teljes technikai változatlansága mellett a megadott API-alapú funkciók nem valósíthatók meg.
