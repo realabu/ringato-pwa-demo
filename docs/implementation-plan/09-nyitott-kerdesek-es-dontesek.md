@@ -49,11 +49,20 @@ Eredeti kérdés: Mi a végleges domain, hol lesz a staging tesztkörnyezet, és
 
 **Státusz:** irány jóváhagyva; **tárhely PWA-szintű alkalmassága és a tesztkörnyezet rendelkezésre állása megerősítve**, de streamingkapacitás, regisztrációs folyamat és staging telepítési/terhelési eredmények még vizsgálandók. **A lenti második „D12 – Adatkezelés és megőrzés” önálló, továbbra is nyitott döntés, nem része ennek a jóváhagyásnak.**
 
-**D13 – A V1 funkciói**
+**D13 – „Virág kérdezi” szavazás – ELFOGADVA, V1 KÖTELEZŐ FUNKCIÓ (2026. október 15.)**
 
-Megválaszolandó kérdés: Bekerül-e a „Virág kérdezi” szavazás az első verzióba?
+Eredeti kérdés: Bekerüljön-e a „Virág kérdezi” szavazás az első verzióba?
 
-A terv javaslata: Alapból kimarad; csak külön igen döntéssel kerül be.
+**Döntés:** **Igen. A „Virág kérdezi” szavazás része az első éles verziónak és az MVP elfogadási feltételeinek.** Nem csupán prototípus-látványelem vagy későbbi opció.
+
+**Javasolt megvalósítási minimum, az implementáció előtt ellenőrizendő részletszabályokkal:**
+- Virág WordPress adminfelületen hozhat létre és kezelhet kérdéseket, válaszlehetőségeket és a szavazás nyitott/zárt állapotát; a megjelenítés az új PWA-ban történik.
+- Bejelentkezett felhasználók szavazhatnak; ajánlott kezdeti szabály: **egy fiók egy válasz egy szavazáson**, szerveroldali egyediséggel és jogosultság-ellenőrzéssel. A lezárt szavazás nem fogad új választ.
+- Az alkalmazás megjeleníti, hogy a felhasználó szavazott-e, és szükség esetén összesített eredményeket mutat; az eredmények láthatósága kezdeti javaslat szerint WordPress adminban állítható.
+- Biztosítani kell a szavazat tárolását, az ismételt kérés/idempotencia és párhuzamos kattintás kezelését, valamint a mobilos üres, betöltés, hiba és lezárt állapotokat.
+- **Nem üzletileg jóváhagyott részletszabály még:** lehet-e válaszát módosítani; egyszerre hány szavazás lehet aktív; pontos eredményláthatóság, időzítés és az esetleges értesítés. Ezeket egyszerű alapértelmezéssel, Virággal/fejlesztővel a modul implementálása előtt egyeztetni kell, a V1-bekerülés ténye nem nyitott.
+
+**Specifikációs hatás:** a V1.3 DOCX F01–F26 listájában ez nem szerepel; most új, önálló **P01 kötelező V1-követelményként** kell nyilvántartani. A következő üzleti specifikáció-verzióba átvezetendő, az eredeti DOCX történeti példánya változatlan.
 
 **D10 – Média**
 
