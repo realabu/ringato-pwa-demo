@@ -60,10 +60,12 @@ Minden alábbi útvonal `/app` prefix alatt. Mobil elsődleges nav: Főoldal, T�
 | `/notifications` | 365 nap, ÚJ, deep link | 25-notifications |
 | `/polls` | **D13/P01 kötelező V1** „Virág kérdezi” – aktív kérdés, válaszopciók, saját szavazati státusz, megengedett összesített eredmény; nincs szavazásnál üres állapot | Prototípus „Virág kérdezi” funkció + új hibás/lezárt képernyők |
 | `/messages` | Saját szülő–Virág szöveges beszélgetés | 27-messages |
-| `/profile` | WP fiókadatok, saját beállítások, logout | 28-profile |
+| `/profile` | WP fiókadatok és D04 szerinti saját család megjelenítése, beállítások, logout; nincs több szülős összekapcsolás vagy átadás V1-ben | 28-profile |
 | `/staff/checkin` | Eseményválasztás, kamera, inspect, redeem | 23-checkin, 24-ticket-scanned |
 
 A `26-push-admin` demonstrációs kampányfelület véglegesen WP adminban valósul meg; nincs hozzá ügyfél/PWA kampányroute. A modalokból valódi deep-linkelhető részletoldal lesz, böngésző Back kompatibilitással. **D13 miatt a „Virág kérdezi” szavazás kötelező V1:** a főoldalon aktív poll összefoglalója/hivatkozása, a `/polls` útvonalon bejelentkezett felhasználói szavazás, eredmény csak jóváhagyott láthatósággal; Virág admin oldali kérdés- és opciókezelést kap. Szerver dönt az egyszeriségről, a kliens csak állapotot mutat; szavazat válaszmódosítása részletszabály még nyitott.
+
+**D04 V1 fiók- és család-UX (2026-10-16):** az appban a belépett fiók a hozzá rendelt egyetlen család jegyeit/bérleteit, külön eseményjegyeit, foglalásait látja. Másik szülő önálló WP-fiókjában ezek nem válnak automatikusan láthatóvá; nincs V1 családmeghívó, fiókegyesítés, jegyátadás vagy több család kezelő. A kivételes több családos vásárlás/átadás ügyfélszolgálati megkereséssel, Virág vagy illetékes munkatárs ellenőrzött kézi ügyintézésével történik, nem kliensoldali jogosultságmódosítással. A későbbi bővíthetőséghez a PWA csak a szerver family-model DTO-ját használja, nem feltételezi, hogy family ID = user ID.
 
 **D02 UI-szabály (2026-10-16):** a kliens nem kalkulál fix 3/8 hónapot és nem írja felül a kapott `expires_at` értéket; a WP-terméktípushoz konfigurált szabály szerinti szerverstátuszt és a `Europe/Budapest` helyi lejárati dátumát jeleníti meg. A bérlet `first_used_at` nélkül még nem aktivált, lejárati nap helyett „első beváltáskor indul” feliratot kap; a tényleges érvényességet a szerver ellenőrzi. A speciális eseményjegy és D09 prémium külön szabályt követ.
 
