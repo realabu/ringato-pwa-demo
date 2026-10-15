@@ -44,9 +44,12 @@ A szolgáltató tényleges domainje telepítési beállítás. A példabeli éle
 | Prémium-hozzáférési adapter (MVP) | Kifizetett havi időszak, lejárat, újravásárlás; fizetési módtól független | Automatikus kártyaterhelés |
 | Későbbi kész recurring adapter (feltételes) | Jóváhagyott, külső kész integráció előfizetési státuszának leképezése a közös hozzáférésre | Saját recurring gateway/bridge fejlesztés a jelenlegi projektben |
 | Better Messages adapter | Szülő–Virág beszélgetés, DTO, transport | Új üzenettároló BM mellett |
+| Poll adapter / PollService (D13 / P01, V1 kötelező) | WordPress admin kérdés- és opciókezelés; bejelentkezett PWA-szavazat, egyediség, összesített eredmény | Kliensoldali szavazatszámlálás vagy hozzáférés más felhasználó válaszához |
 | Média adapter | Forrásazonosító → lejáró CDN hozzáférés | Publikus prémium MP4 feltöltés |
 
 Ajánlott Core belső rétegek: `Domain` (állapot és invariáns), `Application` (use case), `Infrastructure` (WP/WC/CDN/BM repository), `Http` (REST schema + permission), `Admin`, `Jobs`, `Migrations`. Egy moduláris plugin, nem mikroszolgáltatások. A prémium-jogosultságot elválasztjuk a fizetési modelltől, hogy az MVP egyszeri WooCommerce-vásárlásairól később kész előfizetési integrációra lehessen váltani, **saját recurring bridge fejlesztése nélkül**.
+
+**D13 / P01 – V1:** a „Virág kérdezi” szavazás a Ringató Core elkülönített modulja. Virág WordPress adminjából kezelheti a kérdéseket, az opciókat és a közzétételt; a felhasználói választ és eredményt a PWA a saját API-ból éri el. Ajánlott alap: egy bejelentkezett fiók egy szavazat/poll; szerveroldali tranzakció és egyedi index, nem React/localStorage üzleti állapot. A válaszmódosítás és eredményláthatóság részletszabályait még egyeztetni kell. A felhasználói szavazat önmagában nem indít pushküldést.
 
 ## 2. Az eredeti oldal megőrzése
 
