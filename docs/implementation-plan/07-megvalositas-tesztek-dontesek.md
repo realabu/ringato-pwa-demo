@@ -1,6 +1,10 @@
 # 07 – Megvalósítás, tesztek, kiadás és döntések
 
+**Munkarend, 2026-10-15:** a fejlesztési és elfogadási tesztek lokálisan futnak; a tesztszerveres és éles kiadás manuális, telepítés utáni működésellenőrzéssel. Az alábbi eredeti munkacsomagok staging-teszt hivatkozásait e pontosítás szerint kell olvasni. Minden növekményhez aktualizált [telepítési útmutató](11-lokalis-fejlesztes-es-manualis-telepites.md) és verziózott csomag szükséges. A szerverkapacitás/cron/WAF tényleges alkalmassága külön üzemeltetői igazolás, lokális teszteredménnyel nem helyettesíthető.
+
 ## 1. Sorrendezett munkacsomagok
+
+**Inkrementális végrehajtás:** a [10 – Inkrementális mérföldkövek](10-inkrementalis-merfoldkovek.md) MF01–MF14 sorrendje az irányadó. Az alábbi M0–M10/M8a jelölések munkacsomagok, nem az új mérföldkőszámok. M0 felmérései a fejlesztés mellett is haladhatnak; nem kell minden nyitott döntést lezárni a PWA-alap és layout megvalósítása előtt. A 10. dokumentum külön kezeli a regisztráció/belépés technikai próbáját, a családmodell korai sémakapu-ját és az egyes modulok kiadási függőségeit.
 
 Ez implementációs backlog, nem most végrehajtott fejlesztés. Az alapmodulok a nyitott pénzügyi/üzleti döntésektől függetlenül elindíthatók; az érintett kapu nélkül a kapcsolódó funkció nem kiadható. Nincs vállalt naptári határidő vagy megalapozatlan költségbecslés.
 
@@ -112,7 +116,7 @@ A D01 üzleti döntés alapján **nincs alapértelmezett PWA-specifikus terméks
 
 ## 5. Kiadás és rollback
 
-1. Staging: élesből származó, szükség szerint maszkolt adatok és külön sandbox titkok. Éles fizetés/SMTP nincs bekapcsolva a helyi mentés defaultjaiból.
+1. Lokális tesztelés: szükség szerint maszkolt tesztadatok, lokális levélfogó és sandbox integrációk. Eredmények után verziózott kiadási csomag és telepítési útmutató készül. Tesztszerverre, majd élesre ugyanaz a csomag manuálisan kerül ki, külön környezeti konfigurációval és mentéssel. A másolási sorrendet és működésellenőrzést a 11. dokumentum tartalmazza.
 2. Schema expand migráció és Core telepítés feature flags OFF állapotban; meglévő oldal baseline összevetés. Új `/app/` csak engedélyezett tesztfelhasználóknak.
 3. App immutable build upload, shell release atomikusan vált; előző hash assetek megmaradnak. Szerver API kompatibilis előző klienssel.
 4. Szűk staff pilot, tesztjegyek és külön esemény; utána kiválasztott ügyfélpilot. Valós számlázási/merchant engedély csak ellenőrzött éles konfigurációval.

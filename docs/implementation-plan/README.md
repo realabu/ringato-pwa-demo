@@ -18,6 +18,17 @@ Ez a csomag **terv**, nem működő alkalmazás. Nem telepítettünk bővítmén
 | [06 – React, PWA és UX](06-react-pwa-es-ux.md) | Útvonalak, modulok, lejátszás, push, service worker, mobil és offline viselkedés |
 | [07 – Megvalósítás, tesztelés és döntések](07-megvalositas-tesztek-dontesek.md) | Sorrendezett munkacsomagok, elfogadási tesztek, kiadás, üzemeltetés, lezárandó kérdések |
 | [08 – Forrásjegyzék](08-forrasjegyzek.md) | Helyi bizonyítékok és ellenőrzött elsődleges technikai dokumentáció |
+| [09 – Nyitott kérdések és döntések](09-nyitott-kerdesek-es-dontesek.md) | Elfogadott üzleti irányok és az érintett modul előtt lezárandó részletszabályok |
+| [10 – Inkrementális mérföldkövek](10-inkrementalis-merfoldkovek.md) | A fejlesztés követendő MF01–MF14 sorrendje; először a nyitott üzleti kérdés nélkül indítható PWA-, layout- és API-alapok, majd fiókkezelés és modulonkénti kapuk |
+| [11 – Lokális fejlesztés és kézi telepítés](11-lokalis-fejlesztes-es-manualis-telepites.md) | Lokális tesztkörnyezet, manuális kiadási csomag, másolási térkép, pluginok, beállítások, frissítés és rollback |
+
+**Fejlesztési belépési pont:** a [10. dokumentum](10-inkrementalis-merfoldkovek.md) mérföldkövei szerint haladunk inkrementálisan. Első kör: MF01 PWA-alap → MF02 layout → MF03 Core/session → MF04 regisztráció és belépés. A 07. dokumentum M0–M10/M8a csomagjai háttérhivatkozások; a teljes döntéslista lezárása nem előfeltétele az alapok elkezdésének.
+
+## Fejlesztés és kiadás
+
+**2026-10-15-i pontosítás:** a fejlesztés és tesztelés lokális környezeten történik. A tesztszerverre és éles környezetre manuálisan telepítünk; automatikus deploy nincs. Minden mérföldkő része a telepítési dokumentáció és a szükséges kiadási csomag frissítése. A műszaki `INSTALL.md` mellé minden kiadáshoz kötelező egy informatikai alapismeretekkel is követhető, konkrét lépésekre bontott `INSTALL-DOC.md`; mindkettőt mellékelni kell a csomaghoz. A célkörnyezeti működés rövid ellenőrzése a kézi telepítéshez tartozik; a tárhelyfüggő kapacitásokat külön kell igazolni. Ez a munkarend a korábbi fejezetek stagingben végzendő fejlesztési tesztekre utaló megfogalmazásait felülírja.
+
+A másolási helyeket, pluginokat, környezeti beállításokat, első telepítést, frissítést és rollbackot a [11 – Lokális fejlesztés és kézi telepítés](11-lokalis-fejlesztes-es-manualis-telepites.md) írja le. A saját pluginek még tervezettek; a dokumentumot implementációnként a tényleges fájlokkal és kezelőfelületekkel kell pontosítani.
 
 ## Fő javaslatok
 

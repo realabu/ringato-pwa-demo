@@ -1,11 +1,13 @@
 # 06 – React alkalmazás, PWA és UX
 
+**Munkarend (2026-10-15):** a fejlesztés és tesztelés lokálisan történik; tesztszerverre és élesre manuálisan telepítünk, majd rövid működésellenőrzést végzünk. A korábbi staging-tesztre utalásokat e rend szerint kell értelmezni; a tárhelyfüggő kapacitás/cron/WAF külön igazolandó. Minden növekményhez a [11. telepítési útmutató](11-lokalis-fejlesztes-es-manualis-telepites.md) szerint készül csomag és konkrét konfigurációs/másolási leírás.
+
 ## 1. React felépítés
 
-Új alkalmazás külön `ringato-pwa/` könyvtárban (későbbi implementáció); a `ringato-pwa-demo/` változatlan referencia marad. Vite React/TypeScript, strict mode és strict TS, `/app/` base. A demó globális függvényeit és `localStorage`-beli üzleti állapotát nem portoljuk. Modulonként komponens/hook/DTO/service; közös PlayerProvider a navigációk felett.
+Az MF01–MF03-ban elkészült alkalmazás a `ringato-dev/ringato-pwa/` könyvtárban; a `ringato-pwa-demo/` változatlan referencia marad. Vite React/TypeScript, strict mode és strict TS, `/app/` base. A demó globális függvényeit és `localStorage`-beli üzleti állapotát nem portoljuk. Modulonként komponens/hook/DTO/service; közös PlayerProvider a navigációk felett.
 
 ```text
-ringato-pwa/                     # tervezett, még nem létrehozott app
+ringato-dev/ringato-pwa/          # MF01–MF03 alkalmazás; a feature-modulok később bővülnek
   src/app/                      # router, providers, shell, auth bootstrap
   src/features/auth/
   src/features/home/
@@ -23,11 +25,11 @@ ringato-pwa/                     # tervezett, még nem létrehozott app
   src/sw.ts
   public/                       # app ikonok, offline.html
   tests/
-wordpress-plugins/              # tervezett saját pluginek
+ringato-dev/wordpress-plugins/  # MF01–MF03 saját pluginek
   ringato-core/
   ringato-app-shell/
   # recurring gateway plugin NINCS az MVP-ben; később csak külső kész megoldás
-contracts/openapi.yaml          # M0-ban készülő gépi API-szerződés
+ringato-dev/contracts/openapi.yaml # MF03 korai gépi API-szerződés
 ```
 
 Szerverállapot: React Query, query key user ID/session generációval; logoutkor `queryClient.clear()`. Privát cache nincs persistelve. Player/UI: Context + reducer; audio/video `HTMLMediaElement` objektum state-től külön referenciában. Nincs böngészőállapotból létrehozott `plus=true` vagy remaining számláló.

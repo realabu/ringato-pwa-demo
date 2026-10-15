@@ -1,3 +1,7 @@
+## Munkarendi pontosítás – 2026-10-15
+
+A fejlesztés és a tesztek **lokális környezeten** zajlanak; a tesztszerverre és élesre **manuálisan telepítünk**. A lenti, korábbi D12 és más döntések staging-tesztre utaló feladatait a [10. mérföldkőterv](10-inkrementalis-merfoldkovek.md) és a [11. telepítési útmutató](11-lokalis-fejlesztes-es-manualis-telepites.md) szerint hajtjuk végre: lokális teszt, verziózott csomag és kézi kitelepítés, majd rövid célkörnyezeti működésellenőrzés. A szerverfüggő streamkapacitás, cron és WAF igazolása továbbra is nyitott üzemeltetési feltétel. Ez munkarendi pontosítás, a nyitott üzleti részletszabályokat nem zárja le.
+
 **1. Az érdemi implementálás elején eldöntendő kérdések**
 
 **D01 – Termékkínálat – ELFOGADOTT ÜZLETI DÖNTÉS (2026. október 15.)**

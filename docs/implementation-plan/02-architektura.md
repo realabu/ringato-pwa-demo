@@ -1,5 +1,7 @@
 # 02 – Architektúra
 
+**Munkarend (2026-10-15):** a fejlesztés és tesztelés lokálisan történik; tesztszerverre és élesre manuálisan telepítünk, majd rövid működésellenőrzést végzünk. A korábbi staging-tesztre utalásokat e rend szerint kell értelmezni; a tárhelyfüggő kapacitás/cron/WAF külön igazolandó. Minden növekményhez a [11. telepítési útmutató](11-lokalis-fejlesztes-es-manualis-telepites.md) szerint készül csomag és konkrét konfigurációs/másolási leírás.
+
 ## 1. Célarchitektúra és telepítés
 
 **Ajánlott: ugyanazon origin, külön `/app/` felület, moduláris WordPress backend.** Nincs második felhasználó- vagy rendelésrendszer, nincs szinkronizált külön webshop. React statikus assetek + vékony WP app shell, saját WP REST API, ugyanaz a WC pénztár.

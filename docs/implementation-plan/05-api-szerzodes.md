@@ -1,5 +1,7 @@
 # 05 – Tervezett API-szerződés
 
+**Munkarend (2026-10-15):** a fejlesztés és tesztelés lokálisan történik; tesztszerverre és élesre manuálisan telepítünk, majd rövid működésellenőrzést végzünk. A korábbi staging-tesztre utalásokat e rend szerint kell értelmezni; a tárhelyfüggő kapacitás/cron/WAF külön igazolandó. Minden növekményhez a [11. telepítési útmutató](11-lokalis-fejlesztes-es-manualis-telepites.md) szerint készül csomag és konkrét konfigurációs/másolási leírás.
+
 ## 1. Általános szabályok
 
 Ez a **megvalósítandó** Ringató API, nem a jelenlegi WordPress végpontjainak leírása. Base: `/wp-json/ringato/v1`. Az implementáció első munkacsomagjában az alábbi DTO-kból és végpontokból teljes OpenAPI 3.1 dokumentum, Zod schema és typed kliens generálandó; az itt megadott neveket és üzleti szemantikát közös review zárja le.
