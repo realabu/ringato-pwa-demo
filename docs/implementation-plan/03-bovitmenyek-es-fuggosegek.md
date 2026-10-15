@@ -101,7 +101,7 @@ Arculat: a projektgyökér `docs/design/tokens.json`, `tokens.css`, saját fonto
 | Composer autoload + saját namespace | Core modulok, determinisztikus build; recurring bridge nincs a jelenlegi scope-ban |
 | `minishlink/web-push` | VAPID alapú Web Push; PHP/OpenSSL/cURL kompatibilitást tárhelyen igazolni |
 | `sabre/vobject` (feltételes) | ICS generálás/validálás; elhagyható, ha szigorúan tesztelt kicsi ICS-serializer készül |
-| Média provider SDK (feltételes) | Csak a kiválasztott storage/CDN szükséges minimális kliens; titkok backendben |
+| Média provider SDK (feltételes) | Csak a **D10 eredményén alapuló, később kiválasztott** helyi vagy külső médiakiszolgálóhoz szükséges adapter/SDK; titkok backendben; a PWA nem köthető előre egy CDN-hez |
 | PHP unit/integration framework | Core szolgáltatások + tényleges InnoDB konkurenciateszt |
 | PHPCS + WordPress Coding Standards, PHPStan | WP kódminőség, HPOS/escaping/schema ellenőrzések |
 | WP-CLI (fejlesztés/üzemeltetés) | Idempotens migráció, dry-run import, reconciliation riport |
@@ -111,8 +111,8 @@ A meglévő Barion SDK-t nem szerkesztjük vendor fájlban. Az MVP a meglévő e
 ## 5. Szükséges szolgáltatások és költséghelyek
 
 - **D12 (2026-10-15):** a meglévő tárhely PWA-kiszolgálásra alkalmas a projektgazda szerint; **tesztdomaines WP példány és fejlesztői lokális környezet már rendelkezésre áll**. A stagingben kell próbálni a `/app/` telepítését/plugint, rewrite/HTTPS/cache/WAF viselkedést, konfigurációt, frissítést és visszaállítást. Ezek sikeres eredménye még nincs dokumentálva. DB-backup/deploy és PHP/DB erőforrás valós ellenőrzés továbbra is szükséges.
-- **D10/D12 nyitott streaming-kapacitás:** a tárhely PWA-képessége nem igazolja, hogy egyszerre hány audio-/videolejátszást képes akadás és a webshop lassulása nélkül kiszolgálni. Reprezentatív párhuzamos streaming teszt: cél nézőszám, kiszolgált bitrate/sávszélesség, HTTP kapcsolatok, CPU/memória/IO, adatforgalmi korlátok, tartós és csúcsterhelés, mobil range/HLS kompatibilitás.
-- Privát, jogosultságvédett médiakiszolgálás szükséges; **külön storage/CDN/streaming szolgáltató választása nem előre eldöntött**. Az eredmények, várható forgalom és teljes szolgáltatási költség alapján hasonlítsuk össze a meglévő tárhelyes és a külső megoldást. Nyilvános WP uploads nem lehet korlátozás nélküli prémium médiatár.
+- **D10 jóváhagyott eljárás (2026-10-16), mérés még nyitott:** a PWA-képes tárhely párhuzamos streamkapacitását biztonságos, üzemeltetővel egyeztetett lépcsőzetes terheléssel kell igazolni a stagingen. Készül tartalom- és várható egyidejű nézőszám/bitrate/havi forgalom becslés; mérjük a lejátszási hibát, pufferelést, sávszélességet, HTTP kapcsolatokat, CPU/memória/I/O terhelést, adatforgalmi limiteket, webshopválaszidőt, HLS/range mobil kompatibilitást. **Nincs jelenleg igazolt maximális párhuzamos szálérték.**
+- **D10 szolgáltató továbbra is nyitott:** a meglévő tárhelyen megfelelően védett streaming és a külső privát streaming/CDN költségét/teljesítményét/üzemeltetését kell összevetni. Teljes ár: tárolás, havi adatforgalom, szükséges transzkódolás, beállítás/fejlesztés, fenntartás, szolgáltatási korlátok és ügyféltámogatás. Csak mérés és költségtábla után javasoljunk a megrendelőnek konkrét választást. A közvetlen publikus WP uploads URL önmagában nem megfelelő prémiumvédelem.
 - MVP: opcionális Better Messages WebSocket licenc, Ringató Core/App Shell saját fejlesztés és karbantartás. **Recurring csak feltételes:** több kész megoldás teljes licenc-/éves-/tranzakciós-/üzemeltetési költségének összehasonlítása és megrendelői vállalása; saját fizetési bridge nem tervezett.
 - Meglévő Barion egyszeri fizetés sandboxellenőrzése, Billingo tesztüzem, SMTP tesztcímek. Barion merchant recurring jóváhagyás **csak későbbi automatikus opció esetén**.
 - VAPID kulcspár backendben; nincs kötelező fizetős push SaaS. A push szolgáltatói végpontok eléréséhez tárhely egress kell.
