@@ -56,11 +56,12 @@ Minden alábbi útvonal `/app` prefix alatt. Mobil elsődleges nav: Főoldal, T�
 | `/wallet/:id` | Érvényesség, QR, beváltási történet | 19-ticket-valid – 22-pass |
 | `/orders/:id` | Saját rendeléstétel és kapcsolt jogosultság | 18-wallet részlet |
 | `/notifications` | 365 nap, ÚJ, deep link | 25-notifications |
+| `/polls` | **D13/P01 kötelező V1** „Virág kérdezi” – aktív kérdés, válaszopciók, saját szavazati státusz, megengedett összesített eredmény; nincs szavazásnál üres állapot | Prototípus „Virág kérdezi” funkció + új hibás/lezárt képernyők |
 | `/messages` | Saját szülő–Virág szöveges beszélgetés | 27-messages |
 | `/profile` | WP fiókadatok, saját beállítások, logout | 28-profile |
 | `/staff/checkin` | Eseményválasztás, kamera, inspect, redeem | 23-checkin, 24-ticket-scanned |
 
-A `26-push-admin` demonstrációs kampányfelület véglegesen WP adminban valósul meg; nincs hozzá ügyfél/PWA kampányroute. A modalokból valódi deep-linkelhető részletoldal lesz, böngésző Back kompatibilitással. Home opcionális poll csak P01-scope igen esetén.
+A `26-push-admin` demonstrációs kampányfelület véglegesen WP adminban valósul meg; nincs hozzá ügyfél/PWA kampányroute. A modalokból valódi deep-linkelhető részletoldal lesz, böngésző Back kompatibilitással. **D13 miatt a „Virág kérdezi” szavazás kötelező V1:** a főoldalon aktív poll összefoglalója/hivatkozása, a `/polls` útvonalon bejelentkezett felhasználói szavazás, eredmény csak jóváhagyott láthatósággal; Virág admin oldali kérdés- és opciókezelést kap. Szerver dönt az egyszeriségről, a kliens csak állapotot mutat; szavazat válaszmódosítása részletszabály még nyitott.
 
 Minden adatigényes képernyő: loading skeleton, üres, hálózati hiba+retry, jogosultság/login, offline, success. Vásárlás: pending és paid_processing külön, háttérbe vitt app visszatérésekor frissítés. Staff: „ellenőrzés sikeres” nem azonos a „belépés rögzítve” állapottal.
 
