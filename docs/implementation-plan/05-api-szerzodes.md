@@ -87,7 +87,7 @@ Publikus metadata nem tartalmaz user-specifikus `is_favorite` vagy `can_play_pre
 | POST `/notifications/seen` | U | observed_cursor | Monoton frissítés; csak saját megfigyelt receiptig |
 | POST `/notifications/{id}/click` | U | `{}` | Saját receipt click jelzés; idempotens |
 | GET `/messages/thread` | U | – | Saját szülő–Virág ThreadSummary |
-| GET `/messages/thread/messages` | U | cursor, limit, after_id? | Normalizált Message[] és unread; polling kompatibilis |
+| GET `/messages/thread/messages` | U | cursor, limit, after_id? | Normalizált Message[] és unread; **D11: aktív chatképernyőn kb. 10 s polling, háttérben leáll és visszatéréskor frissül** |
 | POST `/messages/thread/messages` | U | text (1–2000 karakter); idempotency | Saját threadbe plain text küldés; recipientet szerver határozza meg |
 | POST `/messages/thread/read` | U | last_message_id | Csak saját thread, monoton olvasási cursor |
 
@@ -191,4 +191,4 @@ Ha React admin készül később, ezek `/admin/...` végpontokat kapnak ugyanily
 
 ## 6. Szerződés lezárása és kompatibilitás
 
-M0-ban minden route request/response és hiba schema OpenAPI-ba; BM adapter spike után üzenet cursor/idempotencia konkretizálás. Kliens és backend közös fixture-ökkel tesztel. V1 breaking változás új névtér (`v2`); opcionális mező hozzáadható, enum bővítés kezelése contract review. Régi aktív SW/kliens esetén `/config.minimum_client_version` kontrollált frissítést kér; checkout/beléptetés közepén nem indít automatikus reloadot.
+M0-ban minden route request/response és hiba schema OpenAPI-ba; **D11 szerinti ingyenes Better Messages REST/AJAX stagingpróba után** üzenet cursor/idempotencia, kétirányú küldés, read/unread, thread-jogosultság és hiba mapping konkretizálás. A WebSocket nem V1-feltétel, és csak külön költségjóváhagyással válhat integrációvá. Kliens és backend közös fixture-ökkel tesztel. V1 breaking változás új névtér (`v2`); opcionális mező hozzáadható, enum bővítés kezelése contract review. Régi aktív SW/kliens esetén `/config.minimum_client_version` kontrollált frissítést kér; checkout/beléptetés közepén nem indít automatikus reloadot.
