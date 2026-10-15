@@ -15,7 +15,7 @@ A mezők tervezett logikai sémát írnak le. Az implementáció első backendmu
 | Tábla | Fő mezők | Kulcs / index / invariáns |
 |---|---|---|
 | `ringato_families` | user_id, display_name, status | UNIQUE user_id; V1 egy fiók = egy család |
-| `ringato_product_rules` | product_id, variation_id (0=base), kind, app_enabled?, event_id?, uses?, validity_months?, rule_version | UNIQUE product_id+variation_id; kind: ordinary/family_ticket/pass/event_ticket/manual_monthly_access/future_recurring; app_enabled csak D01 szerinti egyszerű, indokolt kivétellel; régi Online termékek nem alapból kizártak |
+| `ringato_product_rules` | product_id, variation_id (0=base), kind, app_enabled?, event_id?, uses?, validity_months?, validity_start_event? (`paid_at` / `first_successful_redeem`), rule_version | UNIQUE product_id+variation_id; kind: ordinary/family_ticket/pass/event_ticket/manual_monthly_access/future_recurring; **D02 szerint családi jegy alap 3 naptári hónap `paid_at`-tól, bérlet alap 8 hónap első sikeres beváltástól**, a WP adminban terméktípushoz állítható/validált szabály; régi online termékek nem alapból kizártak |
 | `ringato_event_config` | event_id, app_enabled, type, end_local?, timezone, capacity_families?, product_id?, checkin_from/to?, cancellation_deadline?, revision | UNIQUE event_id; `open` kapacitás NULL, `paid` product kötelező |
 | `ringato_staff_event_access` | staff_user_id, event_id, active | UNIQUE staff+event; capability mellett eseményhatókör; admin globális scope külön explicit beállítás |
 | `ringato_event_inventory` | event_id, capacity, confirmed_units, held_units, version | UNIQUE event_id; zárolható sor, 0 <= confirmed+held <= capacity |
@@ -82,21 +82,23 @@ Lemondás csak valóban aktív foglalásra szabadít egy helyet; ismételt lemon
 
 ### Családi jegy
 
-`pending_payment → active → used | expired | revoked`. A pending rendelésből még nincs beváltható entitlement. `purchased_at` ajánlottan a **hitelesen sikeres fizetés** időpontja, nem order creation. Egy jegy globálisan egyszer használható, bármely nem külön áras alkalmon. Felhasznált/lejárt/visszavont jegy nem állítható vissza ügyfélkéréssel.
+`pending_payment → active → used | expired | revoked`. A pending rendelésből még nincs beváltható entitlement. **D02 szerint** `purchased_at` az igazolt sikeres fizetés (`paid_at`) időpontja, nem order creation; a családi jegy érvényessége ekkor indul, alapértelmezetten 3 naptári hónap a terméktípus szabálya szerint. Egy jegy globálisan egyszer használható, bármely nem külön áras alkalmon. Felhasznált/lejárt/visszavont jegy nem állítható vissza ügyfélkéréssel.
 
 ### Bérlet
 
-`unactivated (remaining=8) → active (first_used_at) → exhausted | expired | revoked`. Első **sikeres tranzakcióban** levonáskor rögzül `first_used_at`, és egyszer számolódik `expires_at`. Előzetes QR-megtekintés/ellenőrzés nem aktivál. Több külön megvásárolt bérlet külön entitlement, nem összemosott összeg; user látja az összeset.
+`unactivated (remaining=8) → active (first_used_at) → exhausted | expired | revoked`. **D02 szerint** az első **sikeres, szerveroldali beváltási tranzakcióban** levonáskor rögzül egyszer `first_used_at`, és innen számoljuk a terméktípusban beállított, alapértelmezetten 8 naptári hónapos `expires_at` értéket. A vásárlás és a QR-megtekintés/read-only inspect nem aktivál, előtte az alap V1 logika szerint nincs használatalapú lejárat. Több külön megvásárolt bérlet külön entitlement, nem összemosott összeg; user látja az összeset.
 
 ### Külön eseményjegy
 
 `pending_payment → active_for_event → used | expired | revoked`. Fizetéskor ugyanabban a provisioning folyamatban létrejön jegy és reservation. A konfigurált beléptetési időablak végén lejár; a staff időablak ajánlott start−2h és end+2h, de eseményenként adminbeállítás és lezárandó üzleti döntés. Téves eseményre mindig tiltás.
 
-### Naptári hónapok – ajánlott pontosítás
+### Naptári hónapok és konfiguráció – D02 ELFOGADVA (2026-10-16)
 
-Budapesti helyi dátumhoz 3 vagy 8 naptári hónap hozzáadása, hónap végén az utolsó létező napra clamp; az év/DST kezelés timezone libraryvel. Ajánlott lejárat: a célhelyi nap **végéig**, adatbázisban exclusive `expires_at` a következő helyi nap 00:00 UTC-re konvertálva. Érvényes, ha szerver `now < expires_at`.
+A **családi jegy** a hitelesen sikeres `paid_at` pillanattól indul (terméktípus alapérték: **3 naptári hónap**), a **8 alkalmas bérlet** az első sikeres `first_used_at` beváltástól (terméktípus alapérték: **8 naptári hónap**). Az időtartam és az induló esemény terméktípusonként a WordPress adminban, ellenőrzött `ringato_product_rules` mappinggel kezelhető; a React kliens nem számol hónapokat. A szabály `rule_version`-nel együtt a rendeléstétel `rule_snapshot` mezőjében rögzül, hogy későbbi módosítás ne változtassa visszamenőleg a már megvett jogosultságot. A 8 alkalom külön fogyasztási korlát.
 
-Példa: január 31-i vásárlás → április 30. nap végéig; augusztus 31-i első bérletbeváltás → következő április 30. végéig. A demó délre állítja a dátumot, ezt nem tekintjük elfogadott üzleti határidőnek. Az időpont vs nap vége és a paid_at fogalma D02-ben jóváhagyandó.
+A kezdő pillanatot `Europe/Budapest` időzónában **helyi dátummá** alakítjuk, ehhez a konfigurált naptári hónapokat adjuk; ha a céldátum napja nem létezik, a célhónap utolsó létező napjára igazítjuk (clamp). A célhelyi nap **végéig** érvényes a jog. Az adatbázisban `expires_at` az **ezt követő helyi nap 00:00** UTC időpontra konvertált, kizárólagos határ; szerveren `now < expires_at`. Nem egyszerű fix +90/+240 nap vagy utcai 24 órák összege, mert a naptári hónap és a DST eltérhet.
+
+Példa: január 31-i jegyfizetés → **április 30. helyi nap végéig**, január 31-i első bérletbeváltás → **szeptember 30. helyi nap végéig**; szökőév és nyári/téli időszámítás határain tesztelendő. Bérletnél használat előtt `expires_at=NULL` a D02 szerinti alapmodellen. A prototípusban előforduló déli lejárat nem elfogadott üzleti szabály. Ezek a családi jegy/bérlet szabályai, nem a D09 prémiumhozzáférés vagy a külön eseményjegyek dátumlogikája.
 
 Főoldali választás: nem használt, nem refundált, még érvényes családi jegyek és remaining>0 aktív/unactivated bérletek. Első használat nélküli bérlet `expires_at=NULL`, végtelennek rendezve. Korábbi expiry előre, holtversenyben purchased_at, majd ID. Külön eseményjegy nem helyettesíti ezt a kártyát; külön eseményblokkon jelenik meg.
 
