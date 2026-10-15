@@ -121,7 +121,7 @@ Panelnyitás: előző cursor alapján ÚJ jelzés, lista observed_cursor után s
 
 Staff először programot választ. HTTPS camera permission, hátsó kamera, `qr-scanner`; stream bezárás navigáció/background esetén. Többszöri dekódolás debounce, sikeres scan után kamera szünet. Inspect minimális család/termék/státusz, majd explicit Beváltás. Response megmutatja a rögzített eventet, időpontot, maradékot. Retry ugyanazzal a műveleti key-vel; offline egyértelmű tiltás. Kamera hibánál manuális opaque kód megadás, ugyanazon szerverjogokkal, nem jogosultságfelülíró gomb.
 
-Üzenet: csak Virág címzett; plain text és szerverkorlát. AJAX polling aktív képernyőn ajánlott 10 s, tab háttérben leáll; visszatéréskor azonnal refresh. Pending send látható, retry azonos client message/idempotency key; vesztes válasznál nincs dupla üzenet. Better Messages adapterpróba zárja a read/unread/cursor pontos viselkedést. WebSocket csak igazolt hivatalos kliens/PWA licenc-kompatibilitás után.
+**D11 jóváhagyott V1 üzenet-UX:** a szülő csak Virágnak írhat plain textet szerverkorláttal; az **ingyenes Better Messages REST/AJAX** integráció az elsődleges, stagingpróba még szükséges. **Kb. 10 s polling csak aktív, látható chatképernyőn**; háttérben/navigálás után leáll, visszatéréskor azonnal frissül. A pending és hibás küldés látható; azonos client message/idempotency key-vel retry nem dupláz. Kétirányú kommunikáció, read/unread és másik ügyfél threadjének tiltása igazolandó. A fizetős WebSocket csak külön bizonyított szükség, kompatibilitási/költségvizsgálat és **megrendelői költségjóváhagyás** után válhat opcióvá, nem V1-kötelező.
 
 ## 7. Design és hozzáférhetőség
 
