@@ -14,7 +14,7 @@ A mezők tervezett logikai sémát írnak le. Az implementáció első backendmu
 
 | Tábla | Fő mezők | Kulcs / index / invariáns |
 |---|---|---|
-| `ringato_families` | user_id, display_name, status | UNIQUE user_id; V1 egy fiók = egy család |
+| `ringato_families` | **id (önálló family_id), owner_user_id, display_name, status** | **D04 V1:** UNIQUE owner_user_id (egy WP fiók = egy család); a család önálló ID, nem azonos a WP user ID-val. A későbbi többfiókos tagság külön kapcsolattáblával bővíthető; V1-ben nincs ilyen kapcsolat/funkció |
 | `ringato_product_rules` | product_id, variation_id (0=base), kind, app_enabled?, event_id?, uses?, validity_months?, validity_start_event? (`paid_at` / `first_successful_redeem`), rule_version | UNIQUE product_id+variation_id; kind: ordinary/family_ticket/pass/event_ticket/manual_monthly_access/future_recurring; **D02 szerint családi jegy alap 3 naptári hónap `paid_at`-tól, bérlet alap 8 hónap első sikeres beváltástól**, a WP adminban terméktípushoz állítható/validált szabály; régi online termékek nem alapból kizártak |
 | `ringato_event_config` | event_id, app_enabled, type, end_local?, timezone, capacity_families?, product_id?, checkin_from/to?, cancellation_deadline?, revision | UNIQUE event_id; `open` kapacitás NULL, `paid` product kötelező |
 | `ringato_staff_event_access` | staff_user_id, event_id, active | UNIQUE staff+event; capability mellett eseményhatókör; admin globális scope külön explicit beállítás |
@@ -66,7 +66,11 @@ Egy `event` ID V1-ben **egy konkrét időpont**, nem teljes ismétlődő sorozat
 - `reservation`: 1 család = 1 hely; aktív saját foglalás **és** érvényes családi jegy/bérlet kell.
 - `paid`: pontosan az adott eseményre érvényes külön jegy és fizetett foglalás kell; családi jegy/bérlet nem jó.
 
-Ajánlott V1 családmodell: egy WP ügyfélfiók egy család. Családtagok száma nem kapacitásegység; gyermeknevet/születési adatot nem szükséges gyűjteni. Két külön fiók ugyanazon családhoz automatikusan nem kapcsolódik. Több család egy vásárlásban, jegyátadás, összevont fiók üzleti döntést igényel.
+**D04 elfogadva (2026-10-16):** az első verzióban **egy WordPress-fiók egy család**, amelyhez egy külön, stabil `family_id` tartozik; a jegyek, bérletek, fizetős eseményjegyek és foglalások ehhez kapcsolódnak. A bejelentkezett fiókból **szerveroldalon feloldott** `family_id` az egyetlen jogosult családazonosító. V1-ben nincs automatikus két szülős összekapcsolás, önkiszolgáló jegyátadás vagy több család egy felhasználói fiók alatt. A családtagok száma nem foglalási kapacitásegység; gyermeknév/születési adat nem szükséges.
+
+**Kézi ügyintézés:** több családot érintő kivételt vagy igazolt átadási igényt Virág vagy külön feljogosított munkatárs ellenőrzött, indokolt, auditált adminfolyamattal intézhet; nem készül publikus átadási API, és a puszta e-mail-egyezés nem bizonyít tulajdont. A kézi korrekció ugyanazt a jogosultság-/foglalás-egyediség-ellenőrzést alkalmazza, mint az automatikus tranzakció, nem hozhat létre több aktív helyet egy családnak ugyanarra az eseményre. Az ügyintézői eljárás konkrét lépéseit implementáció előtt kell véglegesíteni.
+
+**Későbbi bővítésre felkészítés:** a `ringato_families.id` különáll a `owner_user_id`-tól, minden entitlement/reservation family_id-ra hivatkozik. Ha később két külön szülői fiókot kell egy családhoz kapcsolni, azt külön tagsági kapcsolat és ellenőrzött szerepjogosultság oldhatja meg; **a tagsági modul nem része a V1-nek**. Egy konkrét eseményre a család továbbra is legfeljebb egy aktív foglalást tarthat (`UNIQUE event_id+family_id`, megfelelő állapot-/tranzakciókezeléssel).
 
 ### Foglalás tranzakció
 
