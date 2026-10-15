@@ -30,6 +30,8 @@ flowchart LR
 
 A szolgáltató tényleges domainje telepítési beállítás. A példabeli éles URL `https://ringatoviraggal.hu/app/`; a www/non-www kanonikus origin következetesen ugyanaz, mint a WordPress site URL. A helyi `localhost:8080` nem éles push- vagy fizetéskompatibilitási bizonyíték.
 
+**D12 megerősített környezet (2026-10-15, projektgazdai információ):** a tárhelyen már van **tesztdomainen működő WP tesztpéldány**, továbbá a fejlesztő elkészítette a **lokális fejlesztői környezetet**. A staging a PWA/pluginek telepítésének, frissítésének és visszaállításának ellenőrzési helye; a tesztdomain külön origint jelent az éles webhelyhez képest. A tárhely **PWA assetek és shell kiszolgálására alkalmas**, de ebből nem következik a médiastreaming elegendő párhuzamos kapacitása. A várható egyidejű médiahasználatra terhelési próba és szükség esetén külön streaming/CDN opció költségvizsgálata kell (D10).
+
 ### Komponensek
 
 | Komponens | Felelősség | Nem tartozik hozzá |
@@ -64,7 +66,7 @@ Backend- és adatbővítések hatása regressziós teszttel igazolandó. Éles p
 
 ### Döntés: WordPress session cookie + REST nonce
 
-A böngésző a WordPress bejelentkezést használja. A login/elfelejtett jelszó a meglévő WP/WC folyamat biztonságos visszatérési URL-lel; új React jelszó-kezelő backend nem kell. Regisztráció: meglévő WC My Account beállítás vizsgálata; ha nincs engedélyezve, a V1 account-creation módja döntési pont. Vendég publikus médiakatalógust/programot láthat, saját jegyet/foglalást/premiumot nem. **D01:** app-előfizetést a webes checkouton is csak belépett felhasználó vásárolhat, szerveroldali rendelésvalidációval; a jogosultság ugyanahhoz a WP-fiókhoz kötődik.
+A böngésző a WordPress bejelentkezést használja. A login/elfelejtett jelszó a meglévő WP/WC folyamat biztonságos visszatérési URL-lel; új React jelszó-kezelő backend nem kell. **D12 megerősítés:** a jelenlegi webshop vásárlói jellemzően **vendégként, fiók létrehozása nélkül** vásárolnak; ezt a meglévő vásárlási lehetőséget nem tiltjuk le globálisan. A fiókalapú PWA-funkciókhoz és a D01/D09 szerinti havi prémiumtermék webes vásárlásához bejelentkezés kötelező, **termékszinten szerveroldalon érvényesítve**. A WooCommerce regisztráció / My Account / checkout account-creation beállításait és az új ügyfelek számára érthető belépési/regisztrációs átmenetet stagingben ellenőrizni kell; ha hiányzik, egyszerű támogatott módon ki kell alakítani. A korábbi vendégrendelés nem rendelhető automatikusan új fiókhoz pusztán e-mail-egyezés alapján (D08). Vendég publikus médiakatalógust/programot láthat, saját jegyet/foglalást/prémiumot nem. A meglévő webes fiókfelület esetleges nagyobb átalakítása külön scope (D01).
 
 1. `/app/` shell a WP betöltése után felismeri a session cookie-t, és minimális bootstrapot ad: API base, build/API verzió, WP REST nonce, user summary, engedélyezett feature-ek. Nem tesz bele rendelést, QR-t vagy fizetési tokent.
 2. A privát REST kérések `credentials: same-origin` és `X-WP-Nonce` mellett mennek. A nonce **CSRF-védelem, nem önálló hitelesítés**. Szerveren minden végpont saját permission callbacket és objektumtulajdonosi ellenőrzést kap. [WP dokumentáció](https://developer.wordpress.org/rest-api/using-the-rest-api/authentication/)
