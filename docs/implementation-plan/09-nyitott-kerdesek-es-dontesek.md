@@ -98,11 +98,17 @@ A média és a chat végleges megoldása később is lezárható, de a megvalós
 
 **2. Az érintett modul implementálása előtt lezárandó kérdések**
 
-**D02 – Jegyek és bérletek érvényessége**
+**D02 – Jegyek és bérletek érvényessége – ELFOGADOTT DÖNTÉS (2026. október 16.)**
 
-Megválaszolandó kérdés: Pontosan mikortól számít az érvényesség, és a lejárati nap mely időpontjáig tart? Hogyan kezeljük a hónapvégi dátumokat?
+**Döntés:**
+- **Családi jegy:** a hitelesen sikeres WooCommerce-fizetés időpontjától érvényes, **3 naptári hónapig**, az így számított helyi lejárati nap végéig. Nem a rendelés létrehozásának idejétől.
+- **8 alkalmas bérlet:** a megvásárlás nem indítja el a **8 naptári hónapos** időszakot; az első **ténylegesen sikeres, szerveroldalon rögzített beváltás** indítja. Az első használatig a bérlet a jelenlegi V1 szabály szerint `unactivated`, nincs kiszámított használat alapú lejárati dátuma. A QR megnyitása vagy csak ellenőrzése nem számít első beváltásnak. A 8 alkalom limit külön érvényes.
+- **Lejárat:** mindkét terméktípusnál a cél nap **végéig, a `Europe/Budapest` időzóna szerint**. Technikailag `expires_at` = az ezt követő helyi nap 00:00-ja UTC-re konvertálva, **kizárólagos felső határ**; a szerver akkor tekinti érvényesnek, ha `now < expires_at`.
+- **Hónapvége:** naptári hónapokat adunk a kezdő helyi dátumhoz; ha a céldátum napja nem létezik (például 31-e), a célhónap utolsó napjára igazítjuk. Példák: **január 31-i jegyvásárlás → április 30. nap végéig**; **január 31-i első bérletbeváltás → szeptember 30. nap végéig**. Szökőévek és téli/nyári időszámítás szerint is tesztelendő.
+- **Konfigurálhatóság:** az időtartam (alapértelmezés: jegy 3, bérlet 8 naptári hónap) és az aktiválási szabály **a WordPressben karbantartható terméktípus-szabályhoz / termékleképezéshez tartozzon**. Ne legyenek a PWA-kliensbe beégetett fix számok. A rendeléstételhez mentett szabálypillanatkép biztosítja, hogy egy későbbi admin módosítás ne változtassa meg visszamenőleg a már megvett jegy/bérlet lejáratát. Érvénytelen termékkonfigurációt az admin/backend utasítson el.
+- A szabály a **családi jegyre és 8 alkalmas bérletre** vonatkozik; az eseményjegyek és a D09 szerinti manuálisan megvásárolható prémium-hozzáférés eltérő időszabályait nem írja felül.
 
-A terv javaslata: A jegy érvényessége a hiteles sikeres fizetéstől, a bérleté az első sikeres beváltástól számítson. Budapesti idő szerint a cél nap végéig tartson; ha a célhónapban nincs megfelelő nap, annak utolsó napját használjuk.
+**Státusz:** a D02 üzleti döntés lezárt. A tényleges szerveroldali hónapszámítás és a WordPressben kezelhető termékszabályok megvalósítása/tesztelése M2–M3 és T11/T12 feladat; nem állítjuk, hogy a funkció már elkészült.
 
 **D03 – Beváltás és alkalomlevonás**
 
