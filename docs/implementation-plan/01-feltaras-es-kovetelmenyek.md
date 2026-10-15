@@ -103,7 +103,9 @@ Az alábbi F-azonosítók **a DOCX F01–F26 listájára** hivatkoznak. A `build
 
 **D09 specifikációs eltérés (2026-10-15):** az F08–F09 szerinti automatikus havi fizetés és lemondás nem MVP-kiadási feltétel. Az új, bejelentkezéshez kötött manuálisan havonta újravásárolható prémiumterméket külön kell kezelni a meglévő RINGI04 terméktől. Kész, ár/értékben megfelelő recurring integráció csak igazolt kompatibilitás és megrendelői költségvállalás után válhat következő fázissá; egyedi fizetési bridge nem része a projektnek. A DOCX következő változatába átvezetendő.
 
-**Kiegészítés P01:** „Virág kérdezi” szavazás a prototípusban és a generáló scriptben szerepel, de az 1.3-as DOCX F01–F26 és entitáslistájában nincs. Teljes tervezési opcióként szerepel, de V1-scope döntést igényel; nem elrejtett kötelező funkció.
+**D13 / P01 – ELFOGADVA (2026-10-15): „Virág kérdezi” szavazás az első éles verzió kötelező része.** A prototípusban szerepel, de a V1.3-as DOCX történeti F01–F26 listájában és entitáslistájában még nincs; **új, önálló P01 V1-követelményként** fel kell venni a specifikáció következő kiadásába. Tervezett minimum: Virág WordPress adminból kezel szavazásokat, bejelentkezett PWA-felhasználók válaszolhatnak, a szerver biztosítja a szavazatonkénti felhasználói egyediséget és az aktív időablakot, eredményláthatóság konfigurálható. Válaszmódosítás, egyidejű aktív szavazások és az eredmények pontos üzleti szabályai részletezendők.
+
+| P01 / D13 | „Virág kérdezi” – **kötelező V1** szavazás, WP admin kezelés, PWA szavazás/állapot/eredmény | PollService + saját táblák + REST + admin + React | TP01 (korábban opcionális) |
 
 ## 5. Prototípus értelmezése
 
