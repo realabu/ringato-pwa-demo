@@ -15,7 +15,7 @@ flowchart LR
   API --> Legacy
   API --> Tables[Ringató InnoDB táblák]
   API --> Chat[Better Messages adapter]
-  API --> CDN[Privát média storage és CDN]
+  API --> Media[Védett médiakiszolgálás - D10 választás nyitott]
   Admin[Virág WP admin] --> CoreAdmin[Ringató Core admin]
   CoreAdmin --> Tables
   CoreAdmin --> Legacy
@@ -45,7 +45,7 @@ A szolgáltató tényleges domainje telepítési beállítás. A példabeli éle
 | Későbbi kész recurring adapter (feltételes) | Jóváhagyott, külső kész integráció előfizetési státuszának leképezése a közös hozzáférésre | Saját recurring gateway/bridge fejlesztés a jelenlegi projektben |
 | Better Messages adapter | Szülő–Virág beszélgetés, DTO, transport | Új üzenettároló BM mellett |
 | Poll adapter / PollService (D13 / P01, V1 kötelező) | WordPress admin kérdés- és opciókezelés; bejelentkezett PWA-szavazat, egyediség, összesített eredmény | Kliensoldali szavazatszámlálás vagy hozzáférés más felhasználó válaszához |
-| Média adapter | Forrásazonosító → lejáró CDN hozzáférés | Publikus prémium MP4 feltöltés |
+| Média adapter | Forrásazonosító → jogosultságellenőrzött, lejáró helyi vagy külső stream-hozzáférés (D10 alapján választható) | Nyilvános prémium URL vagy előre rögzített CDN-szolgáltató |
 
 Ajánlott Core belső rétegek: `Domain` (állapot és invariáns), `Application` (use case), `Infrastructure` (WP/WC/CDN/BM repository), `Http` (REST schema + permission), `Admin`, `Jobs`, `Migrations`. Egy moduláris plugin, nem mikroszolgáltatások. A prémium-jogosultságot elválasztjuk a fizetési modelltől, hogy az MVP egyszeri WooCommerce-vásárlásairól később kész előfizetési integrációra lehessen váltani, **saját recurring bridge fejlesztése nélkül**.
 
@@ -134,7 +134,9 @@ Lejárt hold után beérkező sikeres fizetés: ugyanazon eseményzár mellett �
 
 ## 6. Média, push és üzenet
 
-- Média metadata WP adminban; nyers prémium source ID csak backendben. Playback végpont minden indításkor jogosultságot ellenőriz és rövid életű hozzáférést kér a választott szolgáltatótól. A HLS manifest, segment és kulcs védelem együtt szükséges; csak a manifest URL aláírása nem elég.
+**D10 üzletileg jóváhagyott vizsgálati sorrend (2026-10-16):** a jelenlegi tárhely PWA-kiszolgálása ismert, streamingkapacitása **nem igazolt**. A tartalom- és forgalombecslést biztonságosan korlátozott párhuzamos audio/video streamingteszt követi; az eredmények alapján összehasonlítjuk a helyi védett kiszolgálást a külső privát streaming/CDN költségével és teljesítményével. A konkrét szolgáltató és a költségvállalás **nyitott döntés**, médiamodul élesítése előtt lezárandó. A Ringató Core minden lejátszást jogosultságellenőrzéshez köt, a frontend providerfüggetlen PlaybackGrantet kap; a streammanifest/szegmensek/kulcsok védelme nem hagyható el egyik megoldásnál sem.
+
+- Média metadata WP adminban; nyers prémium source ID csak backendben. Playback végpont minden indításkor jogosultságot ellenőriz és az utóbb kiválasztott **helyi vagy külső** médiakiszolgálón keresztül rövid életű vagy ezzel egyenértékűen védett hozzáférést ad. A HLS manifest, segment és kulcs védelem együtt szükséges; csak a manifest URL aláírása nem elég.
 - Push manuális kampányból. Kampányküldéskor címzettpillanatkép, egy receipt/fiók, több eszközre szállítás. A push hálózati kézbesítés nem garantálható, a szerveroldali előzmény az igazságforrás. Nincs érzékeny üzenettartalom a zárképernyőn.
 - Better Messages tárolja a thread/message adatot; saját adapter megakadályozza az idegen threadhez hozzáférést és az ügyfelek közötti üzenetküldést. A BM publikus/guest/call/file lehetőségei nem lesznek automatikusan appfunkciók.
 
