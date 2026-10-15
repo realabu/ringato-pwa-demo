@@ -29,8 +29,9 @@
 - `Media`: CPT/taxonómia, privát forrásazonosító, playback provider adapter.
 - `Preferences`: kedvencek és verziózott sor.
 - `Push`: címzettcsoport admin, kampány előnézet/küldés, VAPID, device subscription, receipt/cursor, job retry/retention.
-- `Messaging`: Better Messages adapter + polling; opcionális szavazás modul csak scope-döntés után.
-- `Security` és `Operations`: permission callback minden route-hoz, rate limit, migráció, GDPR export/erase integráció, health/admin diagnosztika és reconciliation job.
+- `Messaging`: Better Messages adapter + AJAX/polling.
+- **`Polls` (D13/P01, V1 kötelező):** „Virág kérdezi” WordPress admin kérdés-/válaszopció-kezelés, publikálás és zárás, eredményláthatósági beállítás; saját szerveroldali válaszmentés, egyediség, összesítés és PWA API. Nem opcionális és nem puszta prototípusfunkció. A részletes válaszmódosítási szabály implementálás előtt egyeztetendő.
+- `Security` és `Operations`: permission callback minden route-hoz, rate limit, migráció, GDPR export/erase integráció, health/admin diagnosztika és reconciliation job. A szavazatadatok hozzáférési, export/törlési és megőrzési szabályai is a D12 adatkezelési döntéshez tartoznak.
 
 Átadáskor plugin forrás, migrációk, admin használati leírás, OpenAPI fájl, szerződéstesztek, staging konfigurációs minta titkok nélkül, kiadási/rollback runbook szükséges.
 
