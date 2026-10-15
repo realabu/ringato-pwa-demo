@@ -52,16 +52,16 @@ A login/logout/reset/regisztráció a meglévő WordPress/WC útvonalakon tört�
 | GET `/events/{id}` | P | – | EventDetail; logged-in kliens saját foglalását külön `/reservations` alapján kapja |
 | GET `/events/{id}/calendar.ics` | P | – | `text/calendar`, UID, UTC idő, escaped leírás; csak publikus program |
 | GET `/reservations` | U | event_id?, cursor, limit | Saját confirmed/cancelled/held státuszok |
-| POST `/events/{id}/reservations` | U | body `{}`; idempotency | D04: a szerver aktuális WP-userhez rendelt egyetlen family_id-jára egy aktív családi hely; nem fogad kliens által választott családot; kizárólag `reservation` type |
-| POST `/reservations/{id}/cancel` | U | body `{}`; idempotency | Saját alapdíjas foglalás lemondása; paid jegy refund külön workflow |
+| POST `/events/{id}/reservations` | U | body `{}`; idempotency | D04/D05: a szerver WP-userhez rendelt family_id-jára egy aktív családi hely; nincs kliens választotta család; csak `reservation` type; teltháznál `event_full`, V1 várólista nincs |
+| POST `/reservations/{id}/cancel` | U | body `{}`; idempotency | D05: saját alapdíjas foglalás csak `now < event.starts_at` feltétellel mondható le; pontos kezdéstől tiltás, idempotens felszabadítás; paid jegy refund külön D07 workflow |
 | GET `/entitlements` | U | kind?, state?, cursor, limit | Saját jegyek/bérletek aktuális szerverállapota |
 | GET `/entitlements/{id}` | U | – | EntitlementDetail, redemption history minimális staff-adattal |
 | POST `/entitlements/{id}/qr` | U | body `{}` | QRPayload: opaque payload, expires_at; csak használható saját entitlement |
 | GET `/subscription` | U | – | PremiumAccessSummary vagy null; MVP: `mode=manual_monthly`, `paid_through`, `access_active`, `renewal_enabled=false`, újravásárlás; később `mode=recurring` |
 | POST `/subscription/{id}/cancel-renewal` | U | body `{}`; idempotency | **Csak későbbi recurring feature flag esetén** elérhető, ha a kész integráció tényleges lemondást támogat. MVP manuális vásárlásnál nincs ilyen művelet (feature off) |
 | GET `/staff/events` | S | from?, to? | Hozzárendelt/scannelhető programok |
-| POST `/staff/checkins/inspect` | S | event_id, qr_payload | Eligibility: eligible vagy D03 szerint `already_checked_in` (eredeti redemption/időpont), reason_code, minimal family/entitlement, revision; read-only, nincs levonás; mindhárom típusnál visszatérés-jelzés |
-| POST `/staff/checkins/redeem` | S | event_id, qr_payload; idempotency | Első sikeres redeem: Redemption + entitlement_after, teljes újraellenőrzés és tranzakció; D03 szerint **ugyanazon eseményen ismétlés/visszatérés nem hoz új rekordot/levonást**, már belépett állapot és korábbi redemption adatai; mindhárom típus |
+| POST `/staff/checkins/inspect` | S | event_id, qr_payload | D03/D05: read-only eligibility / `already_checked_in`, eredeti belépés ideje; staff event-scope és konfigurált start−2h/end+2h vagy eseményenként módosított check-in időablak ellenőrzése; nincs levonás |
+| POST `/staff/checkins/redeem` | S | event_id, qr_payload; idempotency | D03/D05: első beváltás Redemption + entitlement_after, tranzakció és staff időablak újraellenőrzése; ugyanazon eseményre visszatérés semmit nem fogyaszt; időablakon kívül `not_checkin_window` |
 
 ### Média és preferenciák
 
@@ -110,8 +110,8 @@ A WordPress-admin szavazás-/opciókezelése szűk capability-vel és auditálá
 | DTO | Kötelező mezők és szemantika |
 |---|---|
 | Product | id, type, title, money (nullable configurable árnál), price_label, stock_status, purchasable, purchase_mode (`handoff`,`web_configurator`), permalink, image?, variations[], entitlement_kind? |
-| EventDetail | id, title, type (`open`,`reservation`,`paid`), starts_at, ends_at, timezone, venue:{name}, description_text, artwork?, capacity_families (null open), available_families (null open), product_id?, calendar_url |
-| Reservation | id, event_id, family_id, units=1, state (`held`,`confirmed`,`cancelled`,`expired`), hold_expires_at?, order_id?, created_at |
+| EventDetail | id, title, type (`open`,`reservation`,`paid`), starts_at, ends_at, timezone, venue:{name}, description_text, artwork?, capacity_families (null open), available_families (null open), product_id?, calendar_url, **D05**: waitlist_enabled=false (V1), checkin_from?, checkin_to? (szerveroldali default vagy admin override) |
+| Reservation | id, event_id, family_id, units=1, state (`held`,`confirmed`,`cancelled`,`expired`), hold_expires_at?, order_id?, created_at; **D05**: alapdíjas lemondhatóság a kezdési határig, paid hold 15 perc, visszaigazolt kapacitás nélkül nem confirmed |
 | Entitlement | id, kind (`family_ticket`,`pass`,`event_ticket`), state (`unactivated`,`active`,`used`,`exhausted`,`expired`,`revoked`,`legacy_review_required`), source_order_id/item_id, purchased_at, expires_at?, event_id?, total_uses, remaining, first_used_at?, used_at?, display_status; **D02: expiry kizárólag szerveren, product-rule snapshot alapján; bérlet first redeem előtt expires_at=null; API UTC exclusive határ** |
 | EntitlementDetail | Entitlement + redemption_history:[{id,event_id,redeemed_at,consumed_units}], next_action; nincs nyers QR hash/token |
 | OrderSummary | id, created_at, paid_at?, wc_status, total_money, items:[{item_id,product_id,title,quantity,entitlement_ids,provisioning_state}], summary_status |
