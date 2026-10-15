@@ -45,7 +45,7 @@ A szolgáltató tényleges domainje telepítési beállítás. A példabeli éle
 | Event adapter | Meglévő CPT/meta → normalizált esemény; saját PWA-kiegészítés | Meglévő naptár újraírása |
 | Prémium-hozzáférési adapter (MVP) | Kifizetett havi időszak, lejárat, újravásárlás; fizetési módtól független | Automatikus kártyaterhelés |
 | Későbbi kész recurring adapter (feltételes) | Jóváhagyott, külső kész integráció előfizetési státuszának leképezése a közös hozzáférésre | Saját recurring gateway/bridge fejlesztés a jelenlegi projektben |
-| Better Messages adapter | Szülő–Virág beszélgetés, DTO, transport | Új üzenettároló BM mellett |
+| Better Messages adapter (D11) | Ingyenes BM REST/AJAX kétirányú szöveges V1 chat, saját thread/read-state és aktív képernyőn kb. 10 s polling | Új üzenettároló BM mellett és kötelező fizetős WebSocket |
 | Poll adapter / PollService (D13 / P01, V1 kötelező) | WordPress admin kérdés- és opciókezelés; bejelentkezett PWA-szavazat, egyediség, összesített eredmény | Kliensoldali szavazatszámlálás vagy hozzáférés más felhasználó válaszához |
 | Média adapter | Forrásazonosító → jogosultságellenőrzött, lejáró helyi vagy külső stream-hozzáférés (D10 alapján választható) | Nyilvános prémium URL vagy előre rögzített CDN-szolgáltató |
 
@@ -140,7 +140,7 @@ Lejárt hold után beérkező sikeres fizetés: ugyanazon eseményzár mellett �
 
 - Média metadata WP adminban; nyers prémium source ID csak backendben. Playback végpont minden indításkor jogosultságot ellenőriz és az utóbb kiválasztott **helyi vagy külső** médiakiszolgálón keresztül rövid életű vagy ezzel egyenértékűen védett hozzáférést ad. A HLS manifest, segment és kulcs védelem együtt szükséges; csak a manifest URL aláírása nem elég.
 - Push manuális kampányból. Kampányküldéskor címzettpillanatkép, egy receipt/fiók, több eszközre szállítás. A push hálózati kézbesítés nem garantálható, a szerveroldali előzmény az igazságforrás. Nincs érzékeny üzenettartalom a zárképernyőn.
-- Better Messages tárolja a thread/message adatot; saját adapter megakadályozza az idegen threadhez hozzáférést és az ügyfelek közötti üzenetküldést. A BM publikus/guest/call/file lehetőségei nem lesznek automatikusan appfunkciók.
+- **D11 (2026-10-16) elfogadva:** a Better Messages **ingyenes** változata az elsődleges V1 REST/AJAX-integráció, ha a staging technikai/licenc-/jogosultsági próbán megfelel. Saját adapter véd az idegen threadtől és ügyfél–ügyfél üzenetküldéstől; plain text szülő–Virág üzenet, read/unread és ismételt küldés kezelése szükséges. Aktív chatnézeten kb. 10 s polling, háttérben kikapcsolva, visszatéréskor frissítés. A fizetős WebSocket csak igazolt szükség és külön költségjóváhagyás esetén vizsgálandó; sikertelen ingyenes próba nem jelenti az egyedi chatszolgáltatás automatikus fejlesztését. A BM publikus/guest/call/file lehetőségei nem lesznek automatikusan appfunkciók.
 
 ## 7. Üzemeltetési határok
 
