@@ -30,7 +30,7 @@ A kliens code alapján magyar UX-üzenetet mutat; nem a provider raw hiba-/stack
 | Method és útvonal | Auth | Input | Output / hatás |
 |---|---|---|---|
 | GET `/config` | P | – | api_version, minimum_client_version, features, timezone, public support URL; nincs titok |
-| GET `/me` | U | – | UserProfile: id, display_name, email, family, capabilities, subscription_summary |
+| GET `/me` | U | – | UserProfile: id, display_name, email, family (V1: önálló `family_id`, egyetlen WP-fióktulajdonos), capabilities, subscription_summary; D04: nincs többfiókos családtagság |
 | PATCH `/me` | U | display_name, family_display_name | Saját megjelenítési adatok; e-mail/jelszó módosítás webes WP/WC folyamat |
 | GET `/home` | U | – | next_admission, subscription, featured_media, upcoming_events, unread_count; **V1 P01 aktív poll összefoglaló / link, ha van** |
 | GET `/products` | P | cursor, limit, search?, category? | Product[]: alapból ugyanazok az aktív, weben látható és megvásárolható WC-termékek (régi Online Ringató és új app-előfizetés/eseménytermék is); opcionális „csak webshopban” kivétel D01 szerint |
@@ -39,6 +39,8 @@ A kliens code alapján magyar UX-üzenetet mutat; nem a provider raw hiba-/stack
 | GET `/orders/{id}` | U | – | Saját OrderDetail; nem más ügyfél/számla adatai |
 | POST `/checkout-intents` | U | product_id, variation_id?, quantity, attributes?; idempotency | CheckoutIntent + egyszeri handoff_url; szerverár és férőhely |
 | GET `/checkout-intents/{id}` | U | – | Saját payment_state/provisioning_state/order_id/entitlement_ids; nem token újrakiadás |
+
+**D04 V1 család-/API-határ (2026-10-16):** egy bejelentkezett WordPress-fiók egy külön belső `family_id`-hoz kapcsolódik. A saját `/me`, jegy-, foglalás- és rendelésvégpontok kizárólag a szerveroldalon feloldott tulajdonos/család adatait adják vissza; idegen családazonosítóval nem lehet lekérdezni vagy módosítani őket. Nincs V1 publikus családegyesítés, több szülős tagság, jegyátruházás vagy több család önkiszolgáló checkout API. Manuális kivétel kizárólag korlátozott admin capability, hitelesítés és audit mellett. Későbbi tagsági API-hoz új, külön jóváhagyott szerződés kell.
 
 A login/logout/reset/regisztráció a meglévő WordPress/WC útvonalakon történik. **D12:** a webshopban jelenleg vendégvásárlás működik és alapból megmarad; a fiókhoz kötött PWA- és havi prémiumtermékhez regisztráció/bejelentkezés szükséges. A prémiumtermék **webes pénztárnál is szerveroldali termékszintű login-korlátot** kap, nem globális guest checkout tiltást. A regisztráció tényleges WooCommerce-beállításai és UX-e stagingben ellenőrizendők. `GET /app/bootstrap.json` a Shell nem-REST útvonala az auth/nonce frissítéséhez. A `/app/checkout-handoff` a Shell szűk, sessionhöz kötött tokenfelhasználó útvonala; nem általános REST/kosár API.
 
@@ -50,7 +52,7 @@ A login/logout/reset/regisztráció a meglévő WordPress/WC útvonalakon tört�
 | GET `/events/{id}` | P | – | EventDetail; logged-in kliens saját foglalását külön `/reservations` alapján kapja |
 | GET `/events/{id}/calendar.ics` | P | – | `text/calendar`, UID, UTC idő, escaped leírás; csak publikus program |
 | GET `/reservations` | U | event_id?, cursor, limit | Saját confirmed/cancelled/held státuszok |
-| POST `/events/{id}/reservations` | U | body `{}`; idempotency | 1 saját családi hely; kizárólag `reservation` type |
+| POST `/events/{id}/reservations` | U | body `{}`; idempotency | D04: a szerver aktuális WP-userhez rendelt egyetlen family_id-jára egy aktív családi hely; nem fogad kliens által választott családot; kizárólag `reservation` type |
 | POST `/reservations/{id}/cancel` | U | body `{}`; idempotency | Saját alapdíjas foglalás lemondása; paid jegy refund külön workflow |
 | GET `/entitlements` | U | kind?, state?, cursor, limit | Saját jegyek/bérletek aktuális szerverállapota |
 | GET `/entitlements/{id}` | U | – | EntitlementDetail, redemption history minimális staff-adattal |
