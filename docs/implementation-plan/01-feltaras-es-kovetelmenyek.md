@@ -90,16 +90,18 @@ Az alábbi F-azonosítók **a DOCX F01–F26 listájára** hivatkoznak. A `build
 | F14 | **D03 elfogadva:** mindhárom típusnál (családi jegy, 8 alkalmas bérlet, külön áras eseményjegy) egy jogosultság konkrét eseményen csak egyszer váltható be; visszatéréskor nincs új levonás. A családi jegy globálisan egyszeri, a külön eseményjegy eseményhez kötött, a bérlet másik eseményen ugyanazon napon újra használható | EntryService + tranzakció + UNIQUE entitlement/event + staff visszatérésjelzés | T14; T17; T18; T24; D03 |
 | F15 | Programrészlet, naptár előtte/utána | Event adapter + ICS | T15 |
 | F16 | Rendszeres program, nincs foglalás | `open` event | T16 |
-| F17 | Limitált alapdíjas: foglalás ÉS jegy/bérlet | ReservationService + EntryService | T17 |
-| F18 | Külön áras: fizetés = családi hely + eseményjegy | Hold + WC paid event | T18 |
+| F17 | **D05 elfogadva:** limitált alapdíjas foglalás + jegy/bérlet; foglalás a program kezdetéig lemondható, felszabaduló családi hely újra foglalható | ReservationService + EntryService + idempotens kapacitásfelszabadítás | T17; D05 |
+| F18 | **D05 elfogadva:** külön áras jegy és családi hely csak sikeres fizetés/kapacitás mellett; vásárláskor 15 perces hold, késő fizetés nem okozhat túlfoglalást | 15m hold + WC paid event + tranzakciós kapacitásellenőrzés, `paid_capacity_conflict` | T18; D05 |
 | F19 | **D04 elfogadva:** V1 egy WP-fiók = egy külön family_id, 1 család = 1 kapacitásegység/foglalkozás; nincs fiókösszekapcsolás vagy önkiszolgáló jegyátadás | FamilyService + szerveroldali családfeloldás + kapacitászár; későbbi tagságra előkészített ID | T19; T20; D04 |
 | F20 | Rendelés és jogosultság státusz együtt | WC order adapter + wallet | T20 |
 | F21 | Virág manuális egyéni/csoportos push | WP admin + PushService | T21 |
 | F22 | 365 nap előzmény, panelmegnyitás óta új | Receipts + ReadCursor | T22 |
 | F23 | Aszinkron szöveges üzenet Virágnak; D11: ingyenes BM V1, aktív chatben kb. 10 s polling | Better Messages REST/AJAX adapter, staging képesség- és jogosultsági ellenőrzés; fizetős WebSocket külön jóváhagyás esetén | T23; D11 |
-| F24 | Staff ellenőrzés, beváltás, napló | Staff capability + scanner | T24 |
+| F24 | **D05 elfogadva:** staff ellenőrzés/beváltás alapból kezdés előtt 2 órától befejezés után 2 óráig, eseményenként WordPressből konfigurálható | Staff capability + scanner + admin időablakbeállítás | T24; D05 |
 | F25 | WP admin kezeli a termék/program/push adatokat | Core admin + meglévő admin | T25 |
 | F26 | A „Kuponjaim” és a rövid médiacsomag V1-beli kezelése a specifikáció szerint; a régi Online Ringató értékesítésének tiltását a 2026-10-15-i D01 döntés felülírta | Route-kezelés; egységes katalógus D01 szerint | T26; D01 |
+
+**D05 jóváhagyott foglalási és beléptetési szabályok (2026-10-16):** alapdíjas foglalás az esemény kezdését **megelőzően** lemondható; a külön áras foglalkozáshoz vásárláskor 15 perces helyfenntartás tartozik minden értékesítési csatornán. A későn igazolt fizetés csak újra ellenőrzött szabad férőhely esetén adhat jegyet/foglalást, másként `paid_capacity_conflict` és D07 szerinti pénzügyi ügyintézés. A staff alapértelmezett ideje start−2h/end+2h, eseményenként WordPressből módosítható; V1-ben nincs várólista.
 
 **D04 jóváhagyott családmodell (2026-10-16):** egy WordPress ügyfélfiók egy önálló `family_id`-val rendelkező családot képvisel; a jegyek/bérletek/eseményjegyek/foglalások a családhoz tartoznak, két szülő külön fiókja nincs automatikusan összekapcsolva. Jegyátruházás és több család önkiszolgáló vásárlása nem V1. Kivételes esetek kézi, jogosultság- és auditált ügyintézésben; eseményenként legfeljebb egy aktív családi foglalás. A `family_id` elkülönítése lehetőséget hagy későbbi többfiókos családkezelésre, de azt most nem fejlesztjük. A D08 legacy/guest-claim ettől külön nyitott.
 
