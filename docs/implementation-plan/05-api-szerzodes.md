@@ -58,8 +58,8 @@ A login/logout/reset/regisztráció a meglévő WordPress/WC útvonalakon tört�
 | GET `/subscription` | U | – | PremiumAccessSummary vagy null; MVP: `mode=manual_monthly`, `paid_through`, `access_active`, `renewal_enabled=false`, újravásárlás; később `mode=recurring` |
 | POST `/subscription/{id}/cancel-renewal` | U | body `{}`; idempotency | **Csak későbbi recurring feature flag esetén** elérhető, ha a kész integráció tényleges lemondást támogat. MVP manuális vásárlásnál nincs ilyen művelet (feature off) |
 | GET `/staff/events` | S | from?, to? | Hozzárendelt/scannelhető programok |
-| POST `/staff/checkins/inspect` | S | event_id, qr_payload | Eligibility: eligible, reason_code, minimal family/entitlement, revision; nincs levonás |
-| POST `/staff/checkins/redeem` | S | event_id, qr_payload; idempotency | Redemption + entitlement_after; teljes újraellenőrzés és tranzakció |
+| POST `/staff/checkins/inspect` | S | event_id, qr_payload | Eligibility: eligible vagy D03 szerint `already_checked_in` (eredeti redemption/időpont), reason_code, minimal family/entitlement, revision; read-only, nincs levonás; mindhárom típusnál visszatérés-jelzés |
+| POST `/staff/checkins/redeem` | S | event_id, qr_payload; idempotency | Első sikeres redeem: Redemption + entitlement_after, teljes újraellenőrzés és tranzakció; D03 szerint **ugyanazon eseményen ismétlés/visszatérés nem hoz új rekordot/levonást**, már belépett állapot és korábbi redemption adatai; mindhárom típus |
 
 ### Média és preferenciák
 
@@ -123,7 +123,7 @@ A WordPress-admin szavazás-/opciókezelése szűk capability-vel és auditálá
 | PollResults (P01) | poll_id, total_responses, options:[{option_id,count,percentage}]; csak engedélyezett eredményláthatóság mellett |
 | CheckoutIntent | id,state (`created`,`handed_off`,`pending_payment`,`paid_processing`,`fulfilled`,`failed`,`expired`,`paid_capacity_conflict`), payment_state, provisioning_state, order_id?, entitlement_ids[], hold_expires_at?; handoff_url csak létrehozáskor |
 | Eligibility | eligible,reason_code,family_display_name?,entitlement_summary?,event_id,server_time,revision; read-only tájékoztató |
-| Redemption | id,event_id,entitlement_id,redeemed_at,consumed_units,entitlement_after |
+| Redemption | id,event_id,entitlement_id,redeemed_at,consumed_units,entitlement_after; D03: típusfüggetlen egyedi entitlement+event, visszatérés az eredeti rekordra hivatkozik, nincs új consumed_units |
 
 `ends_at` régi eseménynél hiányozhat az adatbázisban; PWA publikálás előtt admin kitöltés kell, nem becsült érték. Számított `state` mindig szerveridőre érvényes; UI határidő elérésekor újratölt.
 
@@ -170,7 +170,7 @@ Content-Type: application/json
 {"event_id":"event-demo","qr_payload":"ringato:v1:example-opaque-token"}
 ```
 
-201 Redemption; azonos key replay 201 ugyanazzal az ID-val, nem új levonás. Domain hibák: `ticket_used`, `pass_exhausted`, `entitlement_expired`, `entitlement_revoked`, `event_mismatch`, `reservation_required`, `not_checkin_window`, `already_checked_in`; 409/422 a lezárt OpenAPI szerint. Másik user saját jegy-végpontjára 404; staff számára a szükséges állapotkód kiadható, PII nélkül.
+201 Redemption; azonos key replay 201 ugyanazzal az ID-val, nem új levonás. **D03:** ugyanazon konkrét eseményre visszatérés mindhárom jogtípusnál `already_checked_in` és az eredeti belépési rekord/időpont alapján ellenőrizhető; másik idempotency key sem készíthet új redemptiónt. Ez **nem új sikeres redeem**. Domain hibák: `ticket_used` (másik eseményen elhasznált egyszeri jegy), `pass_exhausted`, `entitlement_expired`, `entitlement_revoked`, `event_mismatch` (másik eseményre szóló külön áras jegy), `reservation_required`, `not_checkin_window`, `already_checked_in`; 409/422 a lezárt OpenAPI szerint. Másik user saját jegy-végpontjára 404; staff számára a szükséges állapotkód kiadható, PII nélkül.
 
 ## 5. Admin API és vendor-határ
 
