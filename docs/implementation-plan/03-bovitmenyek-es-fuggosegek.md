@@ -11,7 +11,7 @@
 | Meglévő Barion gateway | Egyszeri fizetés megtartása | A 3.10.2 gateway `products`,`refunds` képességet deklarál, recurringot nem |
 | Billingo | Meglévő számlázás megtartása | Manuálisan vásárolt havi termék és refund bizonylat; később csak jóváhagyott recurring esetén renewal számlázás |
 | WooCommerce Subscriptions vagy más kész recurring opció | **Nem MVP-kötelező; feltételes későbbi beszerzés** | A legjobb ár/értékű kompatibilis megoldás teljes licenc-/éves-/tranzakciós költségét és üzemeltetését fel kell mérni; megrendelői vállalás kell |
-| Better Messages | **Új integrációs jelölt** szülő–Virág chathez | V1 free AJAX/polling vizsgálat; WebSocket opcionális fizetős licenc |
+| Better Messages | **D11 elfogadott V1 irány:** ingyenes REST/AJAX változat stagingpróbával | Csak aktív chatnézeten kb. 10 s polling; jogosultság/read/unread/kétirányú kommunikáció igazolandó. Fizetős WebSocket csak indokolt igény és külön megrendelői költségjóváhagyás után |
 | Ringató Core | **Saját plugin szükséges** | REST, admin, domainmodell, kapacitás, jegy/bérlet, média, push, BM adapter |
 | Ringató App Shell | **Saját vékony plugin szükséges** | Build kiszolgálása `/app/`, bootstrap, origin/scope, release verzió |
 | Saját Barion recurring bridge | **NEM része a jelenlegi projektnek** | Egyedi fizetési fejlesztés a rendelkezésre álló keretbe nem fér bele; kész igazolt integráció vagy manuális havi MVP |
@@ -31,7 +31,7 @@
 - `Media`: CPT/taxonómia, privát forrásazonosító, playback provider adapter.
 - `Preferences`: kedvencek és verziózott sor.
 - `Push`: címzettcsoport admin, kampány előnézet/küldés, VAPID, device subscription, receipt/cursor, job retry/retention.
-- `Messaging`: Better Messages adapter + AJAX/polling.
+- `Messaging`: D11 szerint az **ingyenes Better Messages REST/AJAX** az elsődleges, stagingben tesztelendő. Aktív chatben kb. 10 s lekérdezés, háttérben leállítás, visszatéréskor frissítés; saját parent–Virág thread, read/unread, retry/idempotencia és jogosultság. Ha az ingyenes API nem alkalmas, új döntés szükséges.
 - **`Polls` (D13/P01, V1 kötelező):** „Virág kérdezi” WordPress admin kérdés-/válaszopció-kezelés, publikálás és zárás, eredményláthatósági beállítás; saját szerveroldali válaszmentés, egyediség, összesítés és PWA API. Nem opcionális és nem puszta prototípusfunkció. A részletes válaszmódosítási szabály implementálás előtt egyeztetendő.
 - `Security` és `Operations`: permission callback minden route-hoz, rate limit, migráció, GDPR export/erase integráció, health/admin diagnosztika és reconciliation job. A szavazatadatok hozzáférési, export/törlési és megőrzési szabályai is a D12 adatkezelési döntéshez tartoznak.
 
@@ -115,7 +115,7 @@ A meglévő Barion SDK-t nem szerkesztjük vendor fájlban. Az MVP a meglévő e
 - **D12 (2026-10-15):** a meglévő tárhely PWA-kiszolgálásra alkalmas a projektgazda szerint; **tesztdomaines WP példány és fejlesztői lokális környezet már rendelkezésre áll**. A stagingben kell próbálni a `/app/` telepítését/plugint, rewrite/HTTPS/cache/WAF viselkedést, konfigurációt, frissítést és visszaállítást. Ezek sikeres eredménye még nincs dokumentálva. DB-backup/deploy és PHP/DB erőforrás valós ellenőrzés továbbra is szükséges.
 - **D10 jóváhagyott eljárás (2026-10-16), mérés még nyitott:** a PWA-képes tárhely párhuzamos streamkapacitását biztonságos, üzemeltetővel egyeztetett lépcsőzetes terheléssel kell igazolni a stagingen. Készül tartalom- és várható egyidejű nézőszám/bitrate/havi forgalom becslés; mérjük a lejátszási hibát, pufferelést, sávszélességet, HTTP kapcsolatokat, CPU/memória/I/O terhelést, adatforgalmi limiteket, webshopválaszidőt, HLS/range mobil kompatibilitást. **Nincs jelenleg igazolt maximális párhuzamos szálérték.**
 - **D10 szolgáltató továbbra is nyitott:** a meglévő tárhelyen megfelelően védett streaming és a külső privát streaming/CDN költségét/teljesítményét/üzemeltetését kell összevetni. Teljes ár: tárolás, havi adatforgalom, szükséges transzkódolás, beállítás/fejlesztés, fenntartás, szolgáltatási korlátok és ügyféltámogatás. Csak mérés és költségtábla után javasoljunk a megrendelőnek konkrét választást. A közvetlen publikus WP uploads URL önmagában nem megfelelő prémiumvédelem.
-- MVP: opcionális Better Messages WebSocket licenc, Ringató Core/App Shell saját fejlesztés és karbantartás. **Recurring csak feltételes:** több kész megoldás teljes licenc-/éves-/tranzakciós-/üzemeltetési költségének összehasonlítása és megrendelői vállalása; saját fizetési bridge nem tervezett.
+- MVP: ingyenes Better Messages AJAX/REST, a szükséges integrációs tesztek eredményétől függően; Ringató Core/App Shell saját fejlesztés és karbantartás. **WebSocket nem kötelező és nincs jóváhagyva:** csak indoklás, licenc-/költségellenőrzés és külön megrendelői döntés után. **Recurring csak feltételes:** több kész megoldás teljes licenc-/éves-/tranzakciós-/üzemeltetési költségének összehasonlítása és megrendelői vállalása; saját fizetési bridge nem tervezett.
 - Meglévő Barion egyszeri fizetés sandboxellenőrzése, Billingo tesztüzem, SMTP tesztcímek. Barion merchant recurring jóváhagyás **csak későbbi automatikus opció esetén**.
 - VAPID kulcspár backendben; nincs kötelező fizetős push SaaS. A push szolgáltatói végpontok eléréséhez tárhely egress kell.
 - Valós rendszer-cron és Action Scheduler workerfuttatás; napi mentés, monitoring, hibariasztás.
