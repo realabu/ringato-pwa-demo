@@ -50,7 +50,7 @@ Minden alábbi útvonal `/app` prefix alatt. Mobil elsődleges nav: Főoldal, T�
 | `/favorites` | Fiókhoz kötött kedvenc, egyedi lejátszás | 06-favorites |
 | `/queue` | Sor lista, fel/le, törlés, tételről indítás | 07-queue, 08-queue-playing |
 | `/events` | Három típus, foglalásaim | 09-events |
-| `/events/:id` | Részlet, ICS, foglalás/lemondás/vásárlás | 10-open-detail – 14-paid-booked |
+| `/events/:id` | Részlet, ICS, **D05**: alapdíjas foglalás/kezdésig lemondás, betelt állapot várólista nélkül, fizetős 15 perces helyfenntartás és késői fizetésnél külön státusz | 10-open-detail – 14-paid-booked |
 | `/shop` | Élő katalógus + app-előfizetés | 15-shop |
 | `/subscription` | MVP: havi prémium aktív/lejárt, kifizetett időszak, újravásárlás CTA; **nincs lemondás vagy automatikus megújulás**. Később recurring módhoz feltételes lemondás | 16-subscription, 17-sub-ending (recurring design csak később) |
 | `/checkout/:intentId` | Szerver payment/provisioning státusz | Új valós folyamatképernyő |
@@ -64,6 +64,8 @@ Minden alábbi útvonal `/app` prefix alatt. Mobil elsődleges nav: Főoldal, T�
 | `/staff/checkin` | Eseményválasztás, kamera, inspect, redeem | 23-checkin, 24-ticket-scanned |
 
 A `26-push-admin` demonstrációs kampányfelület véglegesen WP adminban valósul meg; nincs hozzá ügyfél/PWA kampányroute. A modalokból valódi deep-linkelhető részletoldal lesz, böngésző Back kompatibilitással. **D13 miatt a „Virág kérdezi” szavazás kötelező V1:** a főoldalon aktív poll összefoglalója/hivatkozása, a `/polls` útvonalon bejelentkezett felhasználói szavazás, eredmény csak jóváhagyott láthatósággal; Virág admin oldali kérdés- és opciókezelést kap. Szerver dönt az egyszeriségről, a kliens csak állapotot mutat; szavazat válaszmódosítása részletszabály még nyitott.
+
+**D05 V1 program- és fizetési UX (2026-10-16):** a limitált alapdíjas esemény foglalása csak az esemény kezdete előtt mondható le; az app a szerveridő/státusz alapján engedi a gombot, a kezdési határt szerver ellenőrzi. Betelt foglalkozásnál „Megtelt” állapot jelenik meg, **várólistagomb nélkül**. A külön áras esemény webes pénztárra átadásakor a helyfenntartás **15 perc**, de a kliens nem tekintheti automatikusan véglegesnek a helyet vagy a fizetési visszairányítást. Lejárt hold utáni, férőhely nélkül beérkező sikeres fizetésnél `paid_capacity_conflict`: tájékoztatás a kifizetett, de még nem teljesíthető vásárlásról és ügyintézési útvonalról; nem jelenik meg használható jegy vagy megerősített foglalás. A D03 szerinti staff beléptetés start−2h/end+2h alap időablaka WordPress adminban eseményenként módosítható; a UI kizárólag a szerver eredményét mutatja.
 
 **D04 V1 fiók- és család-UX (2026-10-16):** az appban a belépett fiók a hozzá rendelt egyetlen család jegyeit/bérleteit, külön eseményjegyeit, foglalásait látja. Másik szülő önálló WP-fiókjában ezek nem válnak automatikusan láthatóvá; nincs V1 családmeghívó, fiókegyesítés, jegyátadás vagy több család kezelő. A kivételes több családos vásárlás/átadás ügyfélszolgálati megkereséssel, Virág vagy illetékes munkatárs ellenőrzött kézi ügyintézésével történik, nem kliensoldali jogosultságmódosítással. A későbbi bővíthetőséghez a PWA csak a szerver family-model DTO-ját használja, nem feltételezi, hogy family ID = user ID.
 
