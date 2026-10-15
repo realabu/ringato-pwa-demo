@@ -145,11 +145,19 @@ A média és a chat végleges megoldása később is lezárható, de a megvalós
 
 **Megvalósítási/tesztelési szabály:** a WordPressben beállítható kivételes eseményablak, a kezdési határpillanat, a 15 perces holdlejárat, a dupla visszaigazolás, az utolsó helyért folyó párhuzamos vásárlás, valamint a lejárt hold utáni fizetés elutasítása/feloldása kötelezően tesztelendő. A D05 üzleti szabályai lezártak; **a teszteredmények és a D07 szerinti visszatérítési eljárás még nyitottak**.
 
-**D07 – Visszatérítés és chargeback**
+**D07 – Visszatérítés és chargeback – ELFOGADOTT V1 DÖNTÉS (2026. október 16.)**
 
-Megválaszolandó kérdés: Mi történik részleges visszatérítés, már használt jegy/bérlet vagy banki visszaterhelés esetén? Mikor vonjuk vissza a jogosultságot, szabadítjuk fel a helyet vagy adunk vissza alkalmat?
+**Döntés:** A visszatérítés elsődleges ügyintézési helye a **meglévő WooCommerce**, a tényleges pénzmozgást a meglévő **Barion fizetési bővítmény** kezeli, a számlázási/helyesbítési folyamat a **Billingóban** marad. **Nem fejlesztünk saját Barion refund rendszert vagy új fizetési alrendszert.**
 
-A terv javaslata: A fel nem használt jogosultságot visszavonjuk; külön áras eseménynél a hely felszabadul. A használt és részleges visszatérítési esetek kézi ellenőrzést igényelnek. Nincs automatikus alkalom-visszaadás.
+- **Egyértelmű teljes visszatérítés, fel nem használt jogosultság:** ha az adott, beazonosítható WooCommerce-rendeléstételre a teljes visszatérítés ténylegesen **sikeresen rögzítve / visszaigazolva** történt, a hozzá tartozó **még fel nem használt** családi jegy, bérlet vagy külön áras eseményjegy visszavonható. Csak az érintett rendeléstétel és az abból származó jog változhat, más termék nem.
+- **Külön áras eseményjegy:** az egyértelműen visszatérített, még fel nem használt eseményjegy **aktív foglalása egyszer, kapacitásvédett tranzakcióban** felszabadítható, ha a hely még releváns. Nem szabad duplán felszabadítani a helyet vagy túlfoglalást okozni.
+- **Már használt jegy/bérlet, részben felhasznált bérlet, részleges/összegalapú vagy többtermékes rendelés visszatérítése:** **nem** jár automatikus teljes jogosultság-visszavonással vagy alkalom-visszaadással. Virág/jogosult ügyintéző rendeléstételenként megvizsgálja és indoklással, jogosultságellenőrzéssel, naplózott kézi korrekcióval dönt. A korábbi sikeres belépési események **auditja változatlanul megmarad**.
+- **Közvetlenül a Barion felületén végzett refund, chargeback, vitatott vagy visszaterhelt fizetés:** nem tételezzük fel, hogy a WooCommerce automatikusan értesül róla. Külön **kézi egyeztetési/reconciliation folyamat** szükséges a Barion, WooCommerce és Billingo állapota között. Kockázat esetén a még fel nem használt érintett hozzáférés ideiglenesen felfüggeszthető, de bizonytalan adat alapján nem történhet végleges automatikus törlés vagy alkalom-visszaadás.
+- A **D05 szerinti `paid_capacity_conflict`** esetben nincs kiállított belépési jog; a ténylegesen megfizetett, de nem teljesíthető rendelés pénzügyi rendezése a WooCommerce/Barion/Billingo ellenőrzött folyamatában történjen, külön ügyintézési állapottal.
+- **Kötelező staging/sandbox próba:** **WooCommerce → Barion → Billingo** teljes és részleges refund; siker, hiba, újrapróbálkozás, állapot- és rendeléstétel-megfeleltetés, helyesbítő bizonylat, egyértelmű/használt jog, többtermékes rendelés, eseményhely egyszeres felszabadítása, valamint a Barionban közvetlenül indított refund/chargeback **szinkronizációs képességének külön vizsgálata**.
+- A helyben feltárt **Barion Payment Gateway for WooCommerce 3.10.2** deklarál `refunds` képességet; ez **nem bizonyítja**, hogy az éles beállításokkal a teljes/részleges refund és a Billingo-szinkron már működik. Tényleges sandbox-bizonyíték szükséges. Az esetleges működési hiány nem jogosít automatikus egyedi fizetési fejlesztésre; külön egyeztetés kell.
+
+**Státusz:** üzleti szabály lezárva; a WooCommerce/Barion/Billingo integráció tényleges megfelelősége, a chargeback-értesítés és az egyeztetési admineljárás részletes tesztelése **nyitott műszaki/üzemeltetési feladat** (M0/M3/M5/M9, T08/T18/T20/T25/T30).
 
 **D06 – Pushértesítések és címzettcsoportok**
 
