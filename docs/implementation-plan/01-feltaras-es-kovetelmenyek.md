@@ -96,7 +96,7 @@ Az alábbi F-azonosítók **a DOCX F01–F26 listájára** hivatkoznak. A `build
 | F20 | Rendelés és jogosultság státusz együtt | WC order adapter + wallet | T20 |
 | F21 | Virág manuális egyéni/csoportos push | WP admin + PushService | T21 |
 | F22 | 365 nap előzmény, panelmegnyitás óta új | Receipts + ReadCursor | T22 |
-| F23 | Aszinkron szöveges üzenet Virágnak | Better Messages adapter | T23 |
+| F23 | Aszinkron szöveges üzenet Virágnak; D11: ingyenes BM V1, aktív chatben kb. 10 s polling | Better Messages REST/AJAX adapter, staging képesség- és jogosultsági ellenőrzés; fizetős WebSocket külön jóváhagyás esetén | T23; D11 |
 | F24 | Staff ellenőrzés, beváltás, napló | Staff capability + scanner | T24 |
 | F25 | WP admin kezeli a termék/program/push adatokat | Core admin + meglévő admin | T25 |
 | F26 | A „Kuponjaim” és a rövid médiacsomag V1-beli kezelése a specifikáció szerint; a régi Online Ringató értékesítésének tiltását a 2026-10-15-i D01 döntés felülírta | Route-kezelés; egységes katalógus D01 szerint | T26; D01 |
