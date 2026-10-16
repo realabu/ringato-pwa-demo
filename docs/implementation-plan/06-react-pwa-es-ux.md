@@ -61,7 +61,7 @@ Minden alábbi útvonal `/app` prefix alatt. Mobil elsődleges nav: Főoldal, T�
 | `/wallet` | Jegyek, bérletek, rendeléselőzmény | 18-wallet |
 | `/wallet/:id` | **D02 szerinti szerver által számolt lejárat**, QR, beváltási történet; bérlet első sikeres használat előtt „még nem indult” | 19-ticket-valid – 22-pass |
 | `/orders/:id` | Saját rendeléstétel és kapcsolt jogosultság | 18-wallet részlet |
-| `/notifications` | 365 nap, ÚJ, deep link | 25-notifications |
+| `/notifications` | Alapértelmezett 365 napos, konfigurálható megjelenítés, ÚJ, deep link (D06/D12) | 25-notifications |
 | `/polls` | **D13/P01 kötelező V1** „Virág kérdezi” – aktív kérdés, válaszopciók, saját szavazati státusz, megengedett összesített eredmény; nincs szavazásnál üres állapot | Prototípus „Virág kérdezi” funkció + új hibás/lezárt képernyők |
 | `/messages` | Saját szülő–Virág szöveges beszélgetés | 27-messages |
 | `/profile` | WP fiókadatok és D04 szerinti saját család megjelenítése, beállítások, logout; nincs több szülős összekapcsolás vagy átadás V1-ben | 28-profile |
@@ -121,7 +121,7 @@ Csak `ringato-app-<build>` prefixű saját cache törölhető. Nem más plugin t
 
 ## 5. Push és értesítések
 
-D06 elfogadva: az app első megnyitásakor nem kérünk pushengedélyt. A feliratkozást csak a felhasználó explicit gombja indítja; elutasított OS permissiont nem kérjük újra automatikusan. A címzett 365 napos appbeli értesítéslistája push nélkül is látható. Külön állapot: nem támogatott / telepítés szükséges / még nincs kérve / granted / denied / subscription hibás. Az app kapcsolója nem tudja önmagában visszaállítani a böngésző denied jogát.
+D06 elfogadva: az app első megnyitásakor nem kérünk pushengedélyt. A feliratkozást csak a felhasználó explicit gombja indítja; elutasított OS permissiont nem kérjük újra automatikusan. A címzett **alapból 365 napos, WordPressből konfigurálható megjelenítési ablakú** appbeli értesítéslistája push nélkül is látható. **D12:** ez nem fizikai törlési határidő; új GDPR törlés/anonimizálás UI-t nem tervezünk. Külön állapot: nem támogatott / telepítés szükséges / még nincs kérve / granted / denied / subscription hibás. Az app kapcsolója nem tudja önmagában visszaállítani a böngésző denied jogát.
 
 iOS/iPadOS Web Push a Home Screenre felvett webappban, iOS/iPadOS 16.4-től jelent meg; tényleges készülék/böngésző követelményt induláskor és kiadáskor ellenőrizni kell. Permission kérés felhasználói interakcióból. [WebKit dokumentáció](https://webkit.org/blog/13878/web-push-for-web-apps-on-ios-and-ipados/)
 
