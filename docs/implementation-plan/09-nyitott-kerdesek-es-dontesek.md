@@ -176,11 +176,18 @@ A média és a chat végleges megoldása később is lezárható, de a megvalós
 
 A D09 manuális prémium időszak-/újravásárlási/lejárati részletei, a D10 szolgáltatóválasztás és a D13 szavazási részletszabályai a fenti fejezetek szerint szintén nyitottak. Az elfogadott D06 kezdeti csoportlistája még rögzítendő; a technikai próbák nem új üzleti döntések.
 
-**D08 – Régi jegyek, bérletek és vendégrendelések átvezetése**
+**D08 – Régi jegyek, bérletek és vendégrendelések átvezetése – ELFOGADOTT FOKOZATOS ÁTÁLLÁS (2026. október 16.)**
 
-Megválaszolandó kérdés: Honnan tudjuk a papírbérletek maradék alkalmait, első használatát és a régi jegyek beváltását? Hogyan rendelünk korábbi vendégvásárlást egy felhasználói fiókhoz? Mi lesz az átállás időpontja?
+**Döntés:** **Nem kell az összes régi papírjegyet és papírbérletet digitalizálni az első verzió indulásához.** A meglévő, érvényes papíros jogosultságok a megszokott, ellenőrzött helyszíni rendben tovább használhatók, miközben az **átállást követően az új digitális jegy- és bérletfolyamatba tartozó vásárlásokat** az új alkalmazás kezeli. A két működés átmenetileg párhuzamos. A D01 szerinti régi WooCommerce-termékek megtartását ez önmagában nem tiltja vagy írja át; a régi SKU-k új digitális jogosultsághoz rendelését termékenként kell ellenőrizni.
 
-A terv javaslata: Csak igazolt adatokból keletkezzen aktív digitális jogosultság. A bizonytalan esetek kézi ellenőrzésre kerüljenek, aktív QR nélkül. A vendégrendelés hozzárendelése igazolt folyamatban történjen; önmagában az e-mail-cím egyezése nem elegendő.
+- **Régi papírjogok:** nincs kötelező tömeges QR-import vagy minden régi papírbérlet digitalizálása. A régi jegyek/bérletek elfogadásának és felhasználásuk adminisztrációjának világos, a helyszíni munkatársakkal egyeztetett átmeneti eljárása legyen. Az első éles kiadásig a teljes régi készlet bevitele nem G3-kapu.
+- **Opcionális, ellenőrzött egyedi átvezetés:** digitális, beváltható jogosultság **csak igazolt** fel nem használt jegyből, illetve ellenőrzött első-használati dátumú és maradék-alkalomszámú bérletből keletkezhet. Ha adatok hiányoznak/ellentmondásosak, `legacy_review_required` és **nincs aktív digitális QR**, amíg Virág vagy jogosult munkatárs nem igazolja. Átvezetés naplózottan, duplikáció- és kettős felhasználás elleni kontrollal történik; az átvett papírjog további papíros használatának szabályát az ügyintéző egyezteti.
+- **Korábbi vendégrendelések:** az új WordPress-fiókhoz történő kapcsolás csak **tulajdonosi igazolással** vagy jogosult munkatárs ellenőrzött, auditált hozzárendelésével történhet. **Az e-mail-cím egyezése önmagában nem elegendő**, a régi rendelés fizetettsége önmagában nem bizonyítja, hogy van még felhasználható jegy.
+- **Új vásárlások:** a kijelölt átállási időponttól a digitális jogosultságkezelésbe bevont jegy-/bérlettermékek új vásárlásai már az új WooCommerce–Ringató Core folyamatba kerülnek, közös web/PWA kereskedelmi szabályokkal. Ugyanazon vásárlásból nem készülhet párhuzamos új papíros és digitális, kétszer beváltható jogosultság.
+- **Átállási időpont és ügyféltájékoztatás:** konkrét nap **még nincs jóváhagyva**. A fejlesztő, Virág és a helyszíni munkatársak a pilot/élesítés előtt meghatározzák, mely termékekre mikor indul az új digitális folyamat, hogyan azonosítható egy régi papírbérlet és hol történik a helyszíni nyilvántartása. Vevői és staff tájékoztatás kötelező.
+- **V1 kiadási kapu:** igazolt új digitális vásárlás/QR/beváltás, a régi papíros jogok zavartalan elfogadása, kettős felhasználás elleni eljárás, és csak a **ténylegesen átvett** tételeknél adatellenőrzés/importteszt. **A teljes történeti állomány digitalizálása nem indulási feltétel**; a későbbi teljes migráció külön egyeztethető.
+
+**Státusz:** üzleti irány jóváhagyva; a konkrét átállási dátum, termékkör, helyszíni eljárás és az opcionális átvétel részletes kontrolljai végrehajtandó feladatok. A D12 adatmegőrzési kérdés továbbra is külön nyitott döntés.
 
 **D12 – Adatkezelés és megőrzés**
 
