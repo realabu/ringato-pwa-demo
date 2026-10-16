@@ -21,8 +21,15 @@ Ez a csomag **megvalósítási terv és döntési napló**. Az MF01–MF03 a kü
 | [09 – Nyitott kérdések és döntések](09-nyitott-kerdesek-es-dontesek.md) | Elfogadott üzleti irányok és az érintett modul előtt lezárandó részletszabályok |
 | [10 – Inkrementális mérföldkövek](10-inkrementalis-merfoldkovek.md) | A fejlesztés követendő MF01–MF14 sorrendje; először a nyitott üzleti kérdés nélkül indítható PWA-, layout- és API-alapok, majd fiókkezelés és modulonkénti kapuk |
 | [11 – Lokális fejlesztés és kézi telepítés](11-lokalis-fejlesztes-es-manualis-telepites.md) | Lokális tesztkörnyezet, manuális kiadási csomag, másolási térkép, pluginok, beállítások, frissítés és rollback |
+| [12 – WordPress tartalomkezelés](12-wordpress-tartalomkezeles.md) | Minden fejlesztésre kötelező ACF Free tartalomkezelés, oldalankénti blokkok, layout és ikonok |
 
 **Fejlesztési belépési pont:** a [10. dokumentum](10-inkrementalis-merfoldkovek.md) mérföldkövei szerint haladunk inkrementálisan. Első kör: MF01 PWA-alap → MF02 layout → MF03 Core/session → MF04 regisztráció és belépés. A 07. dokumentum M0–M10/M8a csomagjai háttérhivatkozások; a teljes döntéslista lezárása nem előfeltétele az alapok elkezdésének.
+
+## Kötelező tartalomkezelés – 2026-10-16
+
+A jelenlegi és minden további fejlesztésben a PWA szerkeszthető blokkjainak szövegeit **WordPressből, az Advanced Custom Fields ingyenes bővítményével** kell kezelni. Reactbe nem kerülhet beégetett szerkesztői tartalom. A layoutszövegek, fejléc, lábléc, gombok, állapotüzenetek, akadálymentes feliratok és menüikonok is szerkeszthetők legyenek. A blokkok a WordPress adminban **oldalanként csoportosítva**, a közös layout külön csoportban szerepeljenek. A jelenlegi megjelenést a meglévő tartalom kezdeti betöltésével meg kell őrizni.
+
+Minden mérföldkő kötelező átadási feltétele: ACF Free meződefiníció és adatmegőrző migráció, szerveroldali DTO/REST, frontend bekötés, szerkesztési leírás és a build nélküli WP-szöveg-/ikonmódosítás ellenőrzése. Pro-only mező vagy fizetős opció nem vezethető be helyette. A technikai sablon, route és üzleti jogosultság kódban marad; kizárólag a CMS-kiesésben szükséges minimális technikai vészfelirat lehet statikus. Részletek: [12 – WordPress tartalomkezelés](12-wordpress-tartalomkezeles.md).
 
 ## Fejlesztés és kiadás
 

@@ -1,5 +1,7 @@
 # 10 – Inkrementális fejlesztési mérföldkövek
 
+**Kötelező tartalomkezelés (2026-10-16):** minden jelenlegi és későbbi PWA-blokk és szerkeszthető szöveg WordPressből, ACF Free mezőkből jön; a közös layoutszövegek és menüikonok is módosíthatók. A blokkok oldalanként csoportosítandók. A React sablon az eredeti megjelenést őrzi. Minden mérföldkő átadási feltétele a WP-szerkesztés build nélküli ellenőrzése. [Részletes szabály és kész-feltételek](12-wordpress-tartalomkezeles.md).
+
 **Készült:** 2026-10-15. **Állapot:** MF01–MF03 implementálva, lokális ellenőrzésre kész (2026-10-15); az MF04–MF14 továbbra is tervezett. A fizikai mobilpróba és a távoli manuális telepítés külön igazolandó.
 
 A cél minden lépés végén külön kipróbálható, ellenőrizhető és visszaállítható növekmény. Először a már eldöntött architektúrára épülő feladatok következnek; a nyitott üzleti szabályokat csak az érintett modul előtt kell lezárni. A regisztráció és belépés önálló, korai mérföldkő, a meglévő WordPress/WooCommerce-fiókrendszerre építve.

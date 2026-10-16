@@ -12,6 +12,7 @@
 | Billingo | Meglévő számlázás és D07 szerint refund-helyesbítés megtartása | WooCommerce → Barion → Billingo teljes és részleges refund és helyesbítés tesztelendő; később csak jóváhagyott recurring esetén renewal számlázás |
 | WooCommerce Subscriptions vagy más kész recurring opció | **Nem MVP-kötelező; feltételes későbbi beszerzés** | A legjobb ár/értékű kompatibilis megoldás teljes licenc-/éves-/tranzakciós költségét és üzemeltetését fel kell mérni; megrendelői vállalás kell |
 | Better Messages | **D11 elfogadott V1 irány:** ingyenes REST/AJAX változat stagingpróbával | Csak aktív chatnézeten kb. 10 s polling; jogosultság/read/unread/kétirányú kommunikáció igazolandó. Fizetős WebSocket csak indokolt igény és külön megrendelői költségjóváhagyás után |
+| Advanced Custom Fields (Free) | **Kötelező**, PWA szövegek, oldalankénti blokkok, layout és menüikonok | Ingyenes; kizárólag Free mezők; [hivatalos telepítés](https://www.advancedcustomfields.com/resources/installation/), nem Pro |
 | Ringató Core | **Saját plugin szükséges** | REST, admin, domainmodell, kapacitás, jegy/bérlet, média, push, BM adapter |
 | Ringató App Shell | **Saját vékony plugin szükséges** | Build kiszolgálása `/app/`, bootstrap, origin/scope, release verzió |
 | Saját Barion recurring bridge | **NEM része a jelenlegi projektnek** | Egyedi fizetési fejlesztés a rendelkezésre álló keretbe nem fér bele; kész igazolt integráció vagy manuális havi MVP |

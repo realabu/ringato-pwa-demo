@@ -1,5 +1,7 @@
 # 01 – Feltárás és követelmények
 
+**Kötelező tartalomkezelés (2026-10-16):** minden jelenlegi és későbbi PWA-blokk és szerkeszthető szöveg WordPressből, ACF Free mezőkből jön; a közös layoutszövegek és menüikonok is módosíthatók. A blokkok oldalanként csoportosítandók. A React sablon az eredeti megjelenést őrzi. Minden mérföldkő átadási feltétele a WP-szerkesztés build nélküli ellenőrzése. [Részletes szabály és kész-feltételek](12-wordpress-tartalomkezeles.md).
+
 ## 1. Bizonyíték és korlát
 
 A felmérés a 2026-10-12-i mentésből visszaállított **helyi WordPressre** vonatkozik. Nem éles audit. Olvasási vizsgálat: aktív/inaktív pluginlista és verziók, tartalomtípus-regisztráció, nyilvános termékek, aggregált adatdarabszámok, téma esemény- és rendeléskezelő kódja, Barion gateway képességdeklaráció. Személyes rendelési adat és integrációs titok nem része e dokumentációnak.
