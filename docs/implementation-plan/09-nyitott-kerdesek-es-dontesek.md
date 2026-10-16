@@ -64,10 +64,16 @@ Eredeti kérdés: Bekerüljön-e a „Virág kérdezi” szavazás az első verz
 
 **Javasolt megvalósítási minimum, az implementáció előtt ellenőrizendő részletszabályokkal:**
 - Virág WordPress adminfelületen hozhat létre és kezelhet kérdéseket, válaszlehetőségeket és a szavazás nyitott/zárt állapotát; a megjelenítés az új PWA-ban történik.
-- Bejelentkezett felhasználók szavazhatnak; ajánlott kezdeti szabály: **egy fiók egy válasz egy szavazáson**, szerveroldali egyediséggel és jogosultság-ellenőrzéssel. A lezárt szavazás nem fogad új választ.
+- **D13/01 ELFOGADVA (2026-10-16):** bejelentkezett felhasználó **egy fiókkal szavazásonként egy végleges választ** adhat le. A PWA a beküldés **előtt megerősítést kér**; a sikeresen leadott választ utólag **nem lehet módosítani**. Lezárt szavazásra új választ nem lehet beküldeni. Szerveroldali egyedi (szavazás, felhasználó) korlát, jogosultsági és állapotellenőrzés védi a többszörös beküldést.
 - Az alkalmazás megjeleníti, hogy a felhasználó szavazott-e, és szükség esetén összesített eredményeket mutat; az eredmények láthatósága kezdeti javaslat szerint WordPress adminban állítható.
 - Biztosítani kell a szavazat tárolását, az ismételt kérés/idempotencia és párhuzamos kattintás kezelését, valamint a mobilos üres, betöltés, hiba és lezárt állapotokat.
-- **Nem üzletileg jóváhagyott részletszabály még:** lehet-e válaszát módosítani; egyszerre hány szavazás lehet aktív; pontos eredményláthatóság, időzítés és az esetleges értesítés. Ezeket egyszerű alapértelmezéssel, Virággal/fejlesztővel a modul implementálása előtt egyeztetni kell, a V1-bekerülés ténye nem nyitott.
+- **Nyitott D13 részletszabályok:** **D13/02** egyszerre hány szavazás lehet aktív; **D13/03** pontos eredményláthatóság; **D13/04** időzítés és esetleges értesítés. A D13/01 szavazatmódosítási kérdés már lezárt, a V1-bekerülés továbbra sem nyitott.
+
+**D13/01 – Végleges, egyszer leadható szavazat – ELFOGADVA (2026. október 16.)**
+
+Minden bejelentkezett WordPress-fiók szavazásonként egy választ adhat le, **megerősítő lépéssel még a végleges POST előtt**. A választás sikeres rögzítése után nincs felhasználói szerkesztés, felülírás vagy újraszavazás, még akkor sem, ha másik opciót választana. Azonos beküldés technikai újrapróbálása nem hoz létre második választ; eltérő opcióval történő ismételt beküldés a már leadott szavazatot nem változtathatja meg. Lezárt vagy a beállított időablakon kívüli szavazásra új válasz nem fogadható el. A PWA a visszaigazolt választ és a véglegességet mutatja. A szerver ellenőrzi a bejelentkezést, a szavazás és opció érvényességét, a (poll_id, user_id) egyediséget és a párhuzamos kattintásokat.
+
+**D13/02 – Egyidejű aktív szavazások száma – NYITOTT.** Döntendő, hogy Virág egyszerre csak egy vagy több aktív szavazást tarthat-e nyitva, és több aktív esetén hogyan jelenjenek meg a PWA főoldalán és a szavazási listán. Az eredményláthatóság (/03) és az időzítés/értesítés (/04) külön jóváhagyandó.
 
 **Specifikációs hatás:** a V1.3 DOCX F01–F26 listájában ez nem szerepel; most új, önálló **P01 kötelező V1-követelményként** kell nyilvántartani. A következő üzleti specifikáció-verzióba átvezetendő, az eredeti DOCX történeti példánya változatlan.
 
