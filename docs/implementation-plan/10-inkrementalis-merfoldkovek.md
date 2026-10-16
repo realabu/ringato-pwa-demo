@@ -2,7 +2,7 @@
 
 **Kötelező tartalomkezelés (2026-10-16):** minden jelenlegi és későbbi PWA-blokk és szerkeszthető szöveg WordPressből, ACF Free mezőkből jön; a közös layoutszövegek és menüikonok is módosíthatók. A blokkok oldalanként csoportosítandók. A React sablon az eredeti megjelenést őrzi. Minden mérföldkő átadási feltétele a WP-szerkesztés build nélküli ellenőrzése. [Részletes szabály és kész-feltételek](12-wordpress-tartalomkezeles.md).
 
-**Készült:** 2026-10-15. **Állapot:** MF01–MF03 implementálva, lokális ellenőrzésre kész (2026-10-15); az MF04–MF14 továbbra is tervezett. A fizikai mobilpróba és a távoli manuális telepítés külön igazolandó.
+**Készült:** 2026-10-15. **Állapot:** MF01–MF04 implementálva, lokális ellenőrzésre kész (MF04: 2026-10-16); az MF05–MF14 továbbra is tervezett. A fizikai mobilpróba és a távoli manuális telepítés külön igazolandó.
 
 A cél minden lépés végén külön kipróbálható, ellenőrizhető és visszaállítható növekmény. Először a már eldöntött architektúrára épülő feladatok következnek; a nyitott üzleti szabályokat csak az érintett modul előtt kell lezárni. A regisztráció és belépés önálló, korai mérföldkő, a meglévő WordPress/WooCommerce-fiókrendszerre építve.
 
@@ -84,8 +84,8 @@ Feladatok:
 
 Feladatok:
 - Először ellenőrizni a WooCommerce My Account, regisztráció és jelszó-visszaállítás beállításait, levélküldését, cookie-jait és az appba visszatérést.
-- Vendég felhívások és biztonságos átvezetés a meglévő WP/WC regisztráció/belépés/reset folyamatba; visszatérés csak engedélyezett appútvonalra. Szükség esetén egyszerű, támogatott fióklétrehozási konfiguráció kialakítása.
-- Saját profil minimum: azonosító, név, fiókadatok megtekintése; e-mail/jelszó módosítása a meglévő fiókfolyamatban. A családadatok a **jóváhagyott D04** alapján egy külön `family_id`-hoz kapcsolódnak az MF07/MF08 üzleti modulokban; az MF04 nem fejleszt két szülős közös családhozzáférést.
+- **Pontosítás (2026-10-16):** vendég felhívások és saját PWA-fiókűrlapok, a meglévő WP/WC natív felhasználó- és jelszóműveletekkel. A felület nem léphet ki az `/app/` scope-ból, új publikus WordPress-oldal vagy globális fiókbeállítás-módosítás nem hozható létre. Visszatérés csak engedélyezett appútvonalra.
+- Saját profil minimum: azonosító, név, fiókadatok megtekintése; e-mail/jelszó módosítása az app saját fiókűrlapján, natív WP-validációval. A családadatok a **jóváhagyott D04** alapján egy külön `family_id`-hoz kapcsolódnak az MF07/MF08 üzleti modulokban; az MF04 nem fejleszt két szülős közös családhozzáférést.
 - Route guard, sessionlejárat, nonce-os logout, több lap közötti kilépésjelzés és memóriabeli személyes állapot törlése.
 - Új, korábban vendégként vásárló személy regisztrálhat; a régi rendeléseit csak a későbbi igazolt D08 folyamat kapcsolhatja hozzá.
 
@@ -185,7 +185,7 @@ A terv két külön **D12** jelölést használ. Minden feladatnál ki kell írn
 - A szükséges adatmodell/API, backend, UI és admin együtt alkosson kipróbálható növekményt. Ahol csak kliensalap készül (MF02/MF06), ezt az átadás külön jelzi.
 - Átadás: build/plugin verzió, bemutatható felhasználói út, lokális pozitív és negatív teszteredmények, ismert korlátok; frissített telepítési útmutató és verziózott kiadási csomag fájllistával, plugin-/konfigurációs változásokkal és visszaállítási lépésekkel. A célkörnyezetre másolás külön, manuális művelet.
 - Az adott mérföldkő ellenőrzése azonnal történjen; az MF14 teljes regresszió, nem az első alkalom az egyes modulok tesztelésére.
-- Állapotok: **tervezett → folyamatban → ellenőrzésre kész → elfogadott**; tényleges akadálynál a blokkoló kérdés és az érintett rész megnevezendő. MF01–MF03 állapota **ellenőrzésre kész**, a többi mérföldkőé **tervezett**.
+- Állapotok: **tervezett → folyamatban → ellenőrzésre kész → elfogadott**; tényleges akadálynál a blokkoló kérdés és az érintett rész megnevezendő. MF01–MF04 állapota **ellenőrzésre kész**, a többi mérföldkőé **tervezett**.
 
 Nem rögzítünk naptári határidőt vagy munkanapbecslést feltárás és kapacitásismeret nélkül. A következő fejlesztési feladatok MF-azonosítóval hivatkozhatók, például: „MF01 megvalósítása”, majd „MF02 megvalósítása”.
 
@@ -200,3 +200,14 @@ Nem rögzítünk naptári határidőt vagy munkanapbecslést feltárás és kapa
 - MF02: önálló arculati CSS, licenccel csomagolt Nunito/Montserrat, minden előírt route váza (köztük polls), közös UI, mobil/desktop layout. A bizonytalan jogú Girly Sunrise/fotók/logó nem kerültek át.
 - MF03: rétegzett Core, idempotens schema/capability-keret, admin diagnosztika, korai OpenAPI/DTO/API-kliens, valódi WP-session, nonce-frissítés, sessionhez kötött memóriacache. Nincs üzleti tábla vagy kitalált jogosultságstátusz.
 - A készülékes iOS/Android telepítés/safe-area ellenőrzés és a célkörnyezeti HTTPS/rewrite/cache/WAF nem tekinthető lokálisan igazoltnak. Ezért az állapot nem „elfogadott”.
+
+
+## MF04 implementációs átadás – javított irány, 2026-10-16
+
+- Felhasználói pontosítás: **a teljes fiókfolyamat a PWA-n belül marad**, és az eredeti weboldal működése, oldalai és globális fiókbeállításai nem változhatnak. A korábbi webes átvezetési megoldást a 0.4.1 felváltja.
+- PWA/Core/Shell 0.4.1, API 1, schema 1, ACF-tartalom 3. Saját React login/register/forgot/reset/edit a `/app/account/*` útvonalakon; a backend natív WP/WC műveleteket használ, nincs külön jelszótárolás.
+- `/app/auth/*` non-REST POST-adapter, same-origin custom header, no CORS/no-store, próbálkozáskorlát. Edithez WP-cookie és nonce; érzékeny adatokhoz jelenlegi jelszó. Resetlevél appba vezet, egyszer használható kulccsal a fragmentben.
+- Mélylink-visszatérés, saját profil, route guard, nonce-os logout, több lap szinkronja és memóriacache-törlés. A D08 automatikus vendégrendelés-kapcsolási tiltás csak az app auth-kéréseiben él; az eredeti webes hookokat nem módosítjuk.
+- Nincs új publikus WP-oldal vagy WC-regisztrációs opciómódosítás. A korábbi, hibás helyi próbából származó 6630-as `/fiokom/` oldal visszavonhatóan lomtárba került; eredeti opciók visszaállítva, fiókok és rendelések megőrizve.
+- Új feliratok: **PWA tartalmak → Profil → Alkalmazáson belüli fiókűrlapok**, ACF Free, build nélkül szerkeszthető.
+- [Kiadás](../../../ringato-dev/docs/releases/mf04/RELEASE.md), [tesztek](../../../ringato-dev/docs/releases/mf04/local-test-results.md), [telepítés](../../../ringato-dev/docs/releases/mf04/INSTALL.md). Külső SMTP, HTTPS/Secure cookie, fizikai standalone mobil és D12 adatkezelés továbbra is külön igazolandó.

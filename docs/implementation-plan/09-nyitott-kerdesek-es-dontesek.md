@@ -35,6 +35,9 @@ Eredeti kérdés: Milyen Barion–WooCommerce Subscriptions megoldással biztos�
 
 **D12 – Környezet és fiókkezelés – ELFOGADOTT IRÁNY, RÉSZFELADATOK NYITVA (2026. október 15.)**
 
+**Felhasználói pontosítás (2026-10-16):** a fiókkezelés teljes felülete a PWA `/app/` scope-jában marad. Natív WordPress/WooCommerce fiókműveletekre épülő saját React-űrlapok szükségesek; a felhasználót nem irányítjuk ki webes Fiókom oldalra. Az app miatt új publikus WP-oldal, fiókoldal-kijelölés vagy globális webes regisztrációs beállítás nem változtatható. Ez az MF04-re kötelező elfogadási feltétel.
+
+
 Eredeti kérdés: Mi a végleges domain, hol lesz a staging tesztkörnyezet, és alkalmas-e a tárhely a PWA-ra? Hogyan regisztrálhat új ügyfél?
 
 **Jóváhagyott megoldás és a projektgazda által megerősített kiinduló tények:**

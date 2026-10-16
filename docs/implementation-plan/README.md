@@ -4,7 +4,7 @@
 
 A kiegészítő alkalmazás önálló React/TypeScript PWA. A meglévő WordPress/WooCommerce marad a felhasználók, termékek, rendelések és programok központi rendszere. Az eredeti publikus oldal megjelenése, útvonalai, témája és meglévő vásárlási folyamata változatlan marad. Új backendképességeket elkülönített bővítmények és saját táblák adnak hozzá.
 
-Ez a csomag **megvalósítási terv és döntési napló**. Az MF01–MF03 a külön fejlesztői WordPress-klónon implementálva, lokális ellenőrzésre kész; az MF04–MF14 tervezett. Az elfogadott döntések és a nyitott részletszabályok állapotát a 09. dokumentum, a fejleszthető mérföldköveket és a fennmaradó átadási kapukat a 10. dokumentum tartalmazza.
+Ez a csomag **megvalósítási terv és döntési napló**. Az MF01–MF04 a külön fejlesztői WordPress-klónon implementálva, lokális ellenőrzésre kész; az MF05–MF14 tervezett. Az MF04 kiadása 0.4.1 (2026-10-16); a célkörnyezeti SMTP/HTTPS és fizikai mobilpróba külön igazolandó. Az elfogadott döntések és a nyitott részletszabályok állapotát a 09. dokumentum, a fejleszthető mérföldköveket és a fennmaradó átadási kapukat a 10. dokumentum tartalmazza.
 
 ## Dokumentumok és olvasási sorrend
 

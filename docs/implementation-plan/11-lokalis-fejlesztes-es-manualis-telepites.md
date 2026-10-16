@@ -218,3 +218,14 @@ A korábbi szakaszok tervezett útvonalait e kiadásra az alábbi tényleges lel
 **Korlátok:** root WP-telepítés, közös origin és WP front-controller rewrite szükséges; `/app` kanonikus címe `/app/`. A célkörnyezeti HTTPS/WAF/cache és fizikai mobilos telepítés külön próba. A Girly Sunrise és az eredeti képek/logó jogai nem igazoltak, ezért nincsenek a csomagban. Nunito/Montserrat OFL-licencmásolattal szerepelnek. A klónon a WC myaccount permalink üresnek bizonyult; ennek támogatott konfigurálása MF04 technikai feladata, most nincs helyette új belépési backend.
 
 Részletes, konkrét kiadási utasítás: [INSTALL.md](../../../ringato-dev/docs/releases/mf01-mf03/INSTALL.md), [közérthető INSTALL-DOC.md](../../../ringato-dev/docs/releases/mf01-mf03/INSTALL-DOC.md), [ROLLBACK.md](../../../ringato-dev/docs/releases/mf01-mf03/ROLLBACK.md), [ellenőrzések](../../../ringato-dev/docs/releases/mf01-mf03/local-test-results.md). Az MF01 build/Shell/SW, az MF02 UI/fontasset és az MF03 Core/API/schema változásait egy közös 0.3.0 növekmény adja át. Külső plugin- vagy üzleti konfigurációváltozás nincs.
+
+
+## MF04 0.4.1 – PWA-n belüli fiókűrlapok
+
+PWA/Core/Shell 0.4.1, API 1, schema 1, ACF-tartalom 3. A build/csomagolás és a két plugin manuális frissítése az MF01–MF03 rendjét követi. Új frontendűrlapok és `/app/auth/*` POST-adapterek szolgálják ki a fiókfolyamatot, natív WP/WC user/session/password műveletekkel.
+
+**Nincs Fiókom oldal-létrehozás, WC-fiókoldal-kijelölés vagy globális regisztrációs opcióváltozás.** A regisztráció/belépés/reset/edit a `/app/account/*` útvonalakon marad. A korábbi hibás MF04 lokális aloldalát visszavonhatóan lomtárba helyeztük és az opciókat visszaállítottuk, felhasználók/rendelések megőrzésével. A read-only `configure-account.php` nem telepítési konfiguráció.
+
+A `/app/auth/*` POST JSON + custom header, edithez nonce/cookie, no-store és CORS-tiltás szükséges. Az ACF hozzáadó migráció a Profil alatt hozza létre az új űrlapszövegeket. A resetlevél `/app/account/reset#...` linkje is az appot nyitja; a kulcs nem HTTP URL-paraméter. A helyi levélfogó nem telepíthető távoli szerverre. Célkörnyezeten külön SMTP/HTTPS/standalone mobilpróba szükséges.
+
+[Telepítés](../../../ringato-dev/docs/releases/mf04/INSTALL.md), [közérthető útmutató](../../../ringato-dev/docs/releases/mf04/INSTALL-DOC.md), [visszaállítás](../../../ringato-dev/docs/releases/mf04/ROLLBACK.md), [tesztek](../../../ringato-dev/docs/releases/mf04/local-test-results.md).
