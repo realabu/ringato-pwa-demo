@@ -117,7 +117,7 @@ Csak `ringato-app-<build>` prefixű saját cache törölhető. Nem más plugin t
 
 ## 5. Push és értesítések
 
-Feliratkozást a user explicit gombja indítja; elutasított OS permissiont nem kérjük újra automatikusan. Külön állapot: nem támogatott / telepítés szükséges / még nincs kérve / granted / denied / subscription hibás. Az app kapcsolója nem tudja önmagában visszaállítani a böngésző denied jogát.
+D06 elfogadva: az app első megnyitásakor nem kérünk pushengedélyt. A feliratkozást csak a felhasználó explicit gombja indítja; elutasított OS permissiont nem kérjük újra automatikusan. A címzett 365 napos appbeli értesítéslistája push nélkül is látható. Külön állapot: nem támogatott / telepítés szükséges / még nincs kérve / granted / denied / subscription hibás. Az app kapcsolója nem tudja önmagában visszaállítani a böngésző denied jogát.
 
 iOS/iPadOS Web Push a Home Screenre felvett webappban, iOS/iPadOS 16.4-től jelent meg; tényleges készülék/böngésző követelményt induláskor és kiadáskor ellenőrizni kell. Permission kérés felhasználói interakcióból. [WebKit dokumentáció](https://webkit.org/blog/13878/web-push-for-web-apps-on-ios-and-ipados/)
 
