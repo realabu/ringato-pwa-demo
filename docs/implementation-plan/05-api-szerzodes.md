@@ -103,11 +103,11 @@ Push endpoint csak valid HTTPS Web Push szolgáltató endpoint: provider allowli
 
 | Method és útvonal | Auth | Input | Output / hatás |
 |---|---|---|---|
-| GET `/polls/current` | U | – | Aktuális, publikált szavazás(ok) és a saját szavazati státusz; ha nincs, üres állapot |
+| GET `/polls/current` | U | cursor?, limit? | **D13/02:** akár sok párhuzamosan, tartósan nyitott publikált poll lapozható listája és a saját szavazati státusz; nem egyetlen aktuális poll. Lezárási dátum nélküli nyitott kérdés is visszajön; ha nincs, üres állapot. A főoldali kiemelés még külön tisztázandó |
 | POST `/polls/{id}/responses` | U | `option_id`; idempotency | **D13/01 elfogadva:** PWA a POST előtt megerősítést kér; szerver aktív pollt, opciót, bejelentkezett usert ellenőriz; UNIQUE poll+user. Első sikeres szavazat végleges; azonos idempotens retry nem dupláz, más opcióra újabb POST nem írhatja át; lezárt poll nem fogad új szavazatot |
-| GET `/polls/{id}/results` | U | – | Összesített, személyes választ nem tartalmazó eredmény, csak ha az admin eredményláthatósági beállítása engedi |
+| GET `/polls/{id}/results` | U | – | **D13/02:** nyitott, akár tartósan nyitott poll **aktuális összesítése** is lekérdezhető; új szavazatokkal változó darabszámok/arányok, egyedi személyes szavazat nélkül. A D13/03 még pontosítja a felhasználói hozzáférést (szavazás előtt/után, vendég) és adminláthatóságot |
 
-A WordPress-admin szavazás-/opciókezelése szűk capability-vel és auditálással biztosítandó; ez nem publikus ügyfél-írási végpont. **D13/01 jóváhagyva (2026-10-16): a sikeres szavazat végleges, felhasználói módosító API nincs**, beküldés előtt PWA-megerősítés szükséges. A már szavazott fiók másik opcióra történő új beküldése nem módosíthatja az eredményt; visszatéréskor a szerver által tárolt saját választ mutatjuk. **D13/02–04** még nyitott: egyidejű aktív szavazások, eredményláthatóság és időzítés/értesítés. A V1.3 F01–F26 történeti listájához képest ez **új P01 kötelező API**, nem opcionális.
+A WordPress-admin szavazás-/opciókezelése szűk capability-vel és auditálással biztosítandó; ez nem publikus ügyfél-írási végpont. **D13/01 jóváhagyva (2026-10-16): a sikeres szavazat végleges, felhasználói módosító API nincs**, beküldés előtt PWA-megerősítés szükséges. A már szavazott fiók másik opcióra történő új beküldése nem módosíthatja az eredményt; visszatéréskor a szerver által tárolt saját választ mutatjuk. **D13/02 elfogadva (2026-10-16):** a végpont több párhuzamos, `closes_at` nélküli folyamatosan nyitott szavazást kezel, ezek élő összesített eredménye lekérdezhető. A **D13/03** eredmények pontos hozzáférése és **D13/04** időzítés/értesítés nyitott; a főoldali kiemelés részlete nem ismert a félbemaradt megrendelői mondatból. A V1.3 F01–F26 történeti listájához képest ez **új P01 kötelező API**, nem opcionális.
 
 ## 3. DTO-k minimális mezőszerződése
 
