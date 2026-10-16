@@ -93,7 +93,7 @@ Feladatok:
 
 **Kész, ha:** lokális tesztfiókkal regisztráció és tesztlevél, jelszó-visszaállítás, hibás belépés, lejárt session, logout és belépés utáni deep link igazolt; az általános webes vendégvásárlás működik. A T01 fiókrésze teljesül; havi prémiumtermék webes vásárlási korlátja az MF09 része.
 
-**Határ:** saját React jelszókezelő backend nem szükséges. Ha a próba nagyobb webes fiókoldal-átalakítást tesz szükségessé, az D01 szerinti külön scope-döntés; a támogatott alapfolyamat az első cél. Éles személyesadat-kezelés előtt a D12 adatkezelési kaput is le kell zárni.
+**Határ:** saját React jelszókezelő backend nem szükséges. Ha a próba nagyobb webes fiókoldal-átalakítást tesz szükségessé, az D01 szerinti külön scope-döntés; a támogatott alapfolyamat az első cél. Éles személyesadat-kezelés előtt a D12 elfogadott projekthatára szerint a megrendelő biztosítja a szükséges adatkezelési és jogi paramétereket; az új GDPR-törlőmotor nem fejlesztési kapu.
 
 ### MF05 – Valós katalógus, programlista és saját adatok olvasása
 
