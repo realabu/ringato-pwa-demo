@@ -94,7 +94,7 @@ Az alábbi F-azonosítók **a DOCX F01–F26 listájára** hivatkoznak. A `build
 | F18 | **D05 elfogadva:** külön áras jegy és családi hely csak sikeres fizetés/kapacitás mellett; vásárláskor 15 perces hold, késő fizetés nem okozhat túlfoglalást | 15m hold + WC paid event + tranzakciós kapacitásellenőrzés, `paid_capacity_conflict` | T18; D05 |
 | F19 | **D04 elfogadva:** V1 egy WP-fiók = egy külön family_id, 1 család = 1 kapacitásegység/foglalkozás; nincs fiókösszekapcsolás vagy önkiszolgáló jegyátadás | FamilyService + szerveroldali családfeloldás + kapacitászár; későbbi tagságra előkészített ID | T19; T20; D04 |
 | F20 | Rendelés és jogosultság státusz együtt | WC order adapter + wallet | T20 |
-| F21 | Virág manuális egyéni/csoportos push | WP admin + PushService | T21 |
+| F21 | D06 elfogadva: WordPressből egyéni/csoport/összes címzés, címzettenként app receipt, külön opcionális push | WP admin + PushService | T21; D06 |
 | F22 | 365 nap előzmény, panelmegnyitás óta új | Receipts + ReadCursor | T22 |
 | F23 | Aszinkron szöveges üzenet Virágnak; D11: ingyenes BM V1, aktív chatben kb. 10 s polling | Better Messages REST/AJAX adapter, staging képesség- és jogosultsági ellenőrzés; fizetős WebSocket külön jóváhagyás esetén | T23; D11 |
 | F24 | **D05 elfogadva:** staff ellenőrzés/beváltás alapból kezdés előtt 2 órától befejezés után 2 óráig, eseményenként WordPressből konfigurálható | Staff capability + scanner + admin időablakbeállítás | T24; D05 |
