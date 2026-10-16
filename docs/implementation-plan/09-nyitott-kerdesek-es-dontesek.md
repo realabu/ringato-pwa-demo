@@ -67,13 +67,23 @@ Eredeti kérdés: Bekerüljön-e a „Virág kérdezi” szavazás az első verz
 - **D13/01 ELFOGADVA (2026-10-16):** bejelentkezett felhasználó **egy fiókkal szavazásonként egy végleges választ** adhat le. A PWA a beküldés **előtt megerősítést kér**; a sikeresen leadott választ utólag **nem lehet módosítani**. Lezárt szavazásra új választ nem lehet beküldeni. Szerveroldali egyedi (szavazás, felhasználó) korlát, jogosultsági és állapotellenőrzés védi a többszörös beküldést.
 - Az alkalmazás megjeleníti, hogy a felhasználó szavazott-e, és szükség esetén összesített eredményeket mutat; az eredmények láthatósága kezdeti javaslat szerint WordPress adminban állítható.
 - Biztosítani kell a szavazat tárolását, az ismételt kérés/idempotencia és párhuzamos kattintás kezelését, valamint a mobilos üres, betöltés, hiba és lezárt állapotokat.
-- **Nyitott D13 részletszabályok:** **D13/02** egyszerre hány szavazás lehet aktív; **D13/03** pontos eredményláthatóság; **D13/04** időzítés és esetleges értesítés. A D13/01 szavazatmódosítási kérdés már lezárt, a V1-bekerülés továbbra sem nyitott.
+- **D13/02 ELFOGADVA (2026-10-16):** egyszerre sok, tartósan nyitva tartható szavazás működhet; az aktuális összesített eredmények megtekinthetők. **Nyitott D13 részletszabályok:** **D13/03** pontos eredmény-hozzáférés (szavazás előtt vagy csak utána, vendégek láthatják-e, adminbeállítás), **D13/04** időzítés és esetleges értesítés. A D13/01 szavazatmódosítási kérdés lezárt, a V1-bekerülés továbbra sem nyitott.
 
 **D13/01 – Végleges, egyszer leadható szavazat – ELFOGADVA (2026. október 16.)**
 
 Minden bejelentkezett WordPress-fiók szavazásonként egy választ adhat le, **megerősítő lépéssel még a végleges POST előtt**. A választás sikeres rögzítése után nincs felhasználói szerkesztés, felülírás vagy újraszavazás, még akkor sem, ha másik opciót választana. Azonos beküldés technikai újrapróbálása nem hoz létre második választ; eltérő opcióval történő ismételt beküldés a már leadott szavazatot nem változtathatja meg. Lezárt vagy a beállított időablakon kívüli szavazásra új válasz nem fogadható el. A PWA a visszaigazolt választ és a véglegességet mutatja. A szerver ellenőrzi a bejelentkezést, a szavazás és opció érvényességét, a (poll_id, user_id) egyediséget és a párhuzamos kattintásokat.
 
-**D13/02 – Egyidejű aktív szavazások száma – NYITOTT.** Döntendő, hogy Virág egyszerre csak egy vagy több aktív szavazást tarthat-e nyitva, és több aktív esetén hogyan jelenjenek meg a PWA főoldalán és a szavazási listán. Az eredményláthatóság (/03) és az időzítés/értesítés (/04) külön jóváhagyandó.
+**D13/02 – Sok, tartósan nyitott szavazás – ELFOGADVA (2026. október 16.)**
+
+**Döntés:** Virág a WordPress-adminban **egyszerre több, akár nagy számú aktív szavazást** tarthat nyitva; nincs „legfeljebb egy aktív szavazás” üzleti korlát. A szavazások **határozatlan ideig is nyitva maradhatnak** (lezárási dátum nem kötelező), amíg Virág manuálisan le nem zárja őket, illetve ha a későbbi D13/04 szerinti időzítés miatt nem jár le egy megadott határidő. A piszkozat/nyitott/lezárt státusz szavazásonként külön működik. A D13/01 szerinti **egy végleges szavazat/fiók/szavazás** változatlan.
+
+- **Eredmények:** a felhasználók megtekinthetik az egyes szavazások **aktuális, összesített** eredményét; a kérdés nyitva tartása nem zárja ki a részeredmény megtekintését. A részleteket (ki látja szavazás előtt/után, vendégként, van-e admin állítható láthatóság) külön **D13/03** kérdésben rögzítjük. Soha nem látható más felhasználó egyedi válasza.
+- **Több szavazás kezelése:** a PWA `/polls` oldala **listázni és egyenként megnyitni** tudja a párhuzamos aktív kérdéseket (nagyobb mennyiségnél lapozva); nem alakítjuk át egyetlen „aktuális kérdés” kötelező megoldássá. A főoldal kiemelési és rendezési szabályát **nem tekintjük eldöntöttnek**, mert az ügyfél mondata az „Ezekből…” szónál félbemaradt; ezt későbbi egyeztetéskor tisztázzuk, nem találunk ki automatikus kiemelési szabályt.
+- **Tesztelendő:** két vagy sok párhuzamosan nyitott poll, saját szavazat/fiókonként/pollonként, határozatlan nyitva tartás, manuális zárás, összesítések frissülése új szavazatok után, lista lapozása, jogosultság és terhelés.
+
+**D13/03 – Eredmények pontos láthatósága – NYITOTT.** El kell dönteni, hogy az élő összesítés **szavazat leadása előtt is**, vagy csak **a saját szavazat leadása után** látható-e, illetve elérhető-e bejelentkezés nélkül. A több nyitott poll és a folyamatos részeredmény-megtekintés már jóváhagyott, a konkrét hozzáférési szabály még nem.
+
+**D13/04 – Időzítés és értesítés – NYITOTT.**
 
 **Specifikációs hatás:** a V1.3 DOCX F01–F26 listájában ez nem szerepel; most új, önálló **P01 kötelező V1-követelményként** kell nyilvántartani. A következő üzleti specifikáció-verzióba átvezetendő, az eredeti DOCX történeti példánya változatlan.
 
