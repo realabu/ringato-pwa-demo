@@ -159,11 +159,18 @@ A média és a chat végleges megoldása később is lezárható, de a megvalós
 
 **Státusz:** üzleti szabály lezárva; a WooCommerce/Barion/Billingo integráció tényleges megfelelősége, a chargeback-értesítés és az egyeztetési admineljárás részletes tesztelése **nyitott műszaki/üzemeltetési feladat** (M0/M3/M5/M9, T08/T18/T20/T25/T30).
 
-**D06 – Pushértesítések és címzettcsoportok**
+**D06 – Pushértesítések és címzettcsoportok – ELFOGADOTT V1 DÖNTÉS (2026. október 16.)**
 
-Megválaszolandó kérdés: Az előzményben minden megcímzett értesítés látszik, vagy csak a ténylegesen kézbesített push? Milyen címzettcsoportok lesznek, és milyen hozzájárulással kezeljük őket?
+**Döntés:** az alkalmazáson belüli értesítési előzmény **független** az operációs rendszer pushengedélyétől, az eszköz meglététől és a tényleges pushkézbesítéstől. A WordPressben Virág által elküldött értesítési kampány minden kijelölt címzettjéhez **pontosan egy fiókszintű értesítési rekord (receipt)** tartozik, push nélkül is.
 
-A terv javaslata: Minden címzett fiókjában legyen appbeli előzmény, a push kézbesítése külön állapotként szerepeljen. Egy fiókhoz egy közös előzmény tartozzon, 365 napos megőrzéssel. A kezdeti csoportokat Virág határozza meg.
+- **Értesítési előzmény:** minden bejelentkezett felhasználó a **neki címzett** értesítéseket láthatja az alkalmazásban, akkor is, ha nem telepítette a PWA-t vagy nem engedélyezte a push-t. Több eszköz ugyanazt a fiókszintű listát és „ÚJ” jelölést látja. Az új jelölés az előző panelmegnyitáshoz / szerveroldali cursorhoz viszonyít.
+- **Push mint külön szállítás:** ha az adott felhasználó/eszköz önként engedélyezte, megkíséreljük a push elküldését. A pushküldés és az eszköz/provider státusza **külön** nyilvántartás; pusztán a szolgáltatói átvételt nem állítjuk tényleges telefonos megjelenítésnek vagy olvasásnak. A sikertelen push **nem tünteti el** az appbeli rekordot.
+- **Címzés:** Virág a **WordPress-adminban** indíthat kézi kampányt **egy konkrét felhasználónak, egy adminisztrált címzettcsoportnak vagy minden felhasználónak**. A kezdeti csoportokat Virág határozza meg, a konkrét csoportlista még rögzítendő. Küldéskor egyedi címzettpillanatkép készül; későbbi csoporttagság-változás nem írja át a múltbeli előzményeket. Az adminisztrációhoz nem kell külön mobiladmin.
+- **365 napos előzmény:** az alkalmazás a **megelőző 365 nap címzett értesítéseit jeleníti meg**, fiókonként, szerveridővel számolva. **A mögöttes adatbázisrekordok tényleges törlési/megőrzési határideje, exportálása, hozzájárulási szövege és a kommunikáció jogalapja továbbra is a külön D12 adatkezelési döntésben tisztázandó.** A 365 nap nem általános adatmegőrzési szabály, nem jelent önmagában adatbázis-törlési felhatalmazást.
+- **Pushengedély bekérése:** **nem** az alkalmazás első megnyitásakor ugrik fel automatikusan. Csak jól érthető, **a felhasználó által indított** műveletből kérjük az OS/böngésző engedélyét; elutasítás után nem ismételjük automatikusan. Az appbeli értesítések ehhez nem kötöttek.
+- **Nyitott implementációs/adatkezelési feladatok:** Virág kezdeti csoportnevei/tagsági szabályai; WordPress-admin küldési előnézet; eszköz- és fiókváltás; opt-in/opt-out; jogosultság, több eszköz és hibás push végpont; D12 szerinti adatvédelmi szabályok és megőrzés.
+
+**Státusz:** a D06 funkcionális döntés lezárt; az admin/címzettcsoportok konkrét beállítása, push-tesztje és a külön D12 adatkezelési kérdés nyitott.
 
 **D08 – Régi jegyek, bérletek és vendégrendelések átvezetése**
 
