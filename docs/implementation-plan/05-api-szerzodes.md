@@ -119,8 +119,6 @@ A WordPress-admin szavazás-/opciókezelése szűk capability-vel és auditálá
 | Entitlement | id, kind (`family_ticket`,`pass`,`event_ticket`), state (`unactivated`,`active`,`used`,`exhausted`,`expired`,`revoked`,`legacy_review_required`), source_order_id/item_id, purchased_at, expires_at?, event_id?, total_uses, remaining, first_used_at?, used_at?, display_status; **D02:** expiry szerveroldali, bérlet first redeem előtt expires_at=null; **D07:** refund miatti revocation vagy felülvizsgálat/felfüggesztés státusza szerveroldalon jelenik meg, más tétel érintetlen |
 | EntitlementDetail | Entitlement + redemption_history:[{id,event_id,redeemed_at,consumed_units}], next_action; nincs nyers QR hash/token |
 | OrderSummary | id, created_at, paid_at?, wc_status, total_money, items:[{item_id,product_id,title,quantity,entitlement_ids,provisioning_state}], summary_status |
-**D09 (2026-10-16):** nincs MVP-kártyacsere, automatikus terhelés/retry, automatikus renewal-értesítés vagy recurring lemondás API. Ezek a későbbi kiválasztott kész integrációhoz tartozó, külön jóváhagyandó szerződések. A manuális hozzáférés pontos hónapszámítása, egymásra vásárlása és lejárati tájékoztatása a D09-MVP/01–03 kérdésekkel tisztázandó; a kliens nem találhat ki default időtartamot.
-
 | PremiumAccessSummary (korábban SubscriptionSummary) | id?, plan_product_id, mode (`manual_monthly`,`recurring`), status, paid_through?, price_money, access_active, renewal_enabled, next_payment_at?, cancellable; MVP `renewal_enabled=false`, `next_payment_at=null`, `cancellable=false` |
 | MediaSummary | id, title, type (`audio`,`video`), category_ids[], duration_seconds, premium, artwork?, aspect_ratio (video 16:9/9:16; audio null) |
 | PlaybackGrant | media_id, protocol (`audio_file`,`mp4`,`hls`), playback_url, expires_at, refresh_after, subtitles[], authorization_mode (`signed_url`,`signed_cookie`,`provider_token`); nincs provider secret |
@@ -132,6 +130,8 @@ A WordPress-admin szavazás-/opciókezelése szűk capability-vel és auditálá
 | CheckoutIntent | id,state (`created`,`handed_off`,`pending_payment`,`paid_processing`,`fulfilled`,`failed`,`expired`,`paid_capacity_conflict`), payment_state, provisioning_state, order_id?, entitlement_ids[], hold_expires_at?; handoff_url csak létrehozáskor |
 | Eligibility | eligible,reason_code,family_display_name?,entitlement_summary?,event_id,server_time,revision; read-only tájékoztató |
 | Redemption | id,event_id,entitlement_id,redeemed_at,consumed_units,entitlement_after; D03: típusfüggetlen egyedi entitlement+event, visszatérés az eredeti rekordra hivatkozik, nincs új consumed_units |
+
+**D09 (2026-10-16):** nincs MVP-kártyacsere, automatikus terhelés/retry, automatikus renewal-értesítés vagy recurring lemondás API. Ezek a későbbi kiválasztott kész integrációhoz tartozó, külön jóváhagyandó szerződések. A manuális hozzáférés pontos hónapszámítása, egymásra vásárlása és lejárati tájékoztatása a D09-MVP/01–03 kérdésekkel tisztázandó; a kliens nem találhat ki default időtartamot.
 
 `ends_at` régi eseménynél hiányozhat az adatbázisban; PWA publikálás előtt admin kitöltés kell, nem becsült érték. Számított `state` mindig szerveridőre érvényes; UI határidő elérésekor újratölt.
 
