@@ -59,8 +59,8 @@ A login/logout/reset/regisztráció a meglévő WordPress/WC útvonalakon tört�
 | GET `/entitlements` | U | kind?, state?, cursor, limit | Saját jegyek/bérletek aktuális szerverállapota |
 | GET `/entitlements/{id}` | U | – | EntitlementDetail, redemption history minimális staff-adattal |
 | POST `/entitlements/{id}/qr` | U | body `{}` | QRPayload: opaque payload, expires_at; csak használható saját entitlement |
-| GET `/subscription` | U | – | PremiumAccessSummary vagy null; MVP: `mode=manual_monthly`, `paid_through`, `access_active`, `renewal_enabled=false`, újravásárlás; később `mode=recurring` |
-| POST `/subscription/{id}/cancel-renewal` | U | body `{}`; idempotency | **Csak későbbi recurring feature flag esetén** elérhető, ha a kész integráció tényleges lemondást támogat. MVP manuális vásárlásnál nincs ilyen művelet (feature off) |
+| GET `/subscription` | U | – | PremiumAccessSummary vagy null; MVP: `mode=manual_monthly`, `paid_through`, `access_active`, `renewal_enabled=false`, újravásárlás; **D09-MVP/01–03** időszak/összeadás/lejárati tájékoztatás még döntendő; később `mode=recurring` |
+| POST `/subscription/{id}/cancel-renewal` | U | body `{}`; idempotency | **Nem MVP-route**; csak későbbi recurring feature flag és külön jóváhagyott kész integrációval, annak lemondási szabályainak pontosítása után. MVP manuális vásárlásnál nincs ilyen művelet (feature off) |
 | GET `/staff/events` | S | from?, to? | Hozzárendelt/scannelhető programok |
 | POST `/staff/checkins/inspect` | S | event_id, qr_payload | D03/D05: read-only eligibility / `already_checked_in`, eredeti belépés ideje; staff event-scope és konfigurált start−2h/end+2h vagy eseményenként módosított check-in időablak ellenőrzése; nincs levonás |
 | POST `/staff/checkins/redeem` | S | event_id, qr_payload; idempotency | D03/D05: első beváltás Redemption + entitlement_after, tranzakció és staff időablak újraellenőrzése; ugyanazon eseményre visszatérés semmit nem fogyaszt; időablakon kívül `not_checkin_window` |
@@ -119,6 +119,8 @@ A WordPress-admin szavazás-/opciókezelése szűk capability-vel és auditálá
 | Entitlement | id, kind (`family_ticket`,`pass`,`event_ticket`), state (`unactivated`,`active`,`used`,`exhausted`,`expired`,`revoked`,`legacy_review_required`), source_order_id/item_id, purchased_at, expires_at?, event_id?, total_uses, remaining, first_used_at?, used_at?, display_status; **D02:** expiry szerveroldali, bérlet first redeem előtt expires_at=null; **D07:** refund miatti revocation vagy felülvizsgálat/felfüggesztés státusza szerveroldalon jelenik meg, más tétel érintetlen |
 | EntitlementDetail | Entitlement + redemption_history:[{id,event_id,redeemed_at,consumed_units}], next_action; nincs nyers QR hash/token |
 | OrderSummary | id, created_at, paid_at?, wc_status, total_money, items:[{item_id,product_id,title,quantity,entitlement_ids,provisioning_state}], summary_status |
+**D09 (2026-10-16):** nincs MVP-kártyacsere, automatikus terhelés/retry, automatikus renewal-értesítés vagy recurring lemondás API. Ezek a későbbi kiválasztott kész integrációhoz tartozó, külön jóváhagyandó szerződések. A manuális hozzáférés pontos hónapszámítása, egymásra vásárlása és lejárati tájékoztatása a D09-MVP/01–03 kérdésekkel tisztázandó; a kliens nem találhat ki default időtartamot.
+
 | PremiumAccessSummary (korábban SubscriptionSummary) | id?, plan_product_id, mode (`manual_monthly`,`recurring`), status, paid_through?, price_money, access_active, renewal_enabled, next_payment_at?, cancellable; MVP `renewal_enabled=false`, `next_payment_at=null`, `cancellable=false` |
 | MediaSummary | id, title, type (`audio`,`video`), category_ids[], duration_seconds, premium, artwork?, aspect_ratio (video 16:9/9:16; audio null) |
 | PlaybackGrant | media_id, protocol (`audio_file`,`mp4`,`hls`), playback_url, expires_at, refresh_after, subtitles[], authorization_mode (`signed_url`,`signed_cookie`,`provider_token`); nincs provider secret |
