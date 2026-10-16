@@ -59,7 +59,7 @@ A login/logout/reset/regisztráció a meglévő WordPress/WC útvonalakon tört�
 | GET `/entitlements` | U | kind?, state?, cursor, limit | Saját jegyek/bérletek aktuális szerverállapota |
 | GET `/entitlements/{id}` | U | – | EntitlementDetail, redemption history minimális staff-adattal |
 | POST `/entitlements/{id}/qr` | U | body `{}` | QRPayload: opaque payload, expires_at; csak használható saját entitlement |
-| GET `/subscription` | U | – | PremiumAccessSummary vagy null; MVP: `mode=manual_monthly`, `paid_through`, `access_active`, `renewal_enabled=false`, újravásárlás; **D09-MVP/01–03** időszak/összeadás/lejárati tájékoztatás még döntendő; később `mode=recurring` |
+| GET `/subscription` | U | – | PremiumAccessSummary vagy null; MVP: `mode=manual_monthly`, `paid_through` (D09-MVP/01: Budapest 1 naptári hónap, célhelyi nap végéhez tartozó UTC exclusive határ), `access_active`, `renewal_enabled=false`, újravásárlás; **D09-MVP/02–03** összeadás/tájékoztatás még nyitott; később `mode=recurring` |
 | POST `/subscription/{id}/cancel-renewal` | U | body `{}`; idempotency | **Nem MVP-route**; csak későbbi recurring feature flag és külön jóváhagyott kész integrációval, annak lemondási szabályainak pontosítása után. MVP manuális vásárlásnál nincs ilyen művelet (feature off) |
 | GET `/staff/events` | S | from?, to? | Hozzárendelt/scannelhető programok |
 | POST `/staff/checkins/inspect` | S | event_id, qr_payload | D03/D05: read-only eligibility / `already_checked_in`, eredeti belépés ideje; staff event-scope és konfigurált start−2h/end+2h vagy eseményenként módosított check-in időablak ellenőrzése; nincs levonás |
@@ -131,7 +131,7 @@ A WordPress-admin szavazás-/opciókezelése szűk capability-vel és auditálá
 | Eligibility | eligible,reason_code,family_display_name?,entitlement_summary?,event_id,server_time,revision; read-only tájékoztató |
 | Redemption | id,event_id,entitlement_id,redeemed_at,consumed_units,entitlement_after; D03: típusfüggetlen egyedi entitlement+event, visszatérés az eredeti rekordra hivatkozik, nincs új consumed_units |
 
-**D09 (2026-10-16):** nincs MVP-kártyacsere, automatikus terhelés/retry, automatikus renewal-értesítés vagy recurring lemondás API. Ezek a későbbi kiválasztott kész integrációhoz tartozó, külön jóváhagyandó szerződések. A manuális hozzáférés pontos hónapszámítása, egymásra vásárlása és lejárati tájékoztatása a D09-MVP/01–03 kérdésekkel tisztázandó; a kliens nem találhat ki default időtartamot.
+**D09 (2026-10-16):** nincs MVP-kártyacsere, automatikus terhelés/retry, automatikus renewal-értesítés vagy recurring lemondás API. Ezek a későbbi kiválasztott kész integrációhoz tartozó, külön jóváhagyandó szerződések. **D09-MVP/01 elfogadva:** a hitelesen fizetett új manuális havi időszak Budapest szerinti 1 naptári hónap célhelyi napjának végéig tart, hónapvégi clamp-pel; az API `paid_through` értéke **UTC exclusive** időpont (következő helyi nap 00:00), a felület ezt helyi lejárati napként mutatja. A **D09-MVP/02** egymásra vásárlása és **/03** lejárati tájékoztatása nyitott; a kliens nem találhat ki újravásárlási vagy figyelmeztetési szabályt.
 
 `ends_at` régi eseménynél hiányozhat az adatbázisban; PWA publikálás előtt admin kitöltés kell, nem becsült érték. Számított `state` mindig szerveridőre érvényes; UI határidő elérésekor újratölt.
 
