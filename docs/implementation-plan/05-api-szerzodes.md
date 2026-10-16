@@ -87,7 +87,7 @@ Publikus metadata nem tartalmaz user-specifikus `is_favorite` vagy `can_play_pre
 |---|---|---|---|
 | POST `/push/devices` | U | endpoint, keys:{p256dh,auth}, consent_version | Subscription regisztrálás/frissítés aktuális fiókhoz |
 | DELETE `/push/devices/{id}` | U | – | Saját eszköz leválasztás, 204 |
-| GET `/notifications` | U | cursor, limit | 365 napos Receipt[], previous_seen_cursor, observed_cursor, unread_count |
+| GET `/notifications` | U | cursor, limit | D06: elmúlt 365 nap címzett Receipt[], pushengedélytől/kézbesítéstől függetlenül, fiókonként egy; previous_seen_cursor, observed_cursor, unread_count; tényleges törlés D12 |
 | POST `/notifications/seen` | U | observed_cursor | Monoton frissítés; csak saját megfigyelt receiptig |
 | POST `/notifications/{id}/click` | U | `{}` | Saját receipt click jelzés; idempotens |
 | GET `/messages/thread` | U | – | Saját szülő–Virág ThreadSummary |
