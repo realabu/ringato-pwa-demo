@@ -87,13 +87,15 @@ Publikus metadata nem tartalmaz user-specifikus `is_favorite` vagy `can_play_pre
 |---|---|---|---|
 | POST `/push/devices` | U | endpoint, keys:{p256dh,auth}, consent_version | Subscription regisztrálás/frissítés aktuális fiókhoz |
 | DELETE `/push/devices/{id}` | U | – | Saját eszköz leválasztás, 204 |
-| GET `/notifications` | U | cursor, limit | D06: elmúlt 365 nap címzett Receipt[], pushengedélytől/kézbesítéstől függetlenül, fiókonként egy; previous_seen_cursor, observed_cursor, unread_count; tényleges törlés D12 |
+| GET `/notifications` | U | cursor, limit | D06: elmúlt **alapértelmezésben 365 nap** címzett Receipt[]-je, pushengedélytől/kézbesítéstől függetlenül, fiókonként egy; a megjelenítési ablak D12 szerint konfigurálható, **nem adatok fizikai törlése**; previous_seen_cursor, observed_cursor, unread_count |
 | POST `/notifications/seen` | U | observed_cursor | Monoton frissítés; csak saját megfigyelt receiptig |
 | POST `/notifications/{id}/click` | U | `{}` | Saját receipt click jelzés; idempotens |
 | GET `/messages/thread` | U | – | Saját szülő–Virág ThreadSummary |
 | GET `/messages/thread/messages` | U | cursor, limit, after_id? | Normalizált Message[] és unread; **D11: aktív chatképernyőn kb. 10 s polling, háttérben leáll és visszatéréskor frissül** |
 | POST `/messages/thread/messages` | U | text (1–2000 karakter); idempotency | Saját threadbe plain text küldés; recipientet szerver határozza meg |
 | POST `/messages/thread/read` | U | last_message_id | Csak saját thread, monoton olvasási cursor |
+
+**D12 adatkezelési API-scope (2026-10-16):** nincs külön új általános PWA GDPR/export/anonimizálási/tömeges törlési endpoint. A meglévő WordPress/WC/BM képességek és a projekt funkcionális életciklus-műveletei megmaradnak (például saját push eszköz leválasztása). A tényleges adatmegőrzési szabályokat az adatkezelő biztosítja, jogi tanácsadás és a hiányzó integráció külön scope. 
 
 Push endpoint csak valid HTTPS Web Push szolgáltató endpoint: provider allowlist/frissíthető policy, privát/loopback/link-local címek tiltása, redirect/destination ellenőrzés, méretlimit. Backend HTTP-hívásból nem lehet tetszőleges URL-lekérő SSRF. Egy közös böngésző subscription másik fiókra bejelentkezéskor leválasztandó/újrakötendő explicit consenttel, nem küldhet az előző ügyfél tartalmát.
 
