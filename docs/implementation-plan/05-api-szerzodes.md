@@ -104,10 +104,10 @@ Push endpoint csak valid HTTPS Web Push szolgáltató endpoint: provider allowli
 | Method és útvonal | Auth | Input | Output / hatás |
 |---|---|---|---|
 | GET `/polls/current` | U | – | Aktuális, publikált szavazás(ok) és a saját szavazati státusz; ha nincs, üres állapot |
-| POST `/polls/{id}/responses` | U | `option_id`; idempotency | Szerver ellenőrzi az aktív pollt, az opciót, a sessionből vett usert; UNIQUE poll+user, az ismételt kérés nem dupláz |
+| POST `/polls/{id}/responses` | U | `option_id`; idempotency | **D13/01 elfogadva:** PWA a POST előtt megerősítést kér; szerver aktív pollt, opciót, bejelentkezett usert ellenőriz; UNIQUE poll+user. Első sikeres szavazat végleges; azonos idempotens retry nem dupláz, más opcióra újabb POST nem írhatja át; lezárt poll nem fogad új szavazatot |
 | GET `/polls/{id}/results` | U | – | Összesített, személyes választ nem tartalmazó eredmény, csak ha az admin eredményláthatósági beállítása engedi |
 
-A WordPress-admin szavazás-/opciókezelése szűk capability-vel és auditálással biztosítandó; ez nem publikus ügyfél-írási végpont. A részeredmények megjelenítése és a szavazat utólagos módosítása az implementálás előtt pontosítandó. A V1.3 F01–F26 történeti listájához képest ez **új P01 kötelező API**, nem opcionális.
+A WordPress-admin szavazás-/opciókezelése szűk capability-vel és auditálással biztosítandó; ez nem publikus ügyfél-írási végpont. **D13/01 jóváhagyva (2026-10-16): a sikeres szavazat végleges, felhasználói módosító API nincs**, beküldés előtt PWA-megerősítés szükséges. A már szavazott fiók másik opcióra történő új beküldése nem módosíthatja az eredményt; visszatéréskor a szerver által tárolt saját választ mutatjuk. **D13/02–04** még nyitott: egyidejű aktív szavazások, eredményláthatóság és időzítés/értesítés. A V1.3 F01–F26 történeti listájához képest ez **új P01 kötelező API**, nem opcionális.
 
 ## 3. DTO-k minimális mezőszerződése
 
