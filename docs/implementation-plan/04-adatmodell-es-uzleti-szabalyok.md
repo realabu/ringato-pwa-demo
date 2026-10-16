@@ -147,7 +147,7 @@ WooCommerce és own tables nem egy végtelen, külső API-t tartalmazó DB-tranz
 
 ## 7. Push és üzenet adatszabályok
 
-Kampány előzmény: egy receipt fiókonként, akkor is, ha az adott fiók pushengedély nélkül csak az appban látja. Ajánlott értelmezés: az admin által címzett és publikált appértesítés kerül az előzménybe, device kézbesítés külön státusz. Ez a „kapott push” szóhasználat D06-ban lezárandó.
+Kampány előzmény: egy receipt fiókonként, akkor is, ha az adott fiók pushengedély nélkül csak az appban látja. Ajánlott értelmezés: az admin által címzett és publikált appértesítés kerül az előzménybe, device kézbesítés külön státusz. A D06 döntés lezárta: a címzett appbeli rekordot pushengedély és kézbesítés nélkül is megkapja.
 
 ÚJ: receipt ID nagyobb, mint előző panelcursor. Lista első lekérése visszaadja snapshot `observed_cursor`; panel megnyitás visszaigazolása csak eddig a cursorig frissít. Közben érkező új értesítés nem válik tévesen olvasottá. Last panel opened timestamp is tárolandó, de rendezés/cursor szerver ID alapján.
 
