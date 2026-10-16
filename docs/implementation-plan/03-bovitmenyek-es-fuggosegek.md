@@ -48,7 +48,7 @@
 
 **A jelenlegi projektben nincs saját Barion recurring integráció fejlesztése.** Az MVP egyszeri, bejelentkezéshez kötött WooCommerce-termékvásárlásokkal működik; a sikeresen kifizetett havi időszakot a Ringató Core kezeli. WooCommerce Subscriptions és Barion recurring jogosultság nem szükséges az MVP indításához.
 
-**D09 részletdöntés (2026-10-16):** a recurring rendszer automatikus terhelésének hibakezelése/retry-szabályai, kártyacsere, lemondás és megújítási értesítések **csak egy később kiválasztott, tesztelt és költségjóváhagyott kész integrációhoz** tervezendők; nem MVP-feladat és nem önálló fejlesztés. A manuális prémiumhoz szükséges **D09-MVP/01** hónap/lejárat, **/02** előre újravásárlás és **/03** lejárati tájékoztatás külön döntendő el.
+**D09 részletdöntés (2026-10-16):** a recurring rendszer automatikus terhelésének hibakezelése/retry-szabályai, kártyacsere, lemondás és megújítási értesítések **csak egy később kiválasztott, tesztelt és költségjóváhagyott kész integrációhoz** tervezendők; nem MVP-feladat és nem önálló fejlesztés. A manuális prémium **D09-MVP/01** időtartama **elfogadva:** hiteles fizetéstől 1 naptári hónap célhelyi napjának végéig, `Europe/Budapest` és hónapvégi igazítás szerint; a **/02 előre újravásárlás** és **/03 lejárati tájékoztatás** külön döntendő el.
 
 **Beszerzési/megvalósíthatósági feladat a következő fázisra:**
 1. Felkutatni a ténylegesen karbantartott, kész WooCommerce-kompatibilis automatikus megújítást (Barionnal, ha bizonyított, vagy más vállalható kész fizetési útvonallal).
