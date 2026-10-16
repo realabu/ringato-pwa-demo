@@ -149,10 +149,10 @@ Az MF09–MF11 teljes modulját még nyitott részletszabályok vagy szolgáltat
 
 ### MF14 – Migráció, teljes V1 pilot és éles átadás
 
-**Előfeltétel:** MF01–MF13; D08/G3 igazolt papírjog- és vendégrendelés-átvezetés; D12 adatkezelés/megőrzés lezárása; G4 integrációk és G5 regresszió teljesülése. **Korábbi csomag:** M9 + M10.
+**Előfeltétel:** MF01–MF13; **D08 jóváhagyott fokozatos átállás**: megőrzött régi papíros helyszíni beváltási eljárás, kijelölt új digitális termékkör/cutoff, az esetleg átvezetett régi jogok bizonyítása és kettős beváltás kizárása – **a teljes történeti papír- és vendégrendelés-import nem kiadási feltétel**; D12 adatkezelés/megőrzés lezárása; G4 integrációk és G5 regresszió teljesülése. **Korábbi csomag:** M9 + M10.
 
 Két külön átadási ponttal:
-1. **MF14a – Lokálisan ellenőrzött kiadásjelölt és telepítőcsomag:** leltár, cutoff, ellenőrzött claim/import dry-run és ismételhetőség; bizonytalan régi joghoz nincs aktív QR. Összes kötelező T01–T31 és TP01 eredmény, valós teszttartalom, web/shop/e-mail regresszió, backup/rollback és előző kliens/SW kompatibilitás lokálisan dokumentálva. Verziózott csomag, fájllista, pluginlista, konfigurációs eltérések, migrációs és rollback-útmutató mellékelve. A D01/D09 által felülírt eredeti követelményeket az elfogadott döntés szerint értékeljük.
+1. **MF14a – Lokálisan ellenőrzött kiadásjelölt és telepítőcsomag:** D08 szerint régi papíros helyszíni folyamat és új digitális vásárlások termékenkénti átállásának terve, cutoff, személyzeti ügyintézési eljárás; **csak ténylegesen átvett régi jogosultságoknál** igazolt claim/import dry-run és idempotencia. Bizonytalan régi joghoz nincs aktív QR; teljes történeti import nem szükséges. Összes kötelező T01–T31 és TP01 eredmény, valós teszttartalom, web/shop/e-mail regresszió, backup/rollback és előző kliens/SW kompatibilitás lokálisan dokumentálva. Verziózott csomag, fájllista, pluginlista, konfigurációs eltérések, migrációs és rollback-útmutató mellékelve. A D01/D09 által felülírt eredeti követelményeket az elfogadott döntés szerint értékeljük.
 2. **MF14b – Manuális tesztszerveres, majd éles telepítés és átadás:** a telepítő az útmutató alapján kézzel kitelepíti ugyanazt az ellenőrzött kiadást, környezetenkénti beállításokkal; telepítés utáni működésellenőrzés, korlátozott pilot és fokozatos feature flag-ek. A feltárt hibák javítása és tesztje lokálisan történik. Migráció, monitoring, napi egyeztetés, admin/staff oktatás és kiadási jegyzőkönyv szükséges.
 
 **Kész, ha:** a pilot elfogadási feltételei teljesülnek, minden kötelező V1-modul működik, üzemeltetési és incidensfelelősök megnevezve, a visszaállítás kipróbált. A korai növekmények lokális átadása nem jelenti a teljes V1 éles kiadhatóságát.
@@ -171,7 +171,7 @@ Ezek az MF01-től külön technikai feladatként haladhatnak; nem kell minden er
 | Média mennyiség, várható párhuzamos használat, tárhelyterhelés és alternatíva költsége | Lokális védelmi/terhelési teszt és külön üzemeltetői célkapacitás-igazolás vagy mérés; D10 döntés | MF10 előtt |
 | Better Messages REST/AJAX, licenc és klienskompatibilitás | Működő izolált próba vagy dokumentált akadály és új döntési igény | MF12 első fejlesztési feladata; elfogadása előtt igazolandó |
 | D13 pollrészletek; D06 kezdeti címzettcsoportok beállítása | D13 részletszabályok lezárása; D06 előzménylogika elfogadva, csak a konkrét csoportnevek/tagsági szabályok rögzítendők | MF11 implementáció előtt; MF13 valós címzés előtt |
-| D08 legacy leltár és D12 adatkezelés | Átvezetési bizonyítékok; adattípusonként megőrzési/export/törlési szabályok | Adatkezelés az érintett modul véglegesítése és éles személyesadat-kezelés előtt; migráció MF14 előtt |
+| D08 fokozatos átállás és D12 adatkezelés | D08 elfogadva: csak választott új digitális termékkör és igazolt opcionális régi import; papíros jogosultságok elfogadási rendje, cutoff és tájékoztatás tisztázandó. D12: adattípusonként megőrzési/export/törlési szabályok | D08 működési rend MF14 pilot/élesítés előtt; **teljes legacy import nem kiadási kapu**. D12 az éles személyesadat-kezelés előtt |
 
 A terv két külön **D12** jelölést használ. Minden feladatnál ki kell írni, hogy **környezet/fiókkezelés** vagy **adatkezelés/megőrzés**; az első elfogadott iránya nem zárja le a másodikat.
 
