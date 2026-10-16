@@ -29,7 +29,7 @@ Eredeti kérdés: Milyen Barion–WooCommerce Subscriptions megoldással biztos�
 - Fel kell térképezni a **legjobb ár/érték arányú, bizonyíthatóan kompatibilis kész megoldásokat**, a konkrét WooCommerce/Barion környezet és szükség esetén más kész fizetési integráció figyelembevételével. A felmérés tartalmazza: kezdeti/licenc/éves díjak, gateway- és tranzakciós költségek, támogatás/karbantartás, esetleges migráció és konfiguráció, Barion merchant recurring engedély, sandbox-bizonyíték, felhasználói élmény és összköltség. Nem feltételezzük, hogy az aktuális Barion plugin tud ismétlődő terhelést.
 - **Automatikusan megújuló előfizetésre csak akkor térünk át**, ha megfelelő kész megoldás létezik, annak teljes költsége ismert, működése tesztelt, és **a megrendelő kifejezetten vállalja a költségeit**. A beszerzés/élesítés addig nyitott, feltételes feladat.
 - Az MVP **már most készüljön későbbi átállásra**: egységes, fizetési megoldástól független prémium-hozzáférési logika, közös `paid_through` és fiókalapú jogosultság, ellenőrzött WooCommerce-rendelésfeldolgozás, cserélhető fizetési/előfizetési adapter. A meglévő manuális jogosultságok migrációja és a duplaterhelés/átfedés kezelése későbbi integrációs feltétel.
-- **D09-MVP/01 ELFOGADVA (2026-10-16):** a manuális havi hozzáférés hiteles fizetéstől egy naptári hónap célhelyi napjának végéig tart, `Europe/Budapest` és hónapvégi igazítással; **D09-MVP/02–03 nyitott:** az előre újravásárlással kapott időszakok összeadása és a lejárati tájékoztatás külön jóváhagyandó; a meglévő webes fiókoldal esetleges átalakítása D01 szerint külön scope. **2026-10-16-án megerősítve:** kártyacsere, automatikus újrapróbálkozás, recurring lemondás és automatikus megújulási értesítés csak egy később kiválasztott és jóváhagyott kész integrációhoz specifikálandó.
+- **D09-MVP/01–02 ELFOGADVA (2026-10-16):** a manuális havi hozzáférés hiteles fizetéstől egy naptári hónap célhelyi napjának végéig tart, `Europe/Budapest` és hónapvégi igazítással; aktív hozzáférés előrevásárlásai hozzáadódnak, **eredeti havi fordulónapot megőrizve**, a lejárt jog új fizetéssel új sorozatot indít. **D09-MVP/03 nyitott:** lejárati tájékoztatás külön jóváhagyandó; a meglévő webes fiókoldal esetleges átalakítása D01 szerint külön scope. **2026-10-16-án megerősítve:** kártyacsere, automatikus újrapróbálkozás, recurring lemondás és automatikus megújulási értesítés csak egy később kiválasztott és jóváhagyott kész integrációhoz specifikálandó.
 
 **Specifikációs hatás:** a V1.3 F08–F09 eredeti automatikus megújulás/lemondás követelménye az MVP-ben nem kötelező; feltételes későbbi cél, a specifikáció következő kiadásában átvezetendő. A D09 üzleti irány lezárt, a kész megoldás költség- és megvalósíthatósági vizsgálata és megrendelői döntés nyitott.
 
@@ -174,7 +174,7 @@ A média és a chat végleges megoldása később is lezárható, de a megvalós
 
 **3. Nyitott végrehajtási részletek és külön elfogadott adatkezelési projekthatár**
 
-A D09-MVP/01 lejárat elfogadott, de az előrevásárlás (D09-MVP/02) és a lejárati tájékoztatás (D09-MVP/03) még nyitott; a D10 szolgáltatóválasztás és a D13 szavazási részletszabályai a fenti fejezetek szerint szintén nyitottak. Az elfogadott D06 kezdeti csoportlistája még rögzítendő; a technikai próbák nem új üzleti döntések.
+A D09-MVP/01 időtartam és /02 eredeti fordulónapot őrző előrevásárlás elfogadott, de a lejárati tájékoztatás (D09-MVP/03) még nyitott; a D10 szolgáltatóválasztás és a D13 szavazási részletszabályai a fenti fejezetek szerint szintén nyitottak. Az elfogadott D06 kezdeti csoportlistája még rögzítendő; a technikai próbák nem új üzleti döntések.
 
 **D08 – Régi jegyek, bérletek és vendégrendelések átvezetése – ELFOGADOTT FOKOZATOS ÁTÁLLÁS (2026. október 16.)**
 
@@ -215,14 +215,24 @@ A D09-MVP/01 lejárat elfogadott, de az előrevásárlás (D09-MVP/02) és a lej
 
 **Példa (nem szökőév):** január 31-én 10:00-kor sikeres fizetés → február 28. **helyi nap végéig** használható; `paid_through` március 1. 00:00 magyar helyi idő, UTC-ként tárolva. Február 29-i cél vagy októberi óraátállás ugyanígy helyi naptárral számolandó.
 
-**Kifejezetten nyitva marad:** ha a vásárlónak **már aktív prémiumhozzáférése van**, egy újabb előrevásárlás milyen kezdőnapot, lejárati napot vagy fordulónapot eredményezzen; időszakok összeadása és átfedés **D09-MVP/02**, nem eldöntött a /01 jóváhagyásával. A lejáratról küldött külön értesítés **D09-MVP/03**. A már elfogadott D02 jegy-/bérletszabályok nem változnak.
+**Az időtartam és előrevásárlás külön elfogadott:** a /01 határozza meg az egy hónap fogalmát; az **elfogadott /02** a már aktív jogosultságot az eredeti naptári fordulónaphoz igazított, felhalmozódó hónapokkal hosszabbítja. A lejáratról küldött külön értesítés **D09-MVP/03** továbbra is nyitott. A D02 jegy-/bérletszabályok nem változnak.
 
-**D09-MVP / 02 – Előre újravásárlás és időszakok összeadása – NYITOTT**
+**D09-MVP / 02 – Előre újravásárlás és időszakok összeadása – ELFOGADVA (2026. október 16.)**
 
-Döntendő: ha az ügyfél még érvényes hozzáféréssel vesz új havi terméket, az új időszak a `paid_through` végétől hozzáadódik-e, vagy a vásárlás időpontjától indul? Mi történik lejárt hozzáférésnél, több gyors egymás utáni vásárlásnál, visszatérítésnél és átfedő WooCommerce-rendeléstételeknél? Többszörös fizetési callback nem hosszabbíthat kétszer. **Nincs elfogadott üzleti válasz.**
+**Döntés:** ha az ügyfélnek a hiteles fizetéskor még aktív manuális prémiumjoga van, minden újonnan **sikeresen kifizetett havi rendeléstétel további egy naptári hónappal hosszabbítja meg** a meglévő kifizetett jogosultságot, **az eredeti havi fordulónap megőrzésével**. Az új vásárlás nem indít a fizetési dátumon átfedő időszakot, és nem veszik el a már kifizetett idő.
+
+- **Eredeti fordulónap (anchor):** az új folyamatos hozzáférési sorozatot megkezdő első hiteles `paid_at` `Europe/Budapest` szerinti helyi **napját** (például 31.) megőrizzük. Minden hosszabbítás **az eredeti kezdő helyi dátumhoz a teljes, eddig kifizetett hónapszám hozzáadásával** számolja a lejárati dátumot, a célhónap végére igazítva, ha ott nincs megfelelő nap. **Nem az előző, esetleg lerövidült februári 28/29. naphoz adunk újabb hónapot.**
+- **Példa, nem szökőév:** első fizetés január 31. → február 28. **végéig**; új fizetés február 20-án, amíg még aktív → március 31. **végéig**; további előrevásárlás → április 30. **végéig**. Február 28. nem írhatja felül az eredeti **31-i fordulónapot**.
+- **Lejárt hozzáférés:** ha az előző időszak a következő sikeres fizetéskor **már lejárt** (`paid_at >= paid_through`, illetve nincs aktív jogosultság), az új, önálló hónap **a fizetés dátumától** indul és **új fordulónapot** hoz létre; a régi, már lejárt hónapokhoz nem adódik hozzá.
+- **Több vásárlás, duplikáció, verseny:** minden igazolt és jogosult WooCommerce-rendeléstétel pontosan egyszer adhat **egy** hónapot. Azonos rendeléstétel ismételt callbackje, háttérjobja vagy kétszeri feldolgozása nem hosszabbíthat újra; párhuzamos eltérő vásárlások tranzakciósan, forrás-azonosítóval, zárolással és egyeztethető időszaktörténettel dolgozandók fel. A sikertelen vagy még függő fizetés nem ad időt. Késve beérkező webhooknál a tényleges hiteles fizetési idő és az eddig jóváírt sorozat ellenőrzése szükséges, nem pusztán a callback beérkezési sorrendjét követjük.
+- **Technikai lejárat:** az így számolt célhelyi nap **végéig** tart az elérés; a `paid_through` az azt **követő magyar helyi nap 00:00-ja** UTC-re konvertálva (**kizárólagos felső határ**). `Europe/Budapest`, szökőév, hónapvég és DST változatlanul érvényesek. A kliens csak a szerver által megállapított állapotot/lejáratot mutatja.
+- **Refund/chargeback:** a **D07 elfogadott** szabályai érvényesek; nincs automatikus, kontrollálatlan visszadátumozás vagy már felhasznált hónap visszavonása. Csak egyértelmű, teljes és **még fel nem használt** időszak automatikus korrekciója engedhető meg, egyébként auditált kézi ügyintézés.
+- **A D09-MVP/03 lejárati figyelmeztetés módja továbbra is NYITOTT**. A D09-MVP/02 elfogadása nem jelent automatikus megújítást vagy terhelést.
+
+**Státusz:** az eredeti havi fordulónapot megőrző, felhalmozódó manuális újravásárlás **jóváhagyott MVP üzleti szabály**. Megvalósítási és tesztkapu M6/MF09, T08–T09.
 
 **D09-MVP / 03 – Lejárati tájékoztatás – NYITOTT**
 
 Döntendő: csak az appban és a webes fiókban mutassuk a pontos lejárati időt és az „Újravásárlás” gombot, vagy legyen külön előzetes e-mail/pushértesítés is, és ha igen, hány nappal korábban? Üzenetek adminkezelése, kézbesítési csatornák és késés esetén ne állítsunk sikertelen automatikus levonást, hiszen nincs ilyen. Az esetleges meglévő webes fiókoldal átalakítása D01 alapján külön scope.
 
-**Státusz:** az automatikus előfizetés részleteinek elhalasztása és a D09-MVP/01 időtartam-/lejáratszabály **elfogadva**; a D09-MVP/02 előre újravásárlás és /03 lejárati tájékoztatás külön még nyitott, az MF09/M6 megvalósítási tesztek lezárása előtt jóváhagyandó.
+**Státusz:** az automatikus előfizetés részleteinek elhalasztása, valamint a D09-MVP/01 időtartam és **D09-MVP/02 eredeti fordulónapos előrevásárlás elfogadva**; csak a **D09-MVP/03 lejárati tájékoztatás üzleti részletei** nyitottak az MF09/M6 megvalósítási tesztek lezárása előtt.
