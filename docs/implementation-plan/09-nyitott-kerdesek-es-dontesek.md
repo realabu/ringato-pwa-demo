@@ -29,7 +29,7 @@ Eredeti kérdés: Milyen Barion–WooCommerce Subscriptions megoldással biztos�
 - Fel kell térképezni a **legjobb ár/érték arányú, bizonyíthatóan kompatibilis kész megoldásokat**, a konkrét WooCommerce/Barion környezet és szükség esetén más kész fizetési integráció figyelembevételével. A felmérés tartalmazza: kezdeti/licenc/éves díjak, gateway- és tranzakciós költségek, támogatás/karbantartás, esetleges migráció és konfiguráció, Barion merchant recurring engedély, sandbox-bizonyíték, felhasználói élmény és összköltség. Nem feltételezzük, hogy az aktuális Barion plugin tud ismétlődő terhelést.
 - **Automatikusan megújuló előfizetésre csak akkor térünk át**, ha megfelelő kész megoldás létezik, annak teljes költsége ismert, működése tesztelt, és **a megrendelő kifejezetten vállalja a költségeit**. A beszerzés/élesítés addig nyitott, feltételes feladat.
 - Az MVP **már most készüljön későbbi átállásra**: egységes, fizetési megoldástól független prémium-hozzáférési logika, közös `paid_through` és fiókalapú jogosultság, ellenőrzött WooCommerce-rendelésfeldolgozás, cserélhető fizetési/előfizetési adapter. A meglévő manuális jogosultságok migrációja és a duplaterhelés/átfedés kezelése későbbi integrációs feltétel.
-- Nyitott részletszabályok: pontos havi időszak és újravásárláskor időszak-összeadás, lejárati tájékoztatás, webes fiókoldalon megjelenítés, a kész ajánlat(ok) árai és jóváhagyása. **A manuális MVP-hez nem szükséges kártyacsere, automatikus újrapróbálkozás vagy előfizetés-lemondás**; az automatikus opcióhoz majd igen.
+- **D09-MVP/01–03 nyitott:** a manuális havi időtartam és lejárat, az előre újravásárlással kapott időszakok összeadása, valamint a lejárati tájékoztatás külön jóváhagyandó; a meglévő webes fiókoldal esetleges átalakítása D01 szerint külön scope. **2026-10-16-án megerősítve:** kártyacsere, automatikus újrapróbálkozás, recurring lemondás és automatikus megújulási értesítés csak egy később kiválasztott és jóváhagyott kész integrációhoz specifikálandó.
 
 **Specifikációs hatás:** a V1.3 F08–F09 eredeti automatikus megújulás/lemondás követelménye az MVP-ben nem kötelező; feltételes későbbi cél, a specifikáció következő kiadásában átvezetendő. A D09 üzleti irány lezárt, a kész megoldás költség- és megvalósíthatósági vizsgálata és megrendelői döntés nyitott.
 
@@ -201,8 +201,22 @@ A D09 manuális prémium időszak-/újravásárlási/lejárati részletei, a D10
 
 **Státusz:** a **projekthatár jóváhagyott**, a megrendelő által megadandó/jóváhagyandó tényleges megőrzési idők és kötelező adatvédelmi követelmények **külön külső feladatok**. Az éles indulás előtt az adatkezelő felelősségi körében kell rendezni őket; ez nem automatikus saját fejlesztésre szóló megrendelés.
 
-**Az előfizetési modul további részletei**
+**Automatikus előfizetés részletszabályai – ELHALASZTVA, ELFOGADOTT DÖNTÉS (2026. október 16.)**
 
-Megválaszolandó kérdés: Sikertelen terhelés után mikor és hányszor próbálkozunk újra? Hogyan értesítjük az ügyfelet, és hogyan cserélhet fizetési eszközt?
+**Jóváhagyott döntés:** a sikertelen **automatikus** terhelés utáni újrapróbálkozások száma/ütemezése, a fizetési eszköz cseréje, az automatikus megújulási értesítések, a recurring előfizetés lemondása és hasonló életciklus-folyamatok **nem az MVP követelményei**. Ezeket **csak akkor specifikáljuk részletesen**, amikor a D09 szerint ténylegesen kiválasztandó, kész WooCommerce-kompatibilis előfizetési integráció funkcióit, licencét és költségeit megismertük, a megrendelő vállalta a költséget, és a későbbi bevezetésről külön döntöttünk. A kész megoldások ár/érték-felmérése továbbra is elvégzendő, de nem blokkolja a manuális MVP-t. Saját Barion recurring bridge nem fejlesztési feladat.
 
-D09 után **csak feltételes, későbbi automatikus előfizetési integrációhoz** döntendők el: az újrapróbálkozások, kártyacsere, értesítés, lemondás. A manuális havi MVP-ben nincs automatikus terhelés, így sikertelen automatikus renewal vagy kártyacsere folyamat sincs; a felhasználó maga vesz újabb hozzáférési időszakot. A már kifizetett időszak végéig tartó hozzáférés, a lejárat és az ismételt vásárlás kezelése az MVP része.
+**Az MVP változatlanul kötelező része:** bejelentkezve megvásárolható egyszeri WooCommerce/Barion havi prémiumtermék weben és PWA-ban, hiteles fizetésből szerveroldali hozzáférés és `paid_through`, hozzáférés kizárólag a kifizetett időszak végéig, új időszak önálló megvásárlása; nincs ismétlődő terhelés, automatikus retry, kártyacsere vagy „előfizetés lemondása” gomb. Az UI ne sugalljon aktív automatikus előfizetést.
+
+**D09-MVP / 01 – A manuális havi hozzáférés időtartama – NYITOTT**
+
+Döntendő: egy manuálisan megvásárolt „havi” hozzáférés **30 × 24 órát**, **egy naptári hónapot az eredeti fizetési pillanatig**, vagy **egy naptári hónapot a cél helyi nap végéig** jelent-e? Mi történik hónapvégen (január 31. → február utolsó napja) és nyári/téli időszámításváltáskor? A számítást szerveroldalon, az egységes `Europe/Budapest` időzóna figyelembevételével tervezzük; **egyelőre nem választottunk időtartam- vagy lejáratmodellt**.
+
+**D09-MVP / 02 – Előre újravásárlás és időszakok összeadása – NYITOTT**
+
+Döntendő: ha az ügyfél még érvényes hozzáféréssel vesz új havi terméket, az új időszak a `paid_through` végétől hozzáadódik-e, vagy a vásárlás időpontjától indul? Mi történik lejárt hozzáférésnél, több gyors egymás utáni vásárlásnál, visszatérítésnél és átfedő WooCommerce-rendeléstételeknél? Többszörös fizetési callback nem hosszabbíthat kétszer. **Nincs elfogadott üzleti válasz.**
+
+**D09-MVP / 03 – Lejárati tájékoztatás – NYITOTT**
+
+Döntendő: csak az appban és a webes fiókban mutassuk a pontos lejárati időt és az „Újravásárlás” gombot, vagy legyen külön előzetes e-mail/pushértesítés is, és ha igen, hány nappal korábban? Üzenetek adminkezelése, kézbesítési csatornák és késés esetén ne állítsunk sikertelen automatikus levonást, hiszen nincs ilyen. Az esetleges meglévő webes fiókoldal átalakítása D01 alapján külön scope.
+
+**Státusz:** az automatikus előfizetés részleteinek elhalasztása **elfogadva**; a három manuális MVP-szabályt egyesével szükséges jóváhagyni az MF09/M6 megvalósítási tesztek lezárása előtt.
