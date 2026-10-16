@@ -189,11 +189,17 @@ A D09 manuális prémium időszak-/újravásárlási/lejárati részletei, a D10
 
 **Státusz:** üzleti irány jóváhagyva; a konkrét átállási dátum, termékkör, helyszíni eljárás és az opcionális átvétel részletes kontrolljai végrehajtandó feladatok. A D12 adatmegőrzési kérdés továbbra is külön nyitott döntés.
 
-**D12 – Adatkezelés és megőrzés**
+**D12 – Adatkezelés és megőrzés – ELFOGADOTT PROJEKTSCOPE (2026. október 16.); A JOGI PARAMÉTEREK KÜLSŐ FELELŐSSÉG**
 
-Megválaszolandó kérdés: Meddig őrizzük meg a chatüzeneteket, auditnaplókat és egyéb adatokat? Milyen hozzájárulási szövegek, exportálási és törlési folyamatok szükségesek?
+**Üzleti döntés:** A Ringató PWA projekt **nem vállal jogi tanácsadást, adatkezelési tájékoztató vagy hozzájárulási szövegek jogi elkészítését/felülvizsgálatát**, és **nem fejleszt külön, átfogó anonimizálási, tömeges adattörlési vagy GDPR-ügyintézési alrendszert**. A meglévő WordPress/WooCommerce/Better Messages/Billingo és azok támogatott adatvédelmi funkcióit használjuk újra. A működéshez szükséges adatállapot-, session-, push-eszköz-leválasztási, jogosultsági és egyéb **funkcionális** törlések/korrekciók megmaradnak, valamint az eredetileg szükséges hozzáférés- és adatbiztonsági követelmények sem tűnnek el.
 
-A terv javaslata: Az egyes adattípusokra külön megőrzési szabály készüljön, adatkezelési felelőssel egyeztetve. A pushelőzmény 365 napja nem általános adatmegőrzési idő.
+- **Beállítható értékek:** ahol a fejlesztés ténylegesen kezel saját megőrzési/megjelenítési időablakot vagy életciklust, lehetőség szerint **adatkategóriánként konfigurálható WordPress-beállítást** biztosítunk, dokumentált alapértékkel. A D06 szerinti **365 nap az app értesítéslista megjelenítési ablaka**, nem automatikus fizikai adattörlési határidő. A jegy és bérlet funkcionális lejárata szintén nem azonos a személyes adatok megőrzési idejével.
+- **„Törvényi” alapérték:** **csak akkor** adunk jogszabályhoz kötött alapértelmezést, ha az az adott adatkategóriára valóban **egyértelműen és ellenőrzötten alkalmazható**, és a megrendelő/adatkezelési felelős megadta vagy jóváhagyta a hivatkozást. **Nincs a GDPR-ban minden adatra egységes megőrzési szám**. Ha ilyen alapérték nem határozható meg, a konfiguráció nem állíthat be ellenőrizetlen „jogi” időtartamot: a megrendelő választja ki/dokumentálja a megfelelő időt vagy a megőrzés felülvizsgálati eljárását. Önkényes automatikus törlés nincs.
+- **Külső felelősség:** a megrendelő saját adatkezelési/jogi felelőse köteles ellenőrizni az adatkezelési jogalapot, tájékoztatást, megőrzési/törlési időket, érintetti kérelmek teljesíthetőségét és a szükséges hozzájárulási folyamatot. A funkciók korlátozott projektscope-ja **nem jelenti az adatkezelő jogi kötelezettségeinek megszűnését**. Ha a meglévő eszközökkel nem teljesíthető kötelező adatvédelmi funkció, azt hiányként jelezzük és **külön megbízás/scope-döntés** tárgyává tesszük, nem tekintjük csendben késznek.
+- **Nincs új automatikus anonimizálási/törlési motor.** Nem távolítunk el kötelező üzleti auditot vagy számlázási adatot felületi kérésre; az adatkezelő által előírt jogszerű megőrzés és érintetti kérelemkezelés külön vizsgálandó. A technikai hozzáférésvédelem, adatminimalizálás, privacy-by-design és a meglévő WP-adatvédelmi funkciók **nem kerülnek kikapcsolásra**.
+- **Technikai átadási ellenőrzés:** dokumentáljuk, mely új adatok keletkeznek (chat, szavazat, értesítések, profil/QR/audit), melyik meglévő rendszer tárolja őket, milyen kapcsolódó beállítások léteznek, és hol hiányzik az adatkezelői döntés. Ez **technikai adatleltár**, nem jogi vélemény és nem vállalás külön export-/erase-integráció fejlesztésére.
+
+**Státusz:** a **projekthatár jóváhagyott**, a megrendelő által megadandó/jóváhagyandó tényleges megőrzési idők és kötelező adatvédelmi követelmények **külön külső feladatok**. Az éles indulás előtt az adatkezelő felelősségi körében kell rendezni őket; ez nem automatikus saját fejlesztésre szóló megrendelés.
 
 **Az előfizetési modul további részletei**
 
