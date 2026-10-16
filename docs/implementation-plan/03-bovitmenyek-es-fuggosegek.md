@@ -30,7 +30,7 @@
 - `Entitlements`, `Reservations`, `Checkin`: own tables, atomikus beváltás/foglalás, staff scope, audit és indokolt admin korrekció.
 - `Media`: CPT/taxonómia, privát forrásazonosító, playback provider adapter.
 - `Preferences`: kedvencek és verziózott sor.
-- `Push`: címzettcsoport admin, kampány előnézet/küldés, VAPID, device subscription, receipt/cursor, job retry/retention.
+- `Push` (D06 elfogadva): WordPress egyéni/csoport/összes címzés; kampány előnézet/küldés, VAPID, device subscription, minden címzettnek egy app receipt push nélkül is, eszközök kézbesítése külön; 365 napos listamegjelenítés, tényleges retention D12 szerint.
 - `Messaging`: D11 szerint az **ingyenes Better Messages REST/AJAX** az elsődleges, stagingben tesztelendő. Aktív chatben kb. 10 s lekérdezés, háttérben leállítás, visszatéréskor frissítés; saját parent–Virág thread, read/unread, retry/idempotencia és jogosultság. Ha az ingyenes API nem alkalmas, új döntés szükséges.
 - **`Polls` (D13/P01, V1 kötelező):** „Virág kérdezi” WordPress admin kérdés-/válaszopció-kezelés, publikálás és zárás, eredményláthatósági beállítás; saját szerveroldali válaszmentés, egyediség, összesítés és PWA API. Nem opcionális és nem puszta prototípusfunkció. A részletes válaszmódosítási szabály implementálás előtt egyeztetendő.
 - `Security` és `Operations`: permission callback minden route-hoz, rate limit, migráció, GDPR export/erase integráció, health/admin diagnosztika és reconciliation job. A szavazatadatok hozzáférési, export/törlési és megőrzési szabályai is a D12 adatkezelési döntéshez tartoznak.
