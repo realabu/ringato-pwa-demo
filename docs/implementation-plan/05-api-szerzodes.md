@@ -35,7 +35,7 @@ A kliens code alapján magyar UX-üzenetet mutat; nem a provider raw hiba-/stack
 | GET `/home` | U | – | next_admission, subscription, featured_media, upcoming_events, unread_count; **V1 P01 aktív poll összefoglaló / link, ha van** |
 | GET `/products` | P | cursor, limit, search?, category? | Product[]: alapból ugyanazok az aktív, weben látható és megvásárolható WC-termékek (régi Online Ringató és új app-előfizetés/eseménytermék is); opcionális „csak webshopban” kivétel D01 szerint |
 | GET `/products/{id}` | P | – | Product + variations/configurator információ |
-| GET `/orders` | U | cursor, limit | Saját OrderSummary[], jogosultságokkal; vendég claim nélküli rendelés nincs |
+| GET `/orders` | U | cursor, limit | Saját OrderSummary[], jogosultságokkal; D08 szerint a korábbi vendégrendelés csak ellenőrzött, opcionális claim után jelenhet meg; e-mail-egyezés alapján automatikusan nem |
 | GET `/orders/{id}` | U | – | Saját OrderDetail + WooCommerce-ben igazolt refund/ügyintézési státusz, ha releváns (D07); nem más ügyfél/számla adatai |
 | POST `/checkout-intents` | U | product_id, variation_id?, quantity, attributes?; idempotency | CheckoutIntent + egyszeri handoff_url; szerverár és férőhely |
 | GET `/checkout-intents/{id}` | U | – | Saját payment_state/provisioning_state/order_id/entitlement_ids; nem token újrakiadás |
@@ -188,7 +188,7 @@ V1 admin lehet hagyományos WP-admin form nonce/capability ellenőrzéssel. Az a
 | Csoport create/update/tagok | ringato_manage_groups | Aktív user, duplikációmentes tagság, audit |
 | Kampány draft/preview | ringato_manage_push | Egyéni/csoport/all deduplikált címzettek, belső allowlist deep link |
 | Kampány send | ringato_manage_push | Explicit admin send, címzettpillanatkép, idempotens outbox; nincs demó PWA-küldés |
-| Entitlement adjustment/import | ringato_adjust_entitlements | Kötelező indok + before/after + batch; ügyfél nem írhat remaininget |
+| Entitlement adjustment/import (D08, opcionális régi jogátvétel) | ringato_adjust_entitlements | Kötelező bizonyíték, indok, before/after és batch; ismeretlen legacy joghoz nincs aktív QR; az ügyfél nem írhat remaininget; a teljes papírmigráció nem V1-követelmény |
 | Audit/reconciliation | ringato_view_audit | Szűrt riport, korlátozott személyes adat |
 
 Ha React admin készül később, ezek `/admin/...` végpontokat kapnak ugyanilyen jogokkal; V1 mobilstaff nem kampányadmin. Barion callbacket a megfelelő gateway kezeli, nem kliens Ringató végpont; Core csak a hitelesített paid/failed eseményt dolgozza fel. Better Messages raw API nincs közvetlenül összekeverve a Ringató DTO-szerződéssel.

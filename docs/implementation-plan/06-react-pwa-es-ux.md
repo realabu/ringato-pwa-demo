@@ -38,6 +38,8 @@ Szerverállapot: React Query, query key user ID/session generációval; logoutko
 
 Kérések: typed fetch + same-origin credentials + nonce; runtime schema, közös error mapping; GET korlátozott retry, mutáció csak idempotens szabály szerint. Entitlement/foglalás/vásárlás után célzott invalidáció: `/home`, wallet, orders, events/reservations, subscription. Backgroundba kerülés után visszatéréskor friss szerverállapot.
 
+**D08 elfogadott fokozatos átállás (2026-10-16):** a régi, érvényes papírjegyek/bérletek továbbra is a helyszíni rend szerint használhatók, az alkalmazás nem ígéri, hogy a korábbi papíros vásárlások mind automatikusan láthatók. Az új digitális termékkör a később kijelölt cutoff után a Core-tól kapja a használható jegy- és bérletstátuszt. Régi jog csak ellenőrzött kézi átvétellel jelenhet meg digitális QR-ként; bizonytalan esetben nincs QR és az ügyfél kézi segítséget kérhet. Régi vendégrendelés nem kapcsolható puszta e-mail-egyezéssel. Átállási dátum és ügyféltájékoztatás az indulás előtt egyeztetendő.
+
 **D12 – vendégből regisztrált felhasználó:** a webshop jelenleg fiók nélküli vendégvásárlásra épül; az app publikus felületei vendégként is böngészhetők, de a prémium vásárlás, saját médiák/jegyek/foglalások előtt egyértelmű bejelentkezés/regisztráció felhívás kell a meglévő WP/WooCommerce-fiókfolyamatba. Az éles webes általános vendégvásárlás nem változik; a havi prémium terméket a webes pénztár is csak bejelentkezve engedi. A staging tesztdomaines példány rendelkezésre áll a telepítési és login-visszatérési UX tesztjéhez; a streaming kapacitás ettől külön mérendő (D10).
 
 ## 2. Útvonalak és képernyőmegfeleltetés
