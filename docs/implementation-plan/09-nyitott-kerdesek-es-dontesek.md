@@ -51,7 +51,7 @@ Eredeti kérdés: Mi a végleges domain, hol lesz a staging tesztkörnyezet, és
 3. Staging–éles eltérés, tesztadatok, biztonságos fizetési/e-mail sandbox és a telepítési/regressziós ellenőrzőlista véglegesítése; a meglévő webes vendégvásárlás ne sérüljön.
 4. Regisztráció/fiók-UX vizsgálata a korábbi vendégvásárlók számára, és a régi vendégrendelések igazolt fiókhoz kapcsolásának külön kezelése (D08). A meglévő weboldal esetleges felületi átdolgozása a D01 szerint külön webmesteri munka vagy ajánlat.
 
-**Státusz:** irány jóváhagyva; **tárhely PWA-szintű alkalmassága és a tesztkörnyezet rendelkezésre állása megerősítve**, de streamingkapacitás, regisztrációs folyamat és staging telepítési/terhelési eredmények még vizsgálandók. **A lenti második „D12 – Adatkezelés és megőrzés” önálló, továbbra is nyitott döntés, nem része ennek a jóváhagyásnak.**
+**Státusz:** irány jóváhagyva; **tárhely PWA-szintű alkalmassága és a tesztkörnyezet rendelkezésre állása megerősítve**, de streamingkapacitás, regisztrációs folyamat és staging telepítési/terhelési eredmények még vizsgálandók. **A lenti második „D12 – Adatkezelés és megőrzés” önálló döntés; annak projekthatárát 2026-10-16-án külön jóváhagytuk, a jogi paraméterek továbbra is a megrendelő feladatai.**
 
 **D13 – „Virág kérdezi” szavazás – ELFOGADVA, V1 KÖTELEZŐ FUNKCIÓ (2026. október 15.)**
 
@@ -92,7 +92,7 @@ Megválaszolandó eredeti kérdés: Megfelel-e a Better Messages ingyenes REST/A
 
 **Fizetős WebSocket:** nem MVP-kötelező és **nincs beszerzésre jóváhagyva**. Csak igazolt használhatósági vagy teljesítménybeli szükség esetén, kompatibilitás- és költségfelmérés, majd **külön megrendelői költségjóváhagyás** után kerülhet be. Ha az ingyenes integráció nem elegendő, annak hiányosságát és a lehetséges alternatívákat külön döntésre kell hozni; saját, költséges chatfejlesztés nem automatikus következmény.
 
-**Státusz:** megvalósítási irány jóváhagyva; a tényleges teszt eredménye még nyitott. A chat adatmegőrzési kérdése a külön D12 adatkezelési döntés része.
+**Státusz:** megvalósítási irány jóváhagyva; a tényleges teszt eredménye még nyitott. A chat adatmegőrzési paraméterei a külön, projektscope szerint már elfogadott D12 értelmében a megrendelő/adatkezelő külső feladatai; új törlési alrendszer nem része a fejlesztésnek.
 
 A média és a chat végleges megoldása később is lezárható, de a megvalósíthatósági próbájukat már az elején érdemes elvégezni.
 
@@ -166,13 +166,13 @@ A média és a chat végleges megoldása később is lezárható, de a megvalós
 - **Értesítési előzmény:** minden bejelentkezett felhasználó a **neki címzett** értesítéseket láthatja az alkalmazásban, akkor is, ha nem telepítette a PWA-t vagy nem engedélyezte a push-t. Több eszköz ugyanazt a fiókszintű listát és „ÚJ” jelölést látja. Az új jelölés az előző panelmegnyitáshoz / szerveroldali cursorhoz viszonyít.
 - **Push mint külön szállítás:** ha az adott felhasználó/eszköz önként engedélyezte, megkíséreljük a push elküldését. A pushküldés és az eszköz/provider státusza **külön** nyilvántartás; pusztán a szolgáltatói átvételt nem állítjuk tényleges telefonos megjelenítésnek vagy olvasásnak. A sikertelen push **nem tünteti el** az appbeli rekordot.
 - **Címzés:** Virág a **WordPress-adminban** indíthat kézi kampányt **egy konkrét felhasználónak, egy adminisztrált címzettcsoportnak vagy minden felhasználónak**. A kezdeti csoportokat Virág határozza meg, a konkrét csoportlista még rögzítendő. Küldéskor egyedi címzettpillanatkép készül; későbbi csoporttagság-változás nem írja át a múltbeli előzményeket. Az adminisztrációhoz nem kell külön mobiladmin.
-- **365 napos előzmény:** az alkalmazás a **megelőző 365 nap címzett értesítéseit jeleníti meg**, fiókonként, szerveridővel számolva. **A mögöttes adatbázisrekordok tényleges törlési/megőrzési határideje, exportálása, hozzájárulási szövege és a kommunikáció jogalapja továbbra is a külön D12 adatkezelési döntésben tisztázandó.** A 365 nap nem általános adatmegőrzési szabály, nem jelent önmagában adatbázis-törlési felhatalmazást.
+- **365 napos előzmény:** az alkalmazás a **megelőző 365 nap címzett értesítéseit jeleníti meg**, fiókonként, szerveridővel számolva. **A mögöttes rekordok tényleges törlési/megőrzési idejét, jogalapját, tájékoztatását és az esetleges érintetti eljárást a D12 elfogadott projekthatára szerint a megrendelő adatkezelője határozza meg; külön GDPR-alrendszer nem része a fejlesztésnek.** A 365 nap nem általános adatmegőrzési szabály, nem jelent önmagában adatbázis-törlési felhatalmazást.
 - **Pushengedély bekérése:** **nem** az alkalmazás első megnyitásakor ugrik fel automatikusan. Csak jól érthető, **a felhasználó által indított** műveletből kérjük az OS/böngésző engedélyét; elutasítás után nem ismételjük automatikusan. Az appbeli értesítések ehhez nem kötöttek.
 - **Nyitott implementációs/adatkezelési feladatok:** Virág kezdeti csoportnevei/tagsági szabályai; WordPress-admin küldési előnézet; eszköz- és fiókváltás; opt-in/opt-out; jogosultság, több eszköz és hibás push végpont; D12 szerinti adatvédelmi szabályok és megőrzés.
 
-**Státusz:** a D06 funkcionális döntés lezárt; az admin/címzettcsoportok konkrét beállítása, push-tesztje és a külön D12 adatkezelési kérdés nyitott.
+**Státusz:** a D06 funkcionális döntés lezárt; az admin/címzettcsoportok konkrét beállítása, push-tesztje és a D12 adatkezelési projekthatár lezárt, a megrendelő jogi/megőrzési paraméterei külső feladatok.
 
-**3. Továbbra is nyitott üzleti és adatkezelési kérdések**
+**3. Nyitott végrehajtási részletek és külön elfogadott adatkezelési projekthatár**
 
 A D09 manuális prémium időszak-/újravásárlási/lejárati részletei, a D10 szolgáltatóválasztás és a D13 szavazási részletszabályai a fenti fejezetek szerint szintén nyitottak. Az elfogadott D06 kezdeti csoportlistája még rögzítendő; a technikai próbák nem új üzleti döntések.
 
@@ -187,7 +187,7 @@ A D09 manuális prémium időszak-/újravásárlási/lejárati részletei, a D10
 - **Átállási időpont és ügyféltájékoztatás:** konkrét nap **még nincs jóváhagyva**. A fejlesztő, Virág és a helyszíni munkatársak a pilot/élesítés előtt meghatározzák, mely termékekre mikor indul az új digitális folyamat, hogyan azonosítható egy régi papírbérlet és hol történik a helyszíni nyilvántartása. Vevői és staff tájékoztatás kötelező.
 - **V1 kiadási kapu:** igazolt új digitális vásárlás/QR/beváltás, a régi papíros jogok zavartalan elfogadása, kettős felhasználás elleni eljárás, és csak a **ténylegesen átvett** tételeknél adatellenőrzés/importteszt. **A teljes történeti állomány digitalizálása nem indulási feltétel**; a későbbi teljes migráció külön egyeztethető.
 
-**Státusz:** üzleti irány jóváhagyva; a konkrét átállási dátum, termékkör, helyszíni eljárás és az opcionális átvétel részletes kontrolljai végrehajtandó feladatok. A D12 adatmegőrzési kérdés továbbra is külön nyitott döntés.
+**Státusz:** üzleti irány jóváhagyva; a konkrét átállási dátum, termékkör, helyszíni eljárás és az opcionális átvétel részletes kontrolljai végrehajtandó feladatok. A D12 adatkezelési projekthatár külön elfogadott, a tényleges megőrzési paraméterek a megrendelő külső feladatai.
 
 **D12 – Adatkezelés és megőrzés – ELFOGADOTT PROJEKTSCOPE (2026. október 16.); A JOGI PARAMÉTEREK KÜLSŐ FELELŐSSÉG**
 
