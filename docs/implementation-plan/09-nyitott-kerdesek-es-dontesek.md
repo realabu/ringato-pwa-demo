@@ -96,7 +96,7 @@ Megválaszolandó eredeti kérdés: Megfelel-e a Better Messages ingyenes REST/A
 
 A média és a chat végleges megoldása később is lezárható, de a megvalósíthatósági próbájukat már az elején érdemes elvégezni.
 
-**2. Az érintett modul implementálása előtt lezárandó kérdések**
+**2. Elfogadott modulszabályok és végrehajtandó feladatok**
 
 **D02 – Jegyek és bérletek érvényessége – ELFOGADOTT DÖNTÉS (2026. október 16.)**
 
@@ -132,18 +132,18 @@ A média és a chat végleges megoldása később is lezárható, de a megvalós
 - **Későbbi bővíthetőség:** a család mint külön entitás és a jegyek/foglalások `family_id` kapcsolata maradjon elkülönítve a WordPress `user_id`-tól. V1-ben minden családnak egy fióktulajdonosa van. A későbbi, külön jóváhagyandó több szülős megoldáshoz külön családtag-/fióktagsági kapcsolattábla és jogosultságmodell csatlakoztatható, a meglévő családazonosítók és jogok tömeges átírása nélkül; **ezt a közös családhozzáférési funkciót most nem fejlesztjük le**.
 - A családtagok részletes személyes adatainak gyűjtése, közös szülői felhasználómenedzsmentje nem szükséges V1-ben; a korábbi vendégvásárlások fiókhoz igazolása külön D08 kérdés, önmagában e-mail-egyezés alapján nincs automatikus hozzárendelés.
 
-**Státusz:** üzleti döntés lezárva. A `family_id`-alapú hozzáférés, foglalási egyediség, manuális korrekció jogosultság- és auditkövetelménye és a későbbi tagság lehetőségének fenntartása implementációs/tesztelési feladat az MF07–MF08 modulokban. A D05 foglalási időablakai, a D07 visszatérítés és a D08 legacy átvezetés külön nyitott döntések.
+**Státusz:** üzleti döntés lezárva. A `family_id`-alapú hozzáférés, foglalási egyediség, manuális korrekció jogosultság- és auditkövetelménye és a későbbi tagság lehetőségének fenntartása implementációs/tesztelési feladat az MF07–MF08 modulokban. A D05 foglalási időablakai és a D07 visszatérítési szabályai szintén elfogadottak; implementációjuk és műszaki igazolásuk még feladat. A D08 legacy átvezetés külön nyitott döntés.
 
 **D05 – Foglalási és beléptetési szabályok – ELFOGADOTT V1 DÖNTÉS (2026. október 16.)**
 
 **Döntés:**
 - **Alapdíjas, korlátozott létszámú esemény:** a saját aktív foglalás **a program kezdetéig**, azaz a szerveren rögzített kezdési időpontot megelőzően lemondható; lemondás esetén pontosan egy családi kapacitásegység szabadul fel. Ismételt lemondás nem szabadíthat fel újabb férőhelyet. A családi jegy/bérlet önmagában nem foglal helyet és a foglalás lemondása nem használja el.
 - **Külön áras esemény fizetés alatti helyfenntartása:** a helyet a vásárlás megkezdésekor létrejövő ellenőrzött foglalási `hold` **15 percig** fenntartjuk, szerveridővel. A korlát minden értékesítési csatornára vonatkozik (PWA, webes kosár/pénztár, rendelésfizetés). Lejáratkor, ha még nincs igazolt és kapacitással egyeztetett fizetés, a hely ismét elérhetővé válhat.
-- **Késő fizetési visszaigazolás:** a lejárt helyfenntartás után érkező sikeres fizetés **sohasem lépheti túl az esemény kapacitását**. Ugyanazon adatbázis-tranzakcióban újra vizsgáljuk, hogy van-e még szabad hely. Ha van, megerősíthető a vásárlás/jegy és foglalás; ha nincs, **nem állítunk ki érvényes belépési jogosultságot**, a rendelés `paid_capacity_conflict` állapotba kerül, és pénzügyi/ügyfélszolgálati rendezést (visszatérítés vagy más megoldás) igényel. A D07 refund-részletszabályai külön döntésben maradnak.
+- **Késő fizetési visszaigazolás:** a lejárt helyfenntartás után érkező sikeres fizetés **sohasem lépheti túl az esemény kapacitását**. Ugyanazon adatbázis-tranzakcióban újra vizsgáljuk, hogy van-e még szabad hely. Ha van, megerősíthető a vásárlás/jegy és foglalás; ha nincs, **nem állítunk ki érvényes belépési jogosultságot**, a rendelés `paid_capacity_conflict` állapotba kerül, és pénzügyi/ügyfélszolgálati rendezést (visszatérítés vagy más megoldás) igényel. A pénzügyi rendezésre az elfogadott D07 visszatérítési szabályai vonatkoznak.
 - **Beléptetés:** a staff alapértelmezésben a foglalkozás kezdete **előtt 2 órával** kezdhet, és a foglalkozás **vége után 2 óráig** végezhet ellenőrzést/beváltást. A valós eseményadatokból szerveroldalon számolt időablak **WordPress adminból eseményenként módosítható**; az alapbeállítás további egyedi beavatkozás nélkül használható. Az ellenőrzés és az új beváltás a D03 szerinti egyszeriséget és családi/event jogosultságokat tiszteletben tartja.
 - **Várólista:** **nem készül az első verzióban**. Betelt foglalkozásnál az alkalmazás világosan jelzi, hogy nincs foglalható hely; a kapacitásversenyt és a többcsatornás fizetést szerveroldali tranzakció védi.
 
-**Megvalósítási/tesztelési szabály:** a WordPressben beállítható kivételes eseményablak, a kezdési határpillanat, a 15 perces holdlejárat, a dupla visszaigazolás, az utolsó helyért folyó párhuzamos vásárlás, valamint a lejárt hold utáni fizetés elutasítása/feloldása kötelezően tesztelendő. A D05 üzleti szabályai lezártak; **a teszteredmények és a D07 szerinti visszatérítési eljárás még nyitottak**.
+**Megvalósítási/tesztelési szabály:** a WordPressben beállítható kivételes eseményablak, a kezdési határpillanat, a 15 perces holdlejárat, a dupla visszaigazolás, az utolsó helyért folyó párhuzamos vásárlás, valamint a lejárt hold utáni fizetés elutasítása/feloldása kötelezően tesztelendő. A D05 üzleti szabályai lezártak; **a teszteredmények, valamint az elfogadott D07 szerinti integráció igazolása és az admineljárás kidolgozása még végrehajtandó feladatok**.
 
 **D07 – Visszatérítés és chargeback – ELFOGADOTT V1 DÖNTÉS (2026. október 16.)**
 
@@ -171,6 +171,10 @@ A média és a chat végleges megoldása később is lezárható, de a megvalós
 - **Nyitott implementációs/adatkezelési feladatok:** Virág kezdeti csoportnevei/tagsági szabályai; WordPress-admin küldési előnézet; eszköz- és fiókváltás; opt-in/opt-out; jogosultság, több eszköz és hibás push végpont; D12 szerinti adatvédelmi szabályok és megőrzés.
 
 **Státusz:** a D06 funkcionális döntés lezárt; az admin/címzettcsoportok konkrét beállítása, push-tesztje és a külön D12 adatkezelési kérdés nyitott.
+
+**3. Továbbra is nyitott üzleti és adatkezelési kérdések**
+
+A D09 manuális prémium időszak-/újravásárlási/lejárati részletei, a D10 szolgáltatóválasztás és a D13 szavazási részletszabályai a fenti fejezetek szerint szintén nyitottak. Az elfogadott D06 kezdeti csoportlistája még rögzítendő; a technikai próbák nem új üzleti döntések.
 
 **D08 – Régi jegyek, bérletek és vendégrendelések átvezetése**
 

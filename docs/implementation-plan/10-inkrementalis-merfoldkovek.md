@@ -21,14 +21,15 @@ Tárhelyfüggő tényeket (például streamkapacitás, szervercron és WAF) lok�
 | Eldöntött alapok | MF01 PWA-alap; MF02 layout; MF03 Core és session-alap | Nincs nyitott üzleti kérdés. Egymás technikai eredményeire épülnek; MF01 indulhat elsőként. |
 | Korai, technikai ellenőrzéssel | MF04 regisztráció/belépés; MF05 olvasó nézetek | Az irány elfogadott; a meglévő WP/WC-folyamatot, adatokat és beállításokat ellenőrizni kell. Ez végrehajtandó feladat, nem általános üzleti stop. |
 | Szolgáltatófüggetlen kliens | MF06 lejátszó alap | Saját vagy engedélyezett tesztmédiával elkezdhető; prémium éles stream és tartós személyes preferenciák nélkül. |
-| Modulonként döntéshez kötött | MF07–MF13 | Csak a saját döntési kapu lezárása után készülhet el a teljes modul. A műszaki felmérések korábban indulnak. |
+| Elfogadott modulszabályokkal fejleszthető | MF07 jegyek/bérletek és staff; MF08 foglalás; MF12 chat; MF13 értesítések | D02–D07 és D11 elfogadva. A technikai előfeltételek teljesülése után fejleszthetők; az integrációs próbák a munka részei. MF12/MF13 éles személyesadat-kezeléséhez D12 lezárása, MF13 valós címzéséhez a kezdeti csoportok rögzítése szükséges. |
+| Modulonként döntéshez kötött | MF09 prémium; MF10 médiatár; MF11 szavazás | A saját nyitott részletszabály vagy szolgáltatóválasztás lezárása után készülhet el a teljes modul. A műszaki felmérések korábban indulnak. |
 | Teljes V1 átadás | MF14 | Minden kötelező modul, migrációs és kiadási kapu teljesülése után. |
 
 **Konkrét első fejlesztési kör: MF01 → MF02 → MF03 → MF04.** Ennek végén telepíthető, arculatos alkalmazás működik valós regisztrációval, belépéssel és saját fiókazonosítással. Az MF05 adja hozzá az első valós tartalmi nézeteket. Jegy-, foglalási vagy fizetési üzleti döntést ehhez még nem kell előre meghozni.
 
 A „nincs nyitott üzleti kérdés” nem jelent már igazolt tárhelyet, csomagkompatibilitást vagy hibamentes integrációt: ezek ellenőrzése az adott mérföldkő feladata. A feltárt, ténylegesen új termék- vagy scope-kérdést a döntési naplóba kell visszavezetni.
 
-## 2. Korai mérföldkövek
+## 2. Fejleszthető mérföldkövek – elfogadott üzleti iránnyal
 
 ### MF01 – Projektalap és elkülönített PWA-keret
 
@@ -121,21 +122,28 @@ Feladatok:
 
 **Kész, ha:** single végén megáll; sor végén megáll; a lejátszás és hibaállapotok valódi médiaeseményekből származnak; iOS/Android próba rögzített. Ez a T04–T06 kliensrésze, nem prémium-médiaátadás és nem streamkapacitás-bizonyíték.
 
-## 3. Döntések után elkészíthető modulok
+### Elfogadott üzleti szabályokkal fejleszthető modulok
 
-Az alábbi sorrend ajánlott. MF10–MF13 a saját előfeltételeik teljesülésekor korábban is sorra vehetők; egyik késése sem akadályozza a független modulok fejlesztését. Teljes V1-et viszont kötelező modul nélkül nem adunk át.
+**Besorolás frissítve: 2026-10-16.** Az MF07, MF08, MF12 és MF13 üzleti iránya elfogadott. Az alábbi technikai függőségek sorrendet jelentenek, nem új üzleti jóváhagyást. A lokális fejlesztés és tesztelés tesztadatokkal indulhat; a műszaki megfelelőségi próbák, az MF13 kezdeti csoportbeállításai és a D12 éles adatkezelési feltételei továbbra is kötelező átadási kapuk. A besorolás nem változtatja a mérföldkövek tervezett készültségi állapotát.
 
 | Mérföldkő | Előfeltétel és döntési kapu | Feladat és átadandó eredmény | Készültség bizonyítéka | Régi csomag |
 |---|---|---|---|---|
 | **MF07 – Vásárlási átadás, jegyek/bérletek és staff** | MF04–MF05; **D02, D03, D04 és D07 elfogadva**. D04 már a családhoz kötött jogok sémája előtt szükséges. | Termékszabály-mapping, nem férőhelyes termékek WC checkout-átadása, saját intentstátusz; idempotens fizetett rendeléstétel → jog; jegy/bérlet nézet, lejárat, QR; staff capability, inspect/redeem, audit és kézi korrekció. **D03 szerint a családi jegy, bérlet és külön áras jegy egyazon eseményre történő visszatéréskor nem vonódik le ismételten** (külön áras esemény tényleges vásárlása és foglalása MF08). D05 időablak/foglalás az MF08-cal zárul. | Sandbox siker/hiba, dupla callback és párhuzamos beváltás, dátumhatárok, idegen QR tiltása; **mindhárom jogtípus re-entry esetén korábbi check-in, 0 új levonás**, azonos nap másik eseményre típushelyes korlátok. T11–T14, T20 és T24–T25. | M3 + M5 alap |
 | **MF08 – Programtípusok és foglalás** | MF05 + MF07; **D04, D05 és D07 elfogadva**. | Eseménykonfiguráció, nyílt/alapdíjas limitált/fizetős limitált típus; kapacitás, **kezdésig lemondható alapdíjas foglalás**, ICS, **15 perces fizetős hold minden checkoutcsatornán**, késő fizetésnél atomikus kapacitásellenőrzés és `paid_capacity_conflict` kezelése. Staff alap időablak start−2h/end+2h és WP-admin eseményenkénti felülírás; **nincs várólista**. A férőhelyes termék csak e védelem elkészülte után vásárolható. **D03 közös visszatéréslogika a külön áras eseményjegyre is kiterjed.** | Utolsó helyre csak egy siker; **15 perces hold lejárata**, ismételt lemondás és kezdéskori tiltás, késő callback esetén nincs túlfoglalás, web/PWA közös kapacitás; **fizetős eseményjeggyel azonos eseményre visszatérés új beváltás nélkül**, eltérő eseményen tiltás. T15–T19, T24 és eseményes T10. | M4 + M5 eseményrésze |
+| **MF12 – Szülő–Virág üzenetek** | MF04; **D11 elfogadva**; a Better Messages megfelelőségi próba a fejlesztés első feladata. D12 megőrzés/export/törlés lezárása éles személyesadat-kezelés előtt szükséges. | BM adapter, kizárólag saját Virág-beszélgetés, aktív képernyőn polling, olvasottság és biztonságos újraküldés. | T23, idegen thread és szülő–szülő küldés tiltása; elveszett válasz nem dupláz; háttérben nincs aktív polling. | M8 chatrésze |
+| **MF13 – Push és appbeli értesítéselőzmény** | MF04; **D06 elfogadva**; VAPID/cron/worker próba a fejlesztés része. Kezdeti csoportlista a valós címzés előtt; D12 adatkezelés lezárása éles személyesadat-kezelés előtt szükséges. | WP admin csoport/kampány/előnézet/küldés, címzettpillanatkép, fiókonkénti receipt, eszközregisztráció és SW push/deep link. | T21–T22; több eszköz és fiókváltás, denied/unsupported/410, cursorverseny és ismételt küldés kezelése; inbox pushengedély nélkül a jóváhagyott szabály szerint. | M8 pushrésze |
+
+**MF07 és MF08 kiadási határa:** a részben elkészült staff/fizetős eseményfunkció feature flag mögött marad, amíg a foglalási és időablak-feltételek nem teljesülnek. Nem nyitunk meg férőhelyes terméket védetlen webes checkouton sem.
+
+## 3. Nyitott döntések után elkészíthető modulok
+
+Az MF09–MF11 teljes modulját még nyitott részletszabályok vagy szolgáltatóválasztás határolják. A felmérések és a döntéstől független alapok korábban is fejleszthetők; a nyitott szabályokat nem helyettesítjük feltételezett üzleti alapértékekkel. Az MF12/MF13 a 2. szekcióban szerepel, és saját előfeltételei teljesülésekor az MF09–MF11-től függetlenül haladhat. Teljes V1-et kötelező modul nélkül nem adunk át.
+
+| Mérföldkő | Előfeltétel és döntési kapu | Feladat és átadandó eredmény | Készültség bizonyítéka | Régi csomag |
+|---|---|---|---|---|
 | **MF09 – Manuális havi prémium-hozzáférés** | MF04 + MF07; **D09 időszak/újravásárlás/lejárati tájékoztatás részletei nyitottak; D07 elfogadva**; aktuális ár és termékmapping rögzítése. D01 szerinti webes fiókélmény felmérése. | Havonta újravásárolható egyszeri WC/Barion termék, mindkét csatornán termékszintű szerveroldali login-korlát; fizetési adaptertől független paid-through; aktív/lejárt státusz, újravásárlási CTA és jóváhagyott lejárati tájékoztatás. | Vendég a prémiumot weben sem veheti meg; más termék vendégként vásárolható; paid/failed/refund, ismételt vásárlás és dupla callback tesztelt. T08–T09 és T01 prémiumrésze. | M6 |
 | **MF10 – Védett médiatár, prémium lejátszás és preferenciák** | MF05 + MF06; prémiumhoz MF09; **D10 + D12 streammérés és releváns adatkezelési szabályok**. | Média WP-admin és katalógus, privát forrás, szerveroldali PlaybackGrant és lejáró hozzáférés teljes védelmi lánccal; tartós fiókonkénti kedvencek és revisionös sor. Mért tárhelykapacitás, szükség esetén kiválasztott külső szolgáltató. | Jogosulatlan playback tiltott; metadata nem szivárogtat forrást; TTL, többeszközös sorütközés, logout stop, eszköz- és streamterhelési próba sikeres. T03–T07, T30 streamrésze. | M7 |
 | **MF11 – „Virág kérdezi” szavazás, kötelező V1** | MF04; **D13 részletei:** válaszmódosítás, aktív szavazások száma, eredményláthatóság, időzítés/értesítés; releváns D12 adatkezelés. | WP admin kérdés/opció/publikálás/zárás; saját szavazatmodell és API; főoldali összefoglaló és `/polls`; jóváhagyott eredménymegjelenítés. | TP01 teljesül: aktív/lezárt, jogosultság, egyediség, párhuzamos kattintás és retry, adminjog, mobilállapotok. | M8a |
-| **MF12 – Szülő–Virág üzenetek** | MF04; **D11 Better Messages próba**, releváns D12 megőrzés/export/törlés. | BM adapter, kizárólag saját Virág-beszélgetés, aktív képernyőn polling, olvasottság és biztonságos újraküldés. | T23, idegen thread és szülő–szülő küldés tiltása; elveszett válasz nem dupláz; háttérben nincs aktív polling. | M8 chatrésze |
-| **MF13 – Push és appbeli értesítéselőzmény** | MF04; **D06 elfogadva**, releváns D12 adatkezelés; VAPID/cron/worker tárhelypróba. | WP admin csoport/kampány/előnézet/küldés, címzettpillanatkép, fiókonkénti receipt, eszközregisztráció és SW push/deep link. | T21–T22; több eszköz és fiókváltás, denied/unsupported/410, cursorverseny és ismételt küldés kezelése; inbox pushengedély nélkül a jóváhagyott szabály szerint. | M8 pushrésze |
-
-**MF07 és MF08 kiadási határa:** a részben elkészült staff/fizetős eseményfunkció feature flag mögött marad, amíg a foglalási és időablak-feltételek nem teljesülnek. Nem nyitunk meg férőhelyes terméket védetlen webes checkouton sem.
 
 **MF09 nem vár automatikus előfizetésre.** A recurring kész megoldások ár/érték-felmérése külön munka, bevezetésük csak későbbi MF09+ növekmény, igazolt integrációval és megrendelői költségvállalással. Saját fizetési bridge nincs a projektben.
 
@@ -159,10 +167,10 @@ Ezek az MF01-től külön technikai feladatként haladhatnak; nem kell minden er
 | WC regisztráció, My Account, resetlevél, app-visszatérés és cookie | Kipróbált ajánlott alapút; esetleges webes többletmunka elkülönítve | MF04 elején |
 | HPOS, terméktípusok, meglévő event mezők, webes belépett fiókélmény | Adaptermapping és feltárt adathiányok; checkout/fiók scope tisztázása | MF05; vásárlási rész MF07/MF09 előtt |
 | Egyszeri Barion, Billingo, SMTP tesztmód és cron/Action Scheduler | Lokális levélfogó és jobfuttatás; **D07 szerint WooCommerce → Barion → Billingo teljes és részleges refund, téves/dupla refund, közvetlen Barion refund/chargeback egyeztetés** sandboxja; szükség esetén ideiglenes callback-elérés | MF07/MF08/MF09, illetve MF13 előtt |
-| D02–D05/D07 üzleti egyeztetés | **D02/D03/D04/D05 elfogadva**, család külön `family_id`-val, alapdíjas lemondás kezdésig, 15 perces fizetős hold, start−2h/end+2h eseményenként felülírható beléptetés, várólista nincs; **D07 refund/chargeback jóváhagyva**; a WooCommerce–Barion–Billingo teljes/részleges refund és közvetlen Barion/chargeback egyeztetés technikai próbája nyitott | MF07/MF08 előtt |
+| D02–D05/D07 elfogadott szabályainak műszaki igazolása | **D02/D03/D04/D05 elfogadva**, család külön `family_id`-val, alapdíjas lemondás kezdésig, 15 perces fizetős hold, start−2h/end+2h eseményenként felülírható beléptetés, várólista nincs; **D07 refund/chargeback jóváhagyva**; a WooCommerce–Barion–Billingo teljes/részleges refund és közvetlen Barion/chargeback egyeztetés technikai próbája nyitott | MF07/MF08 megvalósítása során, elfogadásukig |
 | Média mennyiség, várható párhuzamos használat, tárhelyterhelés és alternatíva költsége | Lokális védelmi/terhelési teszt és külön üzemeltetői célkapacitás-igazolás vagy mérés; D10 döntés | MF10 előtt |
-| Better Messages REST/AJAX, licenc és klienskompatibilitás | Működő izolált próba vagy dokumentált akadály és új döntési igény | MF12 előtt |
-| D13 pollrészletek, D06 címzettcsoportok és előzmény | Modulonként lezárt működési szabályok | MF11, illetve MF13 előtt |
+| Better Messages REST/AJAX, licenc és klienskompatibilitás | Működő izolált próba vagy dokumentált akadály és új döntési igény | MF12 első fejlesztési feladata; elfogadása előtt igazolandó |
+| D13 pollrészletek; D06 kezdeti címzettcsoportok beállítása | D13 részletszabályok lezárása; D06 előzménylogika elfogadva, csak a konkrét csoportnevek/tagsági szabályok rögzítendők | MF11 implementáció előtt; MF13 valós címzés előtt |
 | D08 legacy leltár és D12 adatkezelés | Átvezetési bizonyítékok; adattípusonként megőrzési/export/törlési szabályok | Adatkezelés az érintett modul véglegesítése és éles személyesadat-kezelés előtt; migráció MF14 előtt |
 
 A terv két külön **D12** jelölést használ. Minden feladatnál ki kell írni, hogy **környezet/fiókkezelés** vagy **adatkezelés/megőrzés**; az első elfogadott iránya nem zárja le a másodikat.
