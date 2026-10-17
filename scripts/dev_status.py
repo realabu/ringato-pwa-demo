@@ -99,10 +99,10 @@ def main():
     plan = plan_path.read_text(encoding="utf-8") if plan_path.exists() else ""
     done = completed_count(plan)
     paths = [p for p in git("ls-files", "-z").split("\0") if p]
-    demo_files = [
-        p for p in paths if "/" not in p and pathlib.Path(p).suffix.lower()
-        in {".html", ".js", ".css"}
-    ]
+    # App/demo code only. virag-terv.html is a presentation document.
+    demo_files = [p for p in paths if p in {
+        "app.html", "index.html", "app.js", "v13.js", "sw.js"
+    }]
     source_date, implementation_files = last_source_progress(paths)
     events = git_timeline(done)
     candidates = ([source_date] if source_date else []) + [e["at"] for e in events]
