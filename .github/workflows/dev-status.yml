@@ -1,0 +1,64 @@
+name: Ringató Dev Status · hourly Pages
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "docs/implementation-plan/**"
+      - "ringato-dev/**"
+      - "wordpress-plugins/**"
+      - "src/**"
+      - "apps/**"
+      - "packages/**"
+      - "scripts/dev_status.py"
+      - "docs/dev-status/**"
+      - ".github/workflows/dev-status.yml"
+  schedule:
+    # GitHub Actions cron is UTC, and execution may be delayed.
+    - cron: "17 * * * *"
+
+concurrency:
+  group: "ringato-dev-status-pages"
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Generate status snapshot
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout full Git history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Generate factual metrics
+        run: python3 scripts/dev_status.py
+      - name: Prepare static Pages artifact
+        run: |
+          mkdir -p _site
+          cp docs/dev-status/index.html docs/dev-status/status.json _site/
+          touch _site/.nojekyll
+          python3 -m json.tool _site/status.json > /dev/null
+      - name: Upload site
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+
+  deploy:
+    name: Publish GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+    steps:
+      - name: Deploy
+        id: publish
+        uses: actions/deploy-pages@v4
