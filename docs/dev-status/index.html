@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#172b2b">
+  <meta name="description" content="Ringató Virággal PWA — ellenőrizhető fejlesztési állapot és mérföldkövek">
+  <title>Ringató PWA · Dev Status</title>
+  <style>
+    :root{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;color:#19302e;background:#f6f7f4;font-synthesis:none}
+    *{box-sizing:border-box}body{margin:0}a{color:#17695e;text-underline-offset:3px}
+    .wrap{max-width:1180px;margin:auto;padding:0 24px}.top{background:#172f2b;color:#f4f7f4;overflow:hidden;position:relative}
+    .top:before{content:"";position:absolute;width:700px;height:700px;border:1px solid #ffffff22;right:-200px;top:-380px;border-radius:50%;box-shadow:0 0 0 95px #ffffff07,0 0 0 220px #ffffff05}
+    .nav{display:flex;justify-content:space-between;align-items:center;gap:18px;padding:23px 0;position:relative}
+    .brand{display:flex;gap:12px;align-items:center;font-weight:750;font-size:17px;letter-spacing:-.035em}
+    .symbol{display:grid;place-items:center;width:37px;height:37px;border-radius:13px;background:#d6e8ba;color:#28443a;font-size:20px}
+    .toplink{color:#d5e8df;font-size:13px;text-decoration:none;border:1px solid #627771;border-radius:30px;padding:9px 14px}
+    .hero{position:relative;display:grid;grid-template-columns:1.25fr .75fr;align-items:center;gap:48px;padding:67px 0 76px}
+    .eyebrow{text-transform:uppercase;letter-spacing:.18em;color:#a7ceba;font-size:11px;font-weight:800}
+    h1{font-size:clamp(44px,6vw,78px);letter-spacing:-.065em;line-height:1.03;margin:15px 0 20px}
+    .sub{font-size:17px;line-height:1.72;color:#d3e0d7;max-width:620px}
+    .meta{display:flex;flex-wrap:wrap;gap:9px;margin-top:28px}
+    .chip{font-size:12px;color:#dcf0e5;background:#ffffff13;border:1px solid #ffffff1c;border-radius:25px;padding:9px 12px}
+    .visual{justify-self:center;width:100%;max-width:340px}
+    .orb{aspect-ratio:1;border-radius:50%;background:conic-gradient(#c2e4aa 0 28.5714%,#526863 28.5714% 100%);padding:18px;box-shadow:0 18px 55px #07181066}
+    .orb-inner{height:100%;background:#203a35;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+    .big{font-size:clamp(62px,8vw,91px);font-weight:850;letter-spacing:-.08em;line-height:1}.big small{font-size:24px;font-weight:500;color:#aac5b6;letter-spacing:-.02em}
+    .orb-note{color:#cae2d5;font-size:13px;line-height:1.5;margin-top:12px}
+    main{padding:47px 0 70px}.section-head{display:flex;justify-content:space-between;gap:18px;align-items:baseline;margin:6px 0 23px}
+    h2{margin:0;font-size:24px;letter-spacing:-.04em}h3{margin:0;font-size:16px}
+    .muted{color:#6e7c77}.small{font-size:12px}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:20px 0 42px}
+    .stat{border:1px solid #e3e8e3;border-radius:16px;background:#fff;padding:23px;min-height:155px}
+    .stat-label{font-size:12px;color:#6c7d75;font-weight:650;line-height:1.45;min-height:33px}
+    .stat-value{font-size:32px;letter-spacing:-.055em;font-weight:780;margin:13px 0 3px;line-height:1.1}
+    .stat-foot{font-size:11px;color:#8b9790;line-height:1.5}
+    .section{margin:0 0 38px}
+    .milestones{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+    .milestone{display:flex;align-items:center;gap:12px;background:#fff;padding:15px 17px;border-radius:14px;border:1px solid #e4e9e5;min-height:72px}
+    .num{display:grid;place-items:center;flex:none;width:40px;height:40px;background:#f0f3f0;border-radius:12px;color:#6b7e75;font-size:12px;font-weight:750}
+    .milestone.ready{border-color:#cadfce;background:#f5faf4}.milestone.ready .num{background:#cce8cb;color:#246541}
+    .milestone strong{font-size:13px;line-height:1.4;font-weight:720}.milestone .status{font-size:11px;color:#849087;margin-top:4px}.milestone.ready .status{color:#2a8051}
+    .panels{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:10px 0 40px}
+    .panel{background:#fff;border:1px solid #e4e9e5;border-radius:18px;padding:25px;min-width:0}
+    .panel h3{margin-bottom:15px}.event{padding:13px 0;border-bottom:1px solid #edf0ec;font-size:13px;line-height:1.6}
+    .event:last-child{border:0}.event time{display:block;font-size:11px;color:#7f8b84}.empty{font-size:13px;color:#708078;line-height:1.7}
+    .note{background:#eaf0e9;border:1px solid #d8e3d8;border-radius:17px;padding:21px 25px;font-size:13px;line-height:1.75;color:#3d5248}
+    .note strong{display:block;margin-bottom:6px}.note p{margin:6px 0}
+    .footer{display:flex;justify-content:space-between;flex-wrap:wrap;gap:15px;padding:24px 0 38px;border-top:1px solid #e0e7df;font-size:12px;color:#78867d}
+    .footer-links{display:flex;gap:17px;flex-wrap:wrap}
+    .pill{background:#e9eee6;border-radius:100px;padding:5px 10px;font-weight:700;font-size:11px}
+    .pill.working{background:#dbedda;color:#1c6b42}.pill.stale{background:#fff2d6;color:#785d19}
+    @media(max-width:850px){.hero{grid-template-columns:1fr;gap:30px;padding:40px 0 54px}.visual{max-width:230px;justify-self:start}.grid{grid-template-columns:repeat(2,1fr)}.panels{grid-template-columns:1fr}}
+    @media(max-width:570px){.wrap{padding:0 16px}.toplink{font-size:11px;padding:8px 10px}.hero{gap:28px}.milestones{grid-template-columns:1fr}.grid{gap:9px}.stat{padding:17px;min-height:138px}.stat-value{font-size:27px}.panel{padding:19px}.section-head{align-items:flex-start;flex-direction:column}.meta{margin-top:20px}}
+    @media(prefers-reduced-motion:no-preference){.orb{animation:appear .8s ease-out both}@keyframes appear{from{opacity:.3;transform:scale(.96)}to{opacity:1;transform:scale(1)}}}
+  </style>
+</head>
+<body>
+  <header class="top">
+    <div class="wrap">
+      <nav class="nav" aria-label="Elsődleges navigáció">
+        <div class="brand"><span class="symbol" aria-hidden="true">✿</span> Ringató <span style="font-weight:400;opacity:.65">/ Engineering</span></div>
+        <a class="toplink" href="https://github.com/realabu/ringato-pwa-demo">GitHub ↗</a>
+      </nav>
+      <div class="hero">
+        <div>
+          <div class="eyebrow">Development status · V1</div>
+          <h1>Épül a<br>Ringató app.</h1>
+          <p class="sub">Átlátható fejlesztési állapot, ellenőrizhető mérföldkövek és mért statisztikák — közvetlenül a GitHub dokumentációjából.</p>
+          <div class="meta">
+            <span class="chip" id="stamp">Legutóbbi frissítés: betöltés…</span>
+            <span class="chip">14 mérföldkő</span>
+            <span class="chip">Forrás: GitHub main</span>
+          </div>
+        </div>
+        <div class="visual" aria-label="Megvalósított mérföldkövek aránya">
+          <div class="orb" id="orb"><div class="orb-inner">
+            <div class="big"><span id="done">4</span><small> / 14</small></div>
+            <div class="orb-note">implementálva,<br>ellenőrzésre kész</div>
+          </div></div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <main class="wrap">
+    <section class="section" aria-labelledby="stats-title">
+      <div class="section-head"><h2 id="stats-title">Projekt számokban</h2><span class="muted small">Nem becslések: forrásalapú mérés vagy külön jelölt adat</span></div>
+      <div class="grid" id="stats">
+        <div class="stat"><div class="stat-label">Implementált mérföldkövek</div><div class="stat-value">4 / 14</div><div class="stat-foot">Elfogadási ellenőrzés még szükséges</div></div>
+        <div class="stat"><div class="stat-label">Demó kódsorok</div><div class="stat-value">—</div><div class="stat-foot">Mérés folyamatban</div></div>
+        <div class="stat"><div class="stat-label">Dokumentált saját WP pluginek</div><div class="stat-value">2</div><div class="stat-foot">Telepítés külön igazolandó</div></div>
+        <div class="stat"><div class="stat-label">WP-beállítás változások</div><div class="stat-value">—</div><div class="stat-foot">Auditadat nem érhető el</div></div>
+      </div>
+    </section>
+    <section class="section" aria-labelledby="milestones-title">
+      <div class="section-head"><h2 id="milestones-title">Fejlesztési mérföldkövek</h2><span class="pill working">MF01–MF04 · ellenőrzésre kész</span></div>
+      <div class="milestones" id="milestones" aria-live="polite">
+        <div class="empty">Részletes státusz betöltése…</div>
+      </div>
+    </section>
+    <section class="panels" aria-label="Aktivitás és további teendők">
+      <div class="panel">
+        <h3>Legutóbbi kimutatható előrelépés</h3>
+        <div id="activity" class="empty">GitHub-történet vizsgálata…</div>
+      </div>
+      <div class="panel">
+        <h3>Mi következik?</h3>
+        <div class="event"><strong>MF05 · Valós tartalom bekötése</strong><div class="muted">WooCommerce termékek, események, rendeléselőzmény</div></div>
+        <div class="event"><strong>MF06 · Lejátszó alap</strong><div class="muted">Hang, videó, mini-player, mobilos ellenőrzés</div></div>
+        <div class="event"><strong>Integrációs próbák</strong><div class="muted">Barion/Billingo, Bunny Stream, Better Messages, push</div></div>
+      </div>
+    </section>
+    <section class="note" aria-labelledby="method-title">
+      <strong id="method-title">Hogyan kell olvasni a számokat?</strong>
+      <p>Az MF01–MF04 dokumentáltan implementált, <b>nem véglegesen elfogadott</b>. A prototípus kódsorai nem azonosak az új, helyben fejlesztett React/WordPress rendszer méretével.</p>
+      <p>A dokumentáció szerint két saját WordPress-plugin készült (App Shell és Core), de tényleges éles telepítési darabszám és WordPress-beállításaudit nincs a repóban. A statisztika az elérhetetlen adat helyén szándékosan „—” jelet használ.</p>
+      <p>Az óránkénti frissítés nem jelent automatikusan előrelépést. A 12 órás aktivitásfigyelés csak a GitHubon ténylegesen látható, mérföldkőszámot vagy implementációs forráskódot érintő változást érzékel; helyi, fel nem töltött munkát nem.</p>
+    </section>
+  </main>
+  <footer class="wrap footer">
+    <span>Ringató Virággal PWA · Fejlesztési pillanatkép</span>
+    <span class="footer-links"><a href="https://github.com/realabu/ringato-pwa-demo/blob/main/docs/implementation-plan/10-inkrementalis-merfoldkovek.md">Mérföldkőterv ↗</a><a href="https://github.com/realabu/ringato-pwa-demo/blob/main/docs/implementation-plan/09-nyitott-kerdesek-es-dontesek.md">Döntési napló ↗</a></span>
+  </footer>
+  <script>
+    (function () {
+      const $ = id => document.getElementById(id);
+      const escape = str => String(str).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+      const fmt = s => s ? new Date(s).toLocaleString('hu-HU',{timeZone:'Europe/Budapest',dateStyle:'medium',timeStyle:'short'}) : 'nem állapítható meg';
+      const number = n => Number(n).toLocaleString('hu-HU');
+      const metric = (name, value, foot) => '<div class="stat"><div class="stat-label">'+escape(name)+'</div><div class="stat-value">'+escape(value == null?'—':value)+'</div><div class="stat-foot">'+escape(foot)+'</div></div>';
+      const load = async () => {
+        const response = await fetch('./status.json?ts='+Date.now(),{cache:'no-store'});
+        if (!response.ok) throw new Error('HTTP '+response.status);
+        const s = await response.json(), m = s.metrics || {}, completed = Number(s.completed)||0;
+        $('done').textContent=completed;
+        $('orb').style.background='conic-gradient(#c2e4aa 0 '+(completed/14*100)+'%,#526863 '+(completed/14*100)+'% 100%)';
+        $('stamp').textContent='Adatfrissítés: '+fmt(s.generated_at);
+        $('stats').innerHTML=
+          metric('Implementált mérföldkövek',completed+' / '+s.total,'Állapot: ellenőrzésre kész')+
+          metric('Demó kódsorok',m.prototype_lines==null?null:number(m.prototype_lines),(m.prototype_file_count||0)+' demófájl, csak Git-kód')+
+          metric('Dokumentált saját WP pluginek',m.documented_custom_wp_plugins,'App Shell és Core; telepítés nincs igazolva')+
+          metric('WP-beállítás változások',m.verified_wp_setting_changes,'WordPress-audit nem elérhető')+
+          metric('Implementációs forrásfájlok',m.implementation_file_count,'Csak a repóba feltöltött forrás')+
+          metric('Implementációs kódsorok',m.implementation_lines,'Nem tartalmazza a helyi ringato-dev kódot')+
+          metric('Igazolt telepített WP pluginek',m.verified_installed_wp_plugins,'Tényleges WP-környezeti leltár szükséges')+
+          metric('További mérföldkövek',s.total-completed,'MF05–MF14 tervezett');
+        $('milestones').innerHTML=(s.milestones||[]).map(x=>{
+          const ready=x.state==='Ellenőrzésre kész';
+          return '<div class="milestone '+(ready?'ready':'')+'"><div class="num">'+escape(x.id)+'</div><div><strong>'+escape(x.name)+'</strong><div class="status">'+(ready?'✓ ':'')+escape(x.state)+'</div></div></div>';
+        }).join('');
+        const events=s.progress_events||[];
+        let activity='';
+        if(s.last_observable_progress_at) {
+          let elapsed=(Date.now()-Date.parse(s.last_observable_progress_at))/3600000;
+          let stale=Number.isFinite(elapsed)&&elapsed>=12;
+          activity='<p><span class="pill '+(stale?'stale':'working')+'">'+(stale?'12+ óra megfigyelhető előrelépés nélkül':'Utóbbi előrelépés 12 órán belül')+'</span></p>'+
+            '<p class="small muted">Utolsó forrásalapú változás: '+escape(fmt(s.last_observable_progress_at))+'</p>';
+        } else {
+          activity='<p class="empty">Még nincs GitHubon kimutatható implementációs mérföldkő- vagy kódváltozás. Ez nem jelenti azt, hogy nem folyik helyi fejlesztés.</p>';
+        }
+        activity+=events.slice(0,4).map(e=>'<div class="event"><strong>'+escape(e.title)+'</strong><time>'+escape(fmt(e.at))+' · '+escape(e.sha)+'</time></div>').join('');
+        $('activity').innerHTML=activity;
+      };
+      load().catch(() => {
+        $('stamp').textContent='Élő adat most nem érhető el';
+        $('milestones').innerHTML='<div class="empty">A mérföldkőadatokat a GitHub Actions első sikeres futása tölti fel. A dokumentáció alapján jelenleg MF01–MF04 ellenőrzésre kész.</div>';
+        $('activity').innerHTML='<p class="empty">Az időbélyeg és az aktivitás nem érhető el. Az oldal nem állít bizonyítatlan friss státuszt.</p>';
+      });
+    })();
+  </script>
+</body>
+</html>
