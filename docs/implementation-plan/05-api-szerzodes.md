@@ -189,8 +189,8 @@ V1 admin lehet hagyományos WP-admin form nonce/capability ellenőrzéssel. Az a
 | Termékszabály create/update | ringato_manage_events + WC megfelelő product jog | Rule version, audit; meglévő rendelés snapshot nem változik |
 | Event PWA-config | ringato_manage_events | Programtípus/kapacitás/product/end; inventory limit |
 | Média create/update/publish | ringato_manage_media | Privát forrás, premium, aspect ratio, metadata és tesztstream |
-| Csoport create/update/tagok | ringato_manage_groups | Aktív user, duplikációmentes tagság, audit |
-| Kampány draft/preview | ringato_manage_push | Egyéni/csoport/all deduplikált címzettek, belső allowlist deep link |
+| Csoport create/update/átnevezés/tagok hozzáadása-eltávolítása | ringato_manage_groups | **D06 (2026-10-17):** Virág tetszőleges címzettcsoportokat és több tagságot/fiók kezelhet WP Users/admin felületen, előre rögzített lista nélkül. Elsőként WP Core user/user_meta és meglévő bővítmény; a WP szerepkörök nem címzettcsoportok. Aktív WP-fiók, deduplikáció, nonce/capability, audit |
+| Kampány draft/preview | ringato_manage_push | Egyéni/**egy vagy több csoport**/all deduplikált címzettek, aktuális tagság szerinti előnézet; belső allowlist deep link |
 | Kampány send | ringato_manage_push | Explicit admin send, címzettpillanatkép, idempotens outbox; nincs demó PWA-küldés |
 | Entitlement adjustment/import (D08, opcionális régi jogátvétel) | ringato_adjust_entitlements | Kötelező bizonyíték, indok, before/after és batch; ismeretlen legacy joghoz nincs aktív QR; az ügyfél nem írhat remaininget; a teljes papírmigráció nem V1-követelmény |
 | Audit/reconciliation | ringato_view_audit | Szűrt riport, korlátozott személyes adat |
