@@ -17,7 +17,7 @@ flowchart LR
   API --> Legacy
   API --> Tables[Ringató InnoDB táblák]
   API --> Chat[Better Messages adapter]
-  API --> Media[Védett médiakiszolgálás - D10 választás nyitott]
+  API --> Media[Bunny Stream - hivatalos WP plugin, csak Stream]
   Admin[Virág WP admin] --> CoreAdmin[Ringató Core admin]
   CoreAdmin --> Tables
   CoreAdmin --> Legacy
@@ -32,7 +32,7 @@ flowchart LR
 
 A szolgáltató tényleges domainje telepítési beállítás. A példabeli éles URL `https://ringatoviraggal.hu/app/`; a www/non-www kanonikus origin következetesen ugyanaz, mint a WordPress site URL. A helyi `localhost:8080` nem éles push- vagy fizetéskompatibilitási bizonyíték.
 
-**D12 megerősített környezet (2026-10-15, projektgazdai információ):** a tárhelyen már van **tesztdomainen működő WP tesztpéldány**, továbbá a fejlesztő elkészítette a **lokális fejlesztői környezetet**. A staging a PWA/pluginek telepítésének, frissítésének és visszaállításának ellenőrzési helye; a tesztdomain külön origint jelent az éles webhelyhez képest. A tárhely **PWA assetek és shell kiszolgálására alkalmas**, de ebből nem következik a médiastreaming elegendő párhuzamos kapacitása. A várható egyidejű médiahasználatra terhelési próba és szükség esetén külön streaming/CDN opció költségvizsgálata kell (D10).
+**D12 megerősített környezet (2026-10-15):** tesztdomaines WordPress-példány és lokális fejlesztői környezet rendelkezésre áll; a tesztdomain az éles oldaltól külön origin. A tárhely PWA assetek és shell kiszolgálására alkalmas. **D10 (2026-10-17): a médiát Bunny Stream szolgálja ki, a hivatalos WordPress-plugin kizárólag Stream funkciójával.** A telepítés/rollback, a Core jogosultságkiadása és a Bunny-integráció terhelési próbája még végrehajtandó.
 
 ### Komponensek
 
@@ -47,7 +47,7 @@ A szolgáltató tényleges domainje telepítési beállítás. A példabeli éle
 | Későbbi kész recurring adapter (feltételes) | Jóváhagyott, külső kész integráció előfizetési státuszának leképezése a közös hozzáférésre | Saját recurring gateway/bridge fejlesztés a jelenlegi projektben |
 | Better Messages adapter (D11) | Ingyenes BM REST/AJAX kétirányú szöveges V1 chat, saját thread/read-state és aktív képernyőn kb. 10 s polling | Új üzenettároló BM mellett és kötelező fizetős WebSocket |
 | Poll adapter / PollService (D13 / P01, V1 kötelező) | WordPress admin kérdés- és opciókezelés; bejelentkezett PWA-szavazat, egyediség, kizárólag WP-adminnak elérhető összesített eredmény | Kliensoldali szavazatszámlálás vagy hozzáférés más felhasználó válaszához |
-| Média adapter | Forrásazonosító → jogosultságellenőrzött, lejáró helyi vagy külső stream-hozzáférés (D10 alapján választható) | Nyilvános prémium URL vagy előre rögzített CDN-szolgáltató |
+| Média adapter | Bunny Stream + hivatalos `bunnycdn` plugin Stream-integrációja, Core jogosultságellenőrzés és lejáró PlaybackGrant | Publikus prémiumforrás, kliensbe kerülő API-kulcs vagy Streamen kívüli pluginmodulok használata |
 
 **D12 – adatkezelési scope (2026-10-16):** külön jogi tanácsadást, új általános anonymizáló-/törlőmotort és önálló GDPR export/erase API-t nem építünk. Használjuk a WordPress/WooCommerce/Better Messages/Billingo meglévő támogatott folyamatait; a hozzáférésvédelem, adatminimalizálás, logout/session-takarítás, push eszközleválasztás és üzleti jogosultságkorrekció funkcionális része változatlan. Saját megjelenítési/adatéletciklus-időablakok lehetőség szerint WordPress-konfigurációval állíthatók (D06 inbox 365 nap alapértelmezett láthatóság), de nem tekinthetők automatikus jogszabályi megőrzési időnek. Konkrét kötelező jogi időt csak a megrendelő adatkezelői ellenőrzése után írunk be. Ha a meglévő rendszer nem biztosít egy szükséges adatvédelmi műveletet, hiányt jelentünk és külön scope/üzemeltetési megoldás kell; nem állítunk implicit teljes GDPR-megfelelést.
 
@@ -148,9 +148,9 @@ Lejárt hold után beérkező sikeres fizetés: ugyanazon eseményzár mellett �
 
 ## 6. Média, push és üzenet
 
-**D10 üzletileg jóváhagyott vizsgálati sorrend (2026-10-16):** a jelenlegi tárhely PWA-kiszolgálása ismert, streamingkapacitása **nem igazolt**. A tartalom- és forgalombecslést biztonságosan korlátozott párhuzamos audio/video streamingteszt követi; az eredmények alapján összehasonlítjuk a helyi védett kiszolgálást a külső privát streaming/CDN költségével és teljesítményével. A konkrét szolgáltató és a költségvállalás **nyitott döntés**, médiamodul élesítése előtt lezárandó. A Ringató Core minden lejátszást jogosultságellenőrzéshez köt, a frontend providerfüggetlen PlaybackGrantet kap; a streammanifest/szegmensek/kulcsok védelme nem hagyható el egyik megoldásnál sem.
+**D10 ELFOGADVA (2026-10-17): Bunny Stream + hivatalos `bunnycdn` WordPress-plugin, kizárólag Stream funkcióval.** A CDN/linkátírás, Offloader, Optimizer, Fonts, Shield és minden más pluginmodul kikapcsolva marad. A megelőző helyi vs külső szolgáltatóválasztási eljárás felülírva. A Core marad a prémiumjogosultság igazságforrása; a React providerfüggetlen PlaybackGrantet kap. A plugin–Core–PWA integráció és a teljes streamvédelem igazolása még feladat; a plugin/embed nem helyettesíti a jogosultságellenőrzést. Részletek és 30 párhuzamos lejátszós tervezési profil: D10 döntési napló.
 
-- Média metadata WP adminban; nyers prémium source ID csak backendben. Playback végpont minden indításkor jogosultságot ellenőriz és az utóbb kiválasztott **helyi vagy külső** médiakiszolgálón keresztül rövid életű vagy ezzel egyenértékűen védett hozzáférést ad. A HLS manifest, segment és kulcs védelem együtt szükséges; csak a manifest URL aláírása nem elég.
+- Média metadata WP adminban; nyers prémium source ID csak backendben. Playback végpont minden indításkor jogosultságot ellenőriz és a kiválasztott **Bunny Stream** médiakiszolgálón keresztül rövid életű vagy ezzel egyenértékűen védett hozzáférést ad. A HLS manifest, segment és kulcs védelem együtt szükséges; csak a manifest URL aláírása nem elég.
 - D06 ELFOGADVA, **2026-10-17-i pontosítással**: Push manuális WordPress-kampányból, egyéni/**egy vagy több csoport**/összes címzés. Virág a csoportokat és tagságukat szabadon szerkeszti a WordPress Users/admin környezetében; egy fiók több csoportban lehet, kezdeti csoportlista nem szükséges. **Elsőként WP Core Users + user_meta + admin API-k és meglévő kompatibilis bővítmények újrahasznosítását vizsgáljuk**; a WordPress role-ok nem célzási csoportok, külön táblák csak igazolt szükség esetén. Címzettpillanatkép, deduplikált egy appbeli receipt/fiók a telepítéstől és pushengedélytől függetlenül; több eszközre szállítás külön státuszokkal. A push hálózati kézbesítés nem garantálható, a szerveroldali előzmény az igazságforrás. Nincs érzékeny üzenettartalom a zárképernyőn.
 - **D11 (2026-10-16) elfogadva:** a Better Messages **ingyenes** változata az elsődleges V1 REST/AJAX-integráció, ha a staging technikai/licenc-/jogosultsági próbán megfelel. Saját adapter véd az idegen threadtől és ügyfél–ügyfél üzenetküldéstől; plain text szülő–Virág üzenet, read/unread és ismételt küldés kezelése szükséges. Aktív chatnézeten kb. 10 s polling, háttérben kikapcsolva, visszatéréskor frissítés. A fizetős WebSocket csak igazolt szükség és külön költségjóváhagyás esetén vizsgálandó; sikertelen ingyenes próba nem jelenti az egyedi chatszolgáltatás automatikus fejlesztését. A BM publikus/guest/call/file lehetőségei nem lesznek automatikusan appfunkciók.
 

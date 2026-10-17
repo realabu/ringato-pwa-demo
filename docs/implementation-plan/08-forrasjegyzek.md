@@ -42,6 +42,8 @@ Vizsgált konténerfájlok: `wp-content/themes/ringatoviraggal/functions.php` (e
 | iOS push | [WebKit Web Push](https://webkit.org/blog/13878/web-push-for-web-apps-on-ios-and-ipados/) | Home Screen webapp és interakcióból permission, eszközteszt szükségessége |
 | PHP push | [web-push-php](https://github.com/web-push-libs/web-push-php) | `minishlink/web-push` Composer könyvtár és környezeti függőségek |
 | QR scanner | [nimiq/qr-scanner](https://github.com/nimiq/qr-scanner) | Kamera/dekóder csomagjavaslat |
+| Bunny hivatalos WordPress-plugin | [bunny.net – WordPress CDN Plugin](https://wordpress.org/plugins/bunnycdn/) | D10: hivatalos `bunnycdn` plugin azonosítása és kompatibilitás ellenőrzési forrása; a projekt kizárólag Streamet használ |
+| Bunny Stream WordPress-integráció | [Gyártói ismertető](https://bunny.net/blog/bunny-stream-now-available-in-our-wordpress-plugin-for-instant-video-embedding/) | Stream feltöltési/kezelési integráció; a Core prémiumjogosultság és a PWA-illesztés külön igazolandó |
 | HLS kliens | [hls.js](https://hlsjs.video-dev.org/) | Natív HLS nélküli böngésző lejátszóadapter |
 
 A `/app/` origin, own tables, hold/cursor algoritmus, rövid QR-élettartam, checkout handoff és munkacsomagok **tervezői javaslatok** a helyi rendszer és V1.3 alapján; nem külső forrásból átvett vagy jelenleg működő funkciók. Jogi/consent/retention kérdések felelőssel lezárandó üzleti és adatkezelési feladatok, nem jogi megfelelőségi állítások.

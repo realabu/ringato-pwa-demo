@@ -49,8 +49,8 @@ Eredeti kérdés: Mi a végleges domain, hol lesz a staging tesztkörnyezet, és
 
 **Nyitott, mérendő technikai feladatok:**
 
-1. Mekkora párhuzamos audio-/videostream-forgalmat visel el a meglévő tárhely elfogadható akadás, válaszidő és erőforrásterhelés mellett? Reprezentatív tartalommal, mobilos és párhuzamos terheléses próbával mérjük a sávszélességet, PHP/HTTP kapcsolatszámot, memória/CPU/IO-terhelést, adatátviteli limiteket és a webshop egyidejű működését.
-2. Eredmények és várható nézőszám, forgalom, szolgáltatási költség alapján **külön privát streaming/CDN szolgáltató szükséges-e**? Erről a **D10 média-döntésnél** kell dönteni; nem rendeljük meg automatikusan, és nem feltételezzük, hogy az alaptárhely elegendő. Prémium média jogosultságvédelmét bármely opciónál biztosítani kell.
+1. A D10 szerint kiválasztott Bunny Stream + hivatalos WordPress-plugin integrációt legfeljebb 30 párhuzamos lejátszóval kell igazolni; a WordPress jogosultságkiadását és a webshop egyidejű működését is mérjük.
+2. **D10 frissítve (2026-10-17): Bunny Stream kiválasztva**, a hivatalos `bunnycdn` plugin kizárólag Stream funkciójával. Helyi tárhely vs külső szolgáltató választási kapu nincs; a konkrét konfiguráció, költség és prémiumvédelem igazolása még feladat.
 3. Staging–éles eltérés, tesztadatok, biztonságos fizetési/e-mail sandbox és a telepítési/regressziós ellenőrzőlista véglegesítése; a meglévő webes vendégvásárlás ne sérüljön.
 4. Regisztráció/fiók-UX vizsgálata a korábbi vendégvásárlók számára, és a régi vendégrendelések igazolt fiókhoz kapcsolásának külön kezelése (D08). A meglévő weboldal esetleges felületi átdolgozása a D01 szerint külön webmesteri munka vagy ajánlat.
 
@@ -105,19 +105,21 @@ Eredeti kérdés: Bekerüljön-e a „Virág kérdezi” szavazás az első verz
 
 **Specifikációs hatás:** a V1.3 DOCX F01–F26 listájában ez nem szerepel; most új, önálló **P01 kötelező V1-követelményként** kell nyilvántartani. A következő üzleti specifikáció-verzióba átvezetendő, az eredeti DOCX történeti példánya változatlan.
 
-**D10 – Média és streaming – ELFOGADOTT DÖNTÉSI ELJÁRÁS (2026. október 16.), SZOLGÁLTATÓ NYITOTT**
+**D10 – Média és streaming – BUNNY STREAM ÉS HIVATALOS WORDPRESS-PLUGIN ELFOGADVA (2026. október 17.)**
 
-**Döntés:** A jelenlegi tárhely streamingkapacitását először **valós, dokumentált teszttel megmérjük**, a helyben történő kiszolgálás és a szóba jöhető külső streaming/CDN opciók **teljes költségét és ár/érték arányát** összehasonlítjuk, és csak ezután választunk. **Sem külső szolgáltató, sem a meglévő tárhely nem kapott még végleges jóváhagyást médiaforrásként.** A D12 szerinti PWA-kiszolgálási alkalmasság nem azonos az audio-/videostreaming kapacitásával.
+**Megrendelői döntés:** a külső médiaszolgáltató **Bunny Stream**. A WordPress-integrációhoz a bunny.net által kiadott hivatalos **[bunny.net – WordPress CDN Plugin](https://wordpress.org/plugins/bunnycdn/)** bővítményt használjuk (slug: `bunnycdn`), **kizárólag a Stream funkcióval**. A szolgáltató- és pluginválasztás lezárt; a korábbi, 2026-10-16-i helyi tárhely vs külső szolgáltató kiválasztási eljárását ez a döntés felülírja.
 
-**Mérési és összehasonlítási feladat:**
-1. A tartalomgazdával becsülni kell az audio- és videóanyagok számát, méretét, bitrate-jét, formátumát, népszerűségét, csúcsban várt párhuzamos lejátszások számát és havi adatforgalmát. A feltételezett terhelési profil legyen dokumentált, ne kitalált kapacitásérték.
-2. A meglévő tárhelyen, lehetőleg a rendelkezésre álló tesztdomaines környezetben, **az üzemeltetővel egyeztetett biztonságos korlátok között** kell reprezentatív, fokozatos párhuzamos audio- és videolejátszást mérni. Követendő: sikeres/hibás kérések, indítási késés, pufferelés/akadás, kiszolgált sávszélesség, kapcsolat- és erőforrásigény (CPU, memória, lemez/I/O), adatforgalmi korlát, mobilos HLS/range viselkedés és az ugyanott működő WooCommerce válaszideje. Az éles webshop működését nem veszélyeztethetjük kontrollálatlan terheléssel.
-3. Össze kell vetni legalább a **meglévő tárhelyen megvalósítható védett kiszolgálás** és a **külső, jogosultságvédett streaming/CDN** megoldások költségeit (tárhely, forgalom, transzkódolás, licencek, beállítás/fejlesztés, üzemeltetés, támogatás), teljesítményét, méretezhetőségét és biztonsági korlátait.
-4. A fejlesztő eredmény- és költségösszefoglalót készít a megrendelőnek; ez alapján külön döntés születik az éles médiakiszolgáló helyéről és az esetleges szolgáltatói költség vállalásáról.
+**Kötelező funkcióhatár:** a plugin többi funkcióját nem vesszük igénybe: általános weboldal-CDN/linkátírás, Offloader, Optimizer, Fonts, Shield és minden más, Streamen kívüli modul kikapcsolva marad. A Stream saját médiakézbesítése természetesen része a választott szolgáltatásnak. Nem költöztetjük át a teljes WordPress médiatárat, és nem változtatjuk meg a meglévő oldal, webshop, fontok, cache vagy WAF működését. A Stream-only konfigurációt és a változatlan weboldalműködést regressziós próbával kell igazolni.
 
-**Választástól független minimum:** a prémium audio/video nem lehet közvetlen, nyilvános WordPress uploads URL-en jogosultságellenőrzés nélkül elérhető. A szerver minden lejátszási hozzáférést ellenőriz, a média/segment/kulcs hozzáférés jogosultsághoz kötött és rövid élettartamú vagy azzal egyenértékűen védett. A megoldás legyen cserélhető szolgáltatóadapterrel, hogy ne kössük előre a React-alkalmazást egy CDN-hez.
+**Jóváhagyott tervezési terhelés:** 10 × 60 perc videó, 100 × 2 perc videó és 20 × 3 perc audio; összesen 800 perc videó és 60 perc audio. 50 felhasználó, fejenként átlagosan havi 4 óra lejátszás, összesen 200 óra/hó; legfeljebb 30 párhuzamos lejátszó. Ez tervezési igény, nem már igazolt kapacitás. A tényleges bitráta és tárolt változatok alapján a forgalmi/költségbecslést a konfigurációnál pontosítjuk; a korábbi becslés nem szerződéses díj vagy konkrét csomagbeállítás.
 
-**Státusz:** a **mérés → költség/alkalmasság-összevetés → szolgáltatóválasztás** folyamata jóváhagyott. **Mérési eredmény, streamlimit, szolgáltató, szerződés és végleges költség még nincs igazolva vagy kiválasztva.** A médiamodul éles kiadása előtt a kiválasztott megoldást jogosultsági, mobil lejátszási és terhelési teszten igazolni kell (M7/T03/T06/T30/G4).
+**Jogosultság és PWA:** a WordPress-plugin Stream-integrációját használjuk, a prémium-hozzáférés igazságforrása továbbra is a Ringató Core szerveroldali, fiókalapú jogosultsága. A plugin telepítése vagy egy beágyazókód önmagában nem jogosultságvédelem. A React PWA a Core providerfüggetlen PlaybackGrant-szerződését használja; a könyvtár-/médiaazonosítókat szerveroldalon képezzük le, API- és aláírókulcs nem kerül a kliensbe. Rövid élettartamú vagy azzal egyenértékűen védett lejátszási hozzáférés szükséges, a teljes manifest/szegmens/kulcs láncra. Publikus WordPress uploads URL vagy megkerülhető publikus embed nem szolgálhat prémiumforrásként.
+
+**Nyitott végrehajtási feladatok:** a hivatalos plugin tesztelt verziójának és kompatibilitásának rögzítése; Bunny-fiók és elkülönített teszt-/éles Stream-könyvtárak konfigurálása; WordPress feltöltés/kezelés → Core médiaazonosító → PWA lejátszás integráció; védelem, tokenlejárat/frissítés, CORS/range/HLS és saját React-lejátszó kompatibilitásának igazolása. Az audio-only tartalmak kezelését külön technikai próbával kell ellenőrizni a választott integrációban; hiány esetén azt külön döntésre jelezzük, nem kapcsolunk be automatikusan Offloadert vagy más szolgáltatást.
+
+**Kiadási kapu (M7/MF10, T03/T06/T30/G4):** jogosulatlan hozzáférés és közvetlen forrásmegkerülés tiltása; prémiumlejárat/refund/logout helyes kezelése; hosszú videó közbeni tokenfrissítés; iOS/Android, 16:9/9:16, fullscreen, sor és audio; fokozatos próba legfeljebb 30 párhuzamos lejátszóval, dokumentált indulási idő/pufferelés/hibák/forgalom és egyidejű webshopműködés. A helyi WordPress-tárhely streamkapacitásának összehasonlító felmérése már nem szolgáltatóválasztási előfeltétel; a Core jogosultságkiadó végpontjainak és a Bunny-integrációnak az alkalmasságát továbbra is igazolni kell.
+
+**Státusz:** **Bunny Stream + hivatalos `bunnycdn` WordPress-plugin, kizárólag Stream használattal: ELFOGADVA.** Az implementáció, konkrét beállítások, tényleges szolgáltatói költség és integrációs/terhelési teszteredmények még végrehajtandók; a döntés nem igazol kész telepítést vagy sikeres tesztet.
 
 **D11 – Chat – ELFOGADOTT V1 IRÁNY (2026. október 16.)**
 
@@ -213,7 +215,7 @@ A média és a chat végleges megoldása később is lezárható, de a megvalós
 
 **3. Nyitott végrehajtási részletek és külön elfogadott adatkezelési projekthatár**
 
-A D09-MVP/01 időtartam, /02 eredeti fordulónapot őrző előrevásárlás és /03 kizárólag PWA-beli, utolsó 7 napos lejárati figyelmeztetés **mind elfogadott**; a D10 streaming-szolgáltatóválasztás továbbra is nyitott, de a D13 szavazási részletszabályai már mind elfogadottak. **D06 (2026-10-17): nincs kezdeti csoportlista mint függőség**; Virág a WordPress-adminban szabadon kezeli a csoportokat. A WordPress-alapú technikai illesztés és push-próbák végrehajtási feladatok, nem új üzleti döntések.
+A D09-MVP/01 időtartam, /02 eredeti fordulónapot őrző előrevásárlás és /03 kizárólag PWA-beli, utolsó 7 napos lejárati figyelmeztetés **mind elfogadott**; a D10 szerint a Bunny Stream és a hivatalos WordPress-plugin kizárólagos Stream használata már elfogadott, de a D13 szavazási részletszabályai már mind elfogadottak. **D06 (2026-10-17): nincs kezdeti csoportlista mint függőség**; Virág a WordPress-adminban szabadon kezeli a csoportokat. A WordPress-alapú technikai illesztés és push-próbák végrehajtási feladatok, nem új üzleti döntések.
 
 **D08 – Régi jegyek, bérletek és vendégrendelések átvezetése – ELFOGADOTT FOKOZATOS ÁTÁLLÁS (2026. október 16.)**
 
@@ -254,7 +256,7 @@ A D09-MVP/01 időtartam, /02 eredeti fordulónapot őrző előrevásárlás és 
 
 **Példa (nem szökőév):** január 31-én 10:00-kor sikeres fizetés → február 28. **helyi nap végéig** használható; `paid_through` március 1. 00:00 magyar helyi idő, UTC-ként tárolva. Február 29-i cél vagy októberi óraátállás ugyanígy helyi naptárral számolandó.
 
-**Az időtartam és előrevásárlás külön elfogadott:** a /01 határozza meg az egy hónap fogalmát; az **elfogadott /02** a már aktív jogosultságot az eredeti naptári fordulónaphoz igazított, felhalmozódó hónapokkal hosszabbítja. A lejáratról küldött külön értesítés **D09-MVP/03** továbbra is nyitott. A D02 jegy-/bérletszabályok nem változnak.
+**Az időtartam és előrevásárlás külön elfogadott:** a /01 határozza meg az egy hónap fogalmát; az **elfogadott /02** a már aktív jogosultságot az eredeti naptári fordulónaphoz igazított, felhalmozódó hónapokkal hosszabbítja. **D09-MVP/03 is elfogadva:** a pontos lejárati nap mindig látható a PWA-ban, az utolsó 7 napban kiemelt figyelmeztetéssel és újravásárlással; automatikus lejárati e-mail/push nincs. A D02 jegy-/bérletszabályok nem változnak.
 
 **D09-MVP / 02 – Előre újravásárlás és időszakok összeadása – ELFOGADVA (2026. október 16.)**
 
@@ -266,7 +268,7 @@ A D09-MVP/01 időtartam, /02 eredeti fordulónapot őrző előrevásárlás és 
 - **Több vásárlás, duplikáció, verseny:** minden igazolt és jogosult WooCommerce-rendeléstétel pontosan egyszer adhat **egy** hónapot. Azonos rendeléstétel ismételt callbackje, háttérjobja vagy kétszeri feldolgozása nem hosszabbíthat újra; párhuzamos eltérő vásárlások tranzakciósan, forrás-azonosítóval, zárolással és egyeztethető időszaktörténettel dolgozandók fel. A sikertelen vagy még függő fizetés nem ad időt. Késve beérkező webhooknál a tényleges hiteles fizetési idő és az eddig jóváírt sorozat ellenőrzése szükséges, nem pusztán a callback beérkezési sorrendjét követjük.
 - **Technikai lejárat:** az így számolt célhelyi nap **végéig** tart az elérés; a `paid_through` az azt **követő magyar helyi nap 00:00-ja** UTC-re konvertálva (**kizárólagos felső határ**). `Europe/Budapest`, szökőév, hónapvég és DST változatlanul érvényesek. A kliens csak a szerver által megállapított állapotot/lejáratot mutatja.
 - **Refund/chargeback:** a **D07 elfogadott** szabályai érvényesek; nincs automatikus, kontrollálatlan visszadátumozás vagy már felhasznált hónap visszavonása. Csak egyértelmű, teljes és **még fel nem használt** időszak automatikus korrekciója engedhető meg, egyébként auditált kézi ügyintézés.
-- **A D09-MVP/03 lejárati figyelmeztetés módja továbbra is NYITOTT**. A D09-MVP/02 elfogadása nem jelent automatikus megújítást vagy terhelést.
+- **D09-MVP/03 ELFOGADVA (2026-10-16):** mindig látható pontos PWA-lejárat, az utolsó 7 napban kiemelt figyelmeztetés és újravásárlási lehetőség; automatikus lejárati e-mail/push nincs. A D09-MVP/02 elfogadása nem jelent automatikus megújítást vagy terhelést.
 
 **Státusz:** az eredeti havi fordulónapot megőrző, felhalmozódó manuális újravásárlás **jóváhagyott MVP üzleti szabály**. Megvalósítási és tesztkapu M6/MF09, T08–T09.
 

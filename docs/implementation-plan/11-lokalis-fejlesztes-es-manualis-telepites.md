@@ -109,6 +109,7 @@ Kézi módszerek: WP-admin plugin ZIP feltöltés/frissítés, vagy SFTP/tárhel
 | Ringató Core | Saját kiadási ZIP felrakása és aktiválása | MF03 |
 | Meglévő Barion gateway | Megtartani; helyileg sandbox konfigurációval aktiválni; szerveren környezet szerinti kulcsok | MF07/MF09 |
 | Meglévő Billingo | Megtartani; sandbox/éles adatok és számlázási hatások ellenőrzése | Fizetési integráció |
+| Hivatalos bunny.net WordPress-plugin (`bunnycdn`) | [Hivatalos forrás](https://wordpress.org/plugins/bunnycdn/); tesztelt verzióval telepíteni, **csak Stream** konfigurálható. CDN/linkátírás, Offloader, Optimizer, Fonts, Shield és minden más modul kikapcsolva; titkok backendben; elkülönített teszt-/éles Stream-könyvtárak, regressziós ellenőrzés | MF10, D10 elfogadva (2026-10-17) |
 | Better Messages | Új plugin; csak igazolt D11 megoldás és rögzített verzió/licenc után | MF12 |
 | GiftRocket, CookieYes, SMTP, cache, WAF és egyéb meglévő pluginok | Megtartani, érintett integrációt/configot dokumentálni | A megfelelő modulnál; önálló frissítésük nem része automatikusan a PWA-kiadásnak |
 | Action Scheduler | A meglévő WooCommerce által biztosított példány használata | Háttérjobok; külön plugin csak bizonyított szükség esetén |
@@ -129,7 +130,7 @@ A jelen táblázat beállítási leltár. A saját adminmezők és konfiguráci�
 | Feature flag-ek | Csak elkészült/tesztelt modul | Kezdetben OFF vagy korlátozott tesztkör | Kezdetben OFF/pilot, majd fokozatos bekapcsolás |
 | Termék/esemény mapping és árak | Helyi tesztazonosítók | Tesztszerver saját azonosítói | Éles azonosítók, jóváhagyott árak és szabályok |
 | Barion/Billingo/SMTP | Sandbox és levélfogó | Sandbox és kizárólag tesztcímzettek | Meglévő éles konfiguráció megőrzése, új termékmapping ellenőrzése |
-| Média | Engedélyezett tesztanyag, privát forrás tesztje | Elkülönített tesztforrás, ha szükséges | D10 szerinti igazolt privát kiszolgáló és hozzáférés |
+| Média | Engedélyezett tesztanyag, privát forrás tesztje | Elkülönített tesztforrás, ha szükséges | D10 szerinti Bunny Stream + hivatalos plugin csak Stream, igazolt privát hozzáféréssel |
 | Push/VAPID | Helyi tesztkulcs, tesztböngésző | Külön tesztkulcs és címzettkör | Stabil éles kulcspár; privát kulcs backendben, nem kiadásonként cserélendő |
 | Staff/admin jogosultság | Tesztrole és hozzárendelt tesztesemény | Tesztstaff, szűk capability | Nevesített staff/admin, esemény-hozzárendelés |
 | Cron/jobs | Kézi vagy lokális ütemezett futtatás | Üzemeltető által beállított futtatás | Valós, monitorozott futtatás; meglévő webes cronfeladatok megőrzése |
