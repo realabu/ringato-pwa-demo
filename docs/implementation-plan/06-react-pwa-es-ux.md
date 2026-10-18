@@ -146,3 +146,7 @@ A meglévő arculati tokenek a projekt `docs/design` könyvtárából: szín/fon
 Cél: WCAG 2.2 AA elvek szerinti kezelhetőség, billentyűzet és screen reader, legalább 44px kényelmes touch target, látható fókusz, safe-area, hibákhoz szöveges jelzés, `aria-live` beváltási eredmény, reduced motion, megfelelő kontraszt. Dialog focus trap/return focus, sor fel/le gomb accessible label, aktuális tétel jelzés. Szín/lakat önmagában nem magyaráz jogosultságot. Videóhoz megfelelő felirat/átirat tartalmi munkacsomag.
 
 Mobilmátrix: 320/375/390/430 px, tablet/desktop, landscape, nagyított betű, iOS safe-area. Hálózat: lassú 4G, megszakadás, provider timeout, háttérbe tett app. Célzott kezdeti budget: app JS gzip <=250 kB a dinamikus HLS/scanner chunkok nélkül; LCP <=2.5s, INP <=200ms, CLS <=0.1 mérhető tesztprofilban. Ezek tervezési célok, nem most elért mérési eredmények.
+
+### MF06 UX-felülírás – 2026-10-17
+
+A felhasználó 0.6.2-es pontosítása alapján a korábbi audio mini-player ajánlás helyett a lejátszás minden esetben a saját médiaoldalon történik. Cover és cím közvetlen navigáció, köztes listasoros nézet nélkül. Elnavigáláskor audio/video pause; X stop forrást töröl és visszavisz a listára a sor megtartásával. Sor módban alul Következik, ugyanazt a sor-komponenst használva; autoplay közben a teljes médiaoldal is vált. Audio nagy coverrel, videó natív fullscreen lehetőséggel. Részletes döntés a 09. dokumentum végén.

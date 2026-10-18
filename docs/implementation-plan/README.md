@@ -4,7 +4,7 @@
 
 A kiegészítő alkalmazás önálló React/TypeScript PWA. A meglévő WordPress/WooCommerce marad a felhasználók, termékek, rendelések és programok központi rendszere. Az eredeti publikus oldal megjelenése, útvonalai, témája és meglévő vásárlási folyamata változatlan marad. Új backendképességeket elkülönített bővítmények és saját táblák adnak hozzá.
 
-Ez a csomag **megvalósítási terv és döntési napló**. Az MF01–MF04 a külön fejlesztői WordPress-klónon implementálva, lokális ellenőrzésre kész; az MF05–MF14 tervezett. Az MF04 kiadása 0.4.1 (2026-10-16); a célkörnyezeti SMTP/HTTPS és fizikai mobilpróba külön igazolandó. Az elfogadott döntések és a nyitott részletszabályok állapotát a 09. dokumentum, a fejleszthető mérföldköveket és a fennmaradó átadási kapukat a 10. dokumentum tartalmazza.
+Ez a csomag **megvalósítási terv és döntési napló**. Az MF01–MF07 a külön fejlesztői WordPress-klónon implementálva, lokális ellenőrzésre kész; az MF08–MF14 tervezett. Az aktuális MF07 kiadás 0.7.0 (2026-10-17); a célkörnyezeti SMTP/HTTPS és fizikai mobilpróba külön igazolandó. Az elfogadott döntések és a nyitott részletszabályok állapotát a 09. dokumentum, a fejleszthető mérföldköveket és a fennmaradó átadási kapukat a 10. dokumentum tartalmazza.
 
 ## Dokumentumok és olvasási sorrend
 
@@ -65,3 +65,11 @@ A másolási helyeket, pluginokat, környezeti beállításokat, első telepít�
 - **G5:** Stagingben igazolt weboldal-, webshop- és e-mail-regressziómentesség.
 
 A háttérrendszer bővítése szükséges; a „változatlan oldal” a meglévő publikus felület és működés megőrzését jelenti. A WordPress teljes technikai változatlansága mellett a megadott API-alapú funkciók nem valósíthatók meg.
+
+## Rendelkezésre álló szolgáltatói hozzáférések
+
+**2026-10-17 – projektgazdai visszajelzés:** a Barion sandbox és a bunny.net regisztráció kész, a teszteléshez előkészített kapcsolódási adatok a projekt gyökerének helyi `access.md` fájljában vannak. A Bunny Stream API-kulcs pótolva, a tokenkulcs javítva. A regisztrációt és e kulcsok bekérését ne tartsuk nyitott fejlesztési vagy tesztelési függőségként. Tesztet most nem kér a projektgazda; a tényleges konfiguráció és működés igazolása az érintett mérföldkövek feladata. Titkos értékeket a tervbe nem másolunk.
+
+MF05 0.5.0 (2026-10-17): valós katalógus/program/saját HPOS rendelés olvasás implementálva. [Kiadás](../../../ringato-dev/docs/releases/mf05/RELEASE.md), [lokális ellenőrzések](../../../ringato-dev/docs/releases/mf05/local-test-results.md).
+
+MF07 0.7.0 (2026-10-17): vásárlási átadás, jegytárca/QR, idempotens paid provisioning, közös staff-visszatérés és auditált admin korrekció implementálva. Staff az MF08-ig csak lokális tesztkapcsolóval; férőhelyes vásárlás tiltott. Barion sandbox siker/hiba és teljes/részleges refund helyben igazolt; Billingo/távoli IPN/fizikai mobil külön átadási kapu. [Kiadás](../../../ringato-dev/docs/releases/mf07/RELEASE.md), [tesztek](../../../ringato-dev/docs/releases/mf07/local-test-results.md).

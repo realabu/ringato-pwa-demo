@@ -2,7 +2,7 @@
 
 **Kötelező tartalomkezelés (2026-10-16):** minden jelenlegi és későbbi PWA-blokk és szerkeszthető szöveg WordPressből, ACF Free mezőkből jön; a közös layoutszövegek és menüikonok is módosíthatók. A blokkok oldalanként csoportosítandók. A React sablon az eredeti megjelenést őrzi. Minden mérföldkő átadási feltétele a WP-szerkesztés build nélküli ellenőrzése. [Részletes szabály és kész-feltételek](12-wordpress-tartalomkezeles.md).
 
-**Készült:** 2026-10-15. **Állapot:** MF01–MF04 implementálva, lokális ellenőrzésre kész (MF04: 2026-10-16); az MF05–MF14 továbbra is tervezett. A fizikai mobilpróba és a távoli manuális telepítés külön igazolandó.
+**Készült:** 2026-10-15. **Állapot:** MF01–MF07 implementálva, lokális ellenőrzésre kész (MF05: 2026-10-17); az MF08–MF14 továbbra is tervezett. A fizikai mobilpróba és a távoli manuális telepítés külön igazolandó.
 
 A cél minden lépés végén külön kipróbálható, ellenőrizhető és visszaállítható növekmény. Először a már eldöntött architektúrára épülő feladatok következnek; a nyitott üzleti szabályokat csak az érintett modul előtt kell lezárni. A regisztráció és belépés önálló, korai mérföldkő, a meglévő WordPress/WooCommerce-fiókrendszerre építve.
 
@@ -186,7 +186,7 @@ A terv két külön **D12** jelölést használ. Minden feladatnál ki kell írn
 - A szükséges adatmodell/API, backend, UI és admin együtt alkosson kipróbálható növekményt. Ahol csak kliensalap készül (MF02/MF06), ezt az átadás külön jelzi.
 - Átadás: build/plugin verzió, bemutatható felhasználói út, lokális pozitív és negatív teszteredmények, ismert korlátok; frissített telepítési útmutató és verziózott kiadási csomag fájllistával, plugin-/konfigurációs változásokkal és visszaállítási lépésekkel. A célkörnyezetre másolás külön, manuális művelet.
 - Az adott mérföldkő ellenőrzése azonnal történjen; az MF14 teljes regresszió, nem az első alkalom az egyes modulok tesztelésére.
-- Állapotok: **tervezett → folyamatban → ellenőrzésre kész → elfogadott**; tényleges akadálynál a blokkoló kérdés és az érintett rész megnevezendő. MF01–MF04 állapota **ellenőrzésre kész**, a többi mérföldkőé **tervezett**.
+- Állapotok: **tervezett → folyamatban → ellenőrzésre kész → elfogadott**; tényleges akadálynál a blokkoló kérdés és az érintett rész megnevezendő. MF01–MF06 állapota **ellenőrzésre kész**, a többi mérföldkőé **tervezett**.
 
 Nem rögzítünk naptári határidőt vagy munkanapbecslést feltárás és kapacitásismeret nélkül. A következő fejlesztési feladatok MF-azonosítóval hivatkozhatók, például: „MF01 megvalósítása”, majd „MF02 megvalósítása”.
 
@@ -212,3 +212,30 @@ Nem rögzítünk naptári határidőt vagy munkanapbecslést feltárás és kapa
 - Nincs új publikus WP-oldal vagy WC-regisztrációs opciómódosítás. A korábbi, hibás helyi próbából származó 6630-as `/fiokom/` oldal visszavonhatóan lomtárba került; eredeti opciók visszaállítva, fiókok és rendelések megőrizve.
 - Új feliratok: **PWA tartalmak → Profil → Alkalmazáson belüli fiókűrlapok**, ACF Free, build nélkül szerkeszthető.
 - [Kiadás](../../../ringato-dev/docs/releases/mf04/RELEASE.md), [tesztek](../../../ringato-dev/docs/releases/mf04/local-test-results.md), [telepítés](../../../ringato-dev/docs/releases/mf04/INSTALL.md). Külső SMTP, HTTPS/Secure cookie, fizikai standalone mobil és D12 adatkezelés továbbra is külön igazolandó.
+
+## MF05 implementációs átadás – 2026-10-17
+
+- PWA/Core/Shell 0.5.0, API 1, DB-schema 1, ACF-tartalom 4. Állapot: **ellenőrzésre kész**; MF06–MF14 tervezett.
+- `/app/shop` és termékrészlet: élő WC ár, katalógusláthatóság, készlet/megvásárolhatóság; nincs csatorna szerinti kizárás. Külön „csak webshopban” opciót a WC közös katalógusláthatósága nem biztosít, új adminrendszer nem készült.
+- `/app/events` és részlet: a meglévő event mezők adaptere, Budapest szerinti időpont, mai/későbbi napok, hiányos/draft/jelszavas/tiltott program kizárva. ACF Free PWA-láthatóságkapcsoló; hiányában érvényes publikus program engedett.
+- `/app/orders` és részlet: saját customer_id alapján, WC CRUD/HPOS. Vendég 401, idegen/guest/nem létező 404; tulajdonosszűrőt a kliens nem küldhet. Nincs automatikus e-mail-kapcsolás, QR, foglalási vagy jogosultsági státusz.
+- Főoldal valós publikus előnézetekkel/fiókállapottal; keresés, lapozás és betöltési/üres/hiba/offline állapotok. ACF hozzáadó migráció, üres/szerkesztett értékek megőrzése és build nélküli szövegmódosítás igazolva.
+- [Kiadás](../../../ringato-dev/docs/releases/mf05/RELEASE.md), [tesztek](../../../ringato-dev/docs/releases/mf05/local-test-results.md), [telepítés](../../../ringato-dev/docs/releases/mf05/INSTALL.md). T10/T15/T20 szűk olvasó részei teljesültek. Konfigurátor/checkout, ICS/foglalás és digitális jogosultságok későbbi modulfeladatok; célkörnyezeti és fizikai mobilpróba külön igazolandó.
+
+MF05 0.5.1 felületi pontosítás (2026-10-17): a felhasználó kérésére keresőmezők nélkül; dátumjelvényes tömör programsorok a demó felépítésével, részletekbe helyezett leírás/kép, év/hónap szerinti csoportok és hozzáfűző betöltés. Tartalomverzió 5.
+
+## MF06 implementációs átadás – 2026-10-17
+
+PWA/Core/Shell 0.6.0, API 1, schema 1, ACF-tartalom 7. Valódi audio/video tesztfájlok, controller és PlaybackGrant-határ, single/queue állapotgép, mini-player, natív fullscreen, playsInline/contain, navigációs pause és session-stop/forrástörlés. Helyi sor vendégként is kipróbálható; a tartós személyes sor MF10. Nincs streamintegráció vagy prémiumtartalom. ACF Free feliratok a Média részletei MF06 blokkjában, build nélküli szerkesztés. [Kiadás](../../../ringato-dev/docs/releases/mf06/RELEASE.md), [tesztek](../../../ringato-dev/docs/releases/mf06/local-test-results.md), [telepítés](../../../ringato-dev/docs/releases/mf06/INSTALL.md). Állapot: implementált, lokális ellenőrzésre kész; fizikai iOS/Android, standalone, háttér/lockscreen és célkörnyezeti próba még nem igazolt. Az MF06 teljes készülékes elfogadási feltétele ezért nem lezárt.
+
+MF06 0.6.1 felületi pontosítás: WordPressben fájlonként választható borító, play/típusjelző és üres/teli szíves sorhozzáadás; függőleges egér/érintés drag helyjelölővel, billentyűzetes rendezés. ACF 8, adatmegőrző migráció; 28 unit és 14 érintett böngészőteszt sikeres.
+
+MF06 0.6.2 felhasználói UX-pontosítás: nincs mini-player; közvetlen cover-/címnavigáció teljes saját médiaoldalra, X stop sor megőrzésével, audio cover, sor módú Következik blokk és oldalváltó sorfolytatás. ACF 9, 29 unit és 14 lejátszó-böngészőteszt sikeres; fizikai eszközpróba továbbra is külön.
+
+## MF07 implementációs állapot – 2026-10-17
+
+A 0.7.0 helyi növekmény elkészült: biztonságos WC-pénztárátadás és saját intent, explicit termék-cutoff és rendeléstétel-pillanatkép, darabonként idempotens digitális jog, külön family_id, szerveres D02-lejárat, saját wallet/QR/előzmény, D03 közös inspect/redeem és naplózott admin korrekció. A vásárlási és staff modul saját InnoDB táblái schema 2, az oldalankénti ACF Free feliratok tartalom 10.
+
+Az MF07/MF08 kiadási határ érvényes: staff csak local + tesztkapcsoló; nem-local kódban tiltott. Férőhelyes termék nem vásárolható egyik checkoutcsatornán sem, külön eseményjogot a közös motor tesztjében szintetikus adattal ellenőrzünk. D05 kapacitás/foglalás/időablak MF08. T24/T25 foglalási részei későbbi kapuk; teljes éles staff-elfogadást az MF07 nem állít.
+
+Barion sandbox siker/hiba, teljes és részleges gateway refund lokálisan igazolt. Távoli szolgáltatói IPN, Billingo helyesbítés és fizikai mobil még külön ellenőrizendő. [Kiadás](../../../ringato-dev/docs/releases/mf07/RELEASE.md), [telepítés](../../../ringato-dev/docs/releases/mf07/INSTALL.md), [tesztbizonyíték](../../../ringato-dev/docs/releases/mf07/local-test-results.md).

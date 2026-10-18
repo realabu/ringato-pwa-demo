@@ -230,3 +230,9 @@ PWA/Core/Shell 0.4.1, API 1, schema 1, ACF-tartalom 3. A build/csomagolás és a
 A `/app/auth/*` POST JSON + custom header, edithez nonce/cookie, no-store és CORS-tiltás szükséges. Az ACF hozzáadó migráció a Profil alatt hozza létre az új űrlapszövegeket. A resetlevél `/app/account/reset#...` linkje is az appot nyitja; a kulcs nem HTTP URL-paraméter. A helyi levélfogó nem telepíthető távoli szerverre. Célkörnyezeten külön SMTP/HTTPS/standalone mobilpróba szükséges.
 
 [Telepítés](../../../ringato-dev/docs/releases/mf04/INSTALL.md), [közérthető útmutató](../../../ringato-dev/docs/releases/mf04/INSTALL-DOC.md), [visszaállítás](../../../ringato-dev/docs/releases/mf04/ROLLBACK.md), [tesztek](../../../ringato-dev/docs/releases/mf04/local-test-results.md).
+
+## MF07 0.7.0 tényleges telepítése – 2026-10-17
+
+Schema 2: hat hozzáadó, prefixelt InnoDB tábla; ACF-tartalom 10. Termékszabály a WP-termék ACF-metaadatában, immutábilis rendeléstétel/jog-pillanatképpel. Új termékkör explicit UTC cutoff után; régi/vendégimport nincs. Staff kiadási tiltás az MF08-ig, csak local + tesztkapcsoló. Barion meglévő gateway, saját bridge nélkül; Billingo külön integrációs elfogadási kapu.
+
+A mérvadó fájllista, másolás, konfiguráció, cron és rollback az [MF07 INSTALL.md](../../../ringato-dev/docs/releases/mf07/INSTALL.md), illetve a [közérthető INSTALL-DOC.md](../../../ringato-dev/docs/releases/mf07/INSTALL-DOC.md). A teljes Core-visszaállítást értékesítési szünet és függő fizetések egyeztetése előzze meg; az előnyben részesített rollback a korábbi PWA-build a 0.7.0 Core megtartásával. Új üzleti táblák és pénzügyi/audit adatok nem törölhetők automatikusan.

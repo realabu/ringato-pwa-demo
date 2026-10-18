@@ -282,3 +282,7 @@ A D09-MVP/01 időtartam, /02 eredeti fordulónapot őrző előrevásárlás és 
 - A lejárati státusz minden belépéskor és releváns hozzáférésváltozáskor frissítendő; időközbeni státuszváltozásnál ne maradjon elavult kiemelés. Az egyszeri vásárlást **nem** nevezzük automatikusan megújuló előfizetésnek. A meglévő webes fiókoldal esetleges módosítása a korábban elfogadott **D01 szerint külön felmérés/scope**, nem e döntésben jóváhagyott webes UI-fejlesztés.
 
 **Státusz:** **D09-MVP/01, /02 és /03 mindhárom üzleti részletszabálya ELFOGADVA**. A D09-MVP funkcionális döntéssora lezárt; az M6/MF09 implementáció és T08–T09 elfogadási tesztek, az aktuális prémiumtermék ára/leképezése és a meglévő webes fiókélmény ellenőrzése végrehajtandó. Az automatikus recurring integráció beszerzése/szabályai továbbra is feltételes későbbi döntések.
+
+## MF06 lejátszó UX-pontosítás – 2026-10-17
+
+Felhasználói kérés alapján az audio/video lejátszó kizárólag a média saját részletoldalán jelenik meg, lebegő mini-player és köztes listasoros nézet nélkül. A borító és cím közvetlenül ide vezet; más oldalra lépve mindkét médiatípus szünetel. A felső X stop visszatér a kiinduló listára, a sort megőrzi. Sor módban alul Következik, a teljes médiaoldallal együtt váltó sorfolytatás. Audio a videó helyén WP-borítót mutat, fullscreen nélkül. Ez a korábbi audio mini-player/navigáció közbeni lejátszás UX-ajánlást felülírja. A tartós kedvenc és felhasználói sor továbbra is MF10; az MF06 két kapcsolója csak helyi memóriát használ.
