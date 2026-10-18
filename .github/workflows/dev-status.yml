@@ -66,7 +66,7 @@ jobs:
           cp index.html app.html app.js v13.js sw.js icon.svg manifest.webmanifest virag-terv.html _site/
           cp docs/dev-status/index.html docs/dev-status/status.json _site/dev-status/
           touch _site/.nojekyll
-          python3 -m json.tool _site/status.json > /dev/null
+          python3 -m json.tool _site/dev-status/status.json > /dev/null
       - name: Upload site
         uses: actions/upload-pages-artifact@v4
         with:
