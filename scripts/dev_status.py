@@ -82,7 +82,7 @@ def release_states(root):
         if release not in paths or tests not in paths:
             continue
         text = (root / release).read_text() + '\n' + (root / tests).read_text()
-        if re.search(r'implementált|implementálva|ellenőrzésre kész|elkészült', text, re.I) or n <= plan_ready_count():
+        if re.search(r'implementált|implementálva|ellenőrzésre kész|elkészült', text, re.I):
             result[f'MF{n:02d}'] = {'release': release, 'tests': tests}
     return result
 
