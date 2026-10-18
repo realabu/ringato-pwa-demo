@@ -38,20 +38,33 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - name: Checkout primary development repository (public, read only)
+        id: devcheckout
         uses: actions/checkout@v4
         with:
           repository: nmarton/ringato-dev
           path: _sources/ringato-dev
           fetch-depth: 0
           persist-credentials: false
+        continue-on-error: true
       - name: Verify generator behavior
         run: python3 -m unittest discover -s scripts -p 'test_dev_status.py'
       - name: Generate factual metrics from both pinned checkouts
+        if: steps.devcheckout.outcome == 'success'
         run: python3 scripts/dev_status.py --dev-repo _sources/ringato-dev
+      - name: Mark unavailable development source without claiming inactivity
+        if: steps.devcheckout.outcome != 'success'
+        run: |
+          python3 - <<'PY'
+          import json,datetime,pathlib
+          labels=['PWA projektalap','Arculat és közös UI','WordPress Core és session','Fiók és belépés','Valós katalógus és programok','Médialejátszó alap','Jegyek, bérletek és beléptetés','Programfoglalás','Havi prémium','Védett Bunny médiatár','Virág kérdezi','Szülő–Virág üzenetek','Push és értesítések','Pilot és éles átadás']
+          data={'schema':2,'generated_at':datetime.datetime.now(datetime.timezone.utc).isoformat(),'completed':4,'total':14,'source_unavailable':True,'milestones':[{'id':f'MF{i:02d}','name':name,'state':'Ellenőrzésre kész' if i<=4 else 'Tervezett'} for i,name in enumerate(labels,1)],'metrics':{},'progress_events':[],'notes':['A fejlesztői repo nem hozzáférhető; a fejlesztési statisztikák nem frissültek.']}
+          pathlib.Path('docs/dev-status/status.json').write_text(json.dumps(data,ensure_ascii=False,indent=2))
+          PY
       - name: Prepare static Pages artifact
         run: |
-          mkdir -p _site
-          cp docs/dev-status/index.html docs/dev-status/status.json _site/
+          mkdir -p _site/dev-status
+          cp index.html app.html app.js v13.js sw.js icon.svg manifest.webmanifest virag-terv.html _site/
+          cp docs/dev-status/index.html docs/dev-status/status.json _site/dev-status/
           touch _site/.nojekyll
           python3 -m json.tool _site/status.json > /dev/null
       - name: Upload site
