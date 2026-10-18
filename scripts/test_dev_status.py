@@ -2,11 +2,15 @@ import pathlib
 import subprocess
 import tempfile
 import unittest
-from dev_status import is_source, measure, source_events, generate, preserved_snapshot
+from dev_status import is_source, measure, source_events, generate, preserved_snapshot, plan_ready_ids, plan_ready_count
 from unittest.mock import patch
 
 
 class MetricsTests(unittest.TestCase):
+    def test_plan_ready_is_separate_from_release_evidence(self):
+        self.assertEqual(plan_ready_count(), 9)
+        self.assertEqual(plan_ready_ids(), [f'MF{i:02d}' for i in range(1, 10)])
+
     def test_source_boundary(self):
         for path in ['ringato-pwa/src/pages/HomePage.tsx', 'wordpress-plugins/core/foo.php', 'wordpress-local/mu-plugins/dev.php']:
             self.assertTrue(is_source(path), path)
