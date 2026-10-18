@@ -63,18 +63,18 @@
       </nav>
       <div class="hero">
         <div>
-          <div class="eyebrow">Development status · V1</div>
+          <div class="eyebrow">Development status · két repó</div>
           <h1>Épül a<br>Ringató app.</h1>
-          <p class="sub">Átlátható fejlesztési állapot, ellenőrizhető mérföldkövek és mért statisztikák — közvetlenül a GitHub dokumentációjából.</p>
+          <p class="sub">Átlátható fejlesztési állapot, ellenőrizhető mérföldkövek és mért statisztikák — a tényleges fejlesztési kódból és a kiadási dokumentációból.</p>
           <div class="meta">
             <span class="chip" id="stamp">Legutóbbi frissítés: betöltés…</span>
             <span class="chip">14 mérföldkő</span>
-            <span class="chip">Forrás: GitHub main</span>
+            <span class="chip">Elsődleges forrás: nmarton/ringato-dev</span>
           </div>
         </div>
         <div class="visual" aria-label="Megvalósított mérföldkövek aránya">
           <div class="orb" id="orb"><div class="orb-inner">
-            <div class="big"><span id="done">4</span><small> / 14</small></div>
+            <div class="big"><span id="done">—</span><small> / 14</small></div>
             <div class="orb-note">implementálva,<br>ellenőrzésre kész</div>
           </div></div>
         </div>
@@ -84,15 +84,11 @@
   <main class="wrap">
     <section class="section" aria-labelledby="stats-title">
       <div class="section-head"><h2 id="stats-title">Projekt számokban</h2><span class="muted small">Nem becslések: forrásalapú mérés vagy külön jelölt adat</span></div>
-      <div class="grid" id="stats">
-        <div class="stat"><div class="stat-label">Implementált mérföldkövek</div><div class="stat-value">4 / 14</div><div class="stat-foot">Elfogadási ellenőrzés még szükséges</div></div>
-        <div class="stat"><div class="stat-label">Demó kódsorok</div><div class="stat-value">—</div><div class="stat-foot">Mérés folyamatban</div></div>
-        <div class="stat"><div class="stat-label">Dokumentált saját WP pluginek</div><div class="stat-value">2</div><div class="stat-foot">Telepítés külön igazolandó</div></div>
-        <div class="stat"><div class="stat-label">WP-beállítás változások</div><div class="stat-value">—</div><div class="stat-foot">Auditadat nem érhető el</div></div>
-      </div>
+      <div class="grid" id="stats"><p class="empty">Forrásadatok betöltése…</p></div>
+      <div class="panel" id="measurement"></div>
     </section>
     <section class="section" aria-labelledby="milestones-title">
-      <div class="section-head"><h2 id="milestones-title">Fejlesztési mérföldkövek</h2><span class="pill working">MF01–MF04 · ellenőrzésre kész</span></div>
+      <div class="section-head"><h2 id="milestones-title">Fejlesztési mérföldkövek</h2><span class="pill working" id="milestone-summary">Kiadási bizonyítékok betöltése…</span></div>
       <div class="milestones" id="milestones" aria-live="polite">
         <div class="empty">Részletes státusz betöltése…</div>
       </div>
@@ -104,16 +100,15 @@
       </div>
       <div class="panel">
         <h3>Mi következik?</h3>
-        <div class="event"><strong>MF05 · Valós tartalom bekötése</strong><div class="muted">WooCommerce termékek, események, rendeléselőzmény</div></div>
-        <div class="event"><strong>MF06 · Lejátszó alap</strong><div class="muted">Hang, videó, mini-player, mobilos ellenőrzés</div></div>
+        <div class="event"><strong>MF07 · Jegyek és beléptetés</strong><div class="muted">Vásárlás, jegy/bérlet, QR és személyzeti ellenőrzés</div></div>
+        <div class="event"><strong>MF08 · Programfoglalás</strong><div class="muted">Férőhelyek, foglalás és időablakok</div></div>
         <div class="event"><strong>Integrációs próbák</strong><div class="muted">Barion/Billingo, Bunny Stream, Better Messages, push</div></div>
       </div>
     </section>
     <section class="note" aria-labelledby="method-title">
       <strong id="method-title">Hogyan kell olvasni a számokat?</strong>
-      <p>Az MF01–MF04 dokumentáltan implementált, <b>nem véglegesen elfogadott</b>. A prototípus kódsorai nem azonosak az új, helyben fejlesztett React/WordPress rendszer méretével.</p>
-      <p>A dokumentáció szerint két saját WordPress-plugin készült (App Shell és Core), de tényleges éles telepítési darabszám és WordPress-beállításaudit nincs a repóban. A statisztika az elérhetetlen adat helyén szándékosan „—” jelet használ.</p>
-      <p>Az óránkénti frissítés nem jelent automatikusan előrelépést. A 12 órás aktivitásfigyelés csak a GitHubon ténylegesen látható, mérföldkőszámot vagy implementációs forráskódot érintő változást érzékel; helyi, fel nem töltött munkát nem.</p>
+      <div id="method-notes"></div>
+      <div id="provenance"></div>
     </section>
   </main>
   <footer class="wrap footer">
@@ -126,6 +121,7 @@
       const escape = str => String(str).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
       const fmt = s => s ? new Date(s).toLocaleString('hu-HU',{timeZone:'Europe/Budapest',dateStyle:'medium',timeStyle:'short'}) : 'nem állapítható meg';
       const number = n => Number(n).toLocaleString('hu-HU');
+      const sourceLink = (url, label) => '<a href="'+escape(url)+'">'+escape(label)+'</a>';
       const metric = (name, value, foot) => '<div class="stat"><div class="stat-label">'+escape(name)+'</div><div class="stat-value">'+escape(value == null?'—':value)+'</div><div class="stat-foot">'+escape(foot)+'</div></div>';
       const load = async () => {
         const response = await fetch('./status.json?ts='+Date.now(),{cache:'no-store'});
@@ -134,35 +130,42 @@
         $('done').textContent=completed;
         $('orb').style.background='conic-gradient(#c2e4aa 0 '+(completed/14*100)+'%,#526863 '+(completed/14*100)+'% 100%)';
         $('stamp').textContent='Adatfrissítés: '+fmt(s.generated_at);
+        $('milestone-summary').textContent=completed+' / '+s.total+' · helyi implementációs átadás';
         $('stats').innerHTML=
-          metric('Implementált mérföldkövek',completed+' / '+s.total,'Állapot: ellenőrzésre kész')+
-          metric('Demó kódsorok',m.prototype_lines==null?null:number(m.prototype_lines),(m.prototype_file_count||0)+' demófájl, csak Git-kód')+
-          metric('Dokumentált saját WP pluginek',m.documented_custom_wp_plugins,'App Shell és Core; telepítés nincs igazolva')+
-          metric('WP-beállítás változások',m.verified_wp_setting_changes,'WordPress-audit nem elérhető')+
-          metric('Implementációs forrásfájlok',m.implementation_file_count,'Csak a repóba feltöltött forrás')+
-          metric('Implementációs kódsorok',m.implementation_lines,'Nem tartalmazza a helyi ringato-dev kódot')+
-          metric('Igazolt telepített WP pluginek',m.verified_installed_wp_plugins,'Tényleges WP-környezeti leltár szükséges')+
-          metric('További mérföldkövek',s.total-completed,'MF05–MF14 tervezett');
+          metric('Implementált mérföldkövek',completed+' / '+s.total,'Kiadási és tesztdokumentáció; elfogadás még szükséges')+
+          metric('Alkalmazás- és WP-forrássorok',number(m.implementation_lines),number(m.implementation_file_count)+' fájl · '+number(m.implementation_nonblank_lines)+' nem üres sor')+
+          metric('Frontend funkciókönyvtárak',m.feature_modules,(s.features||[]).join(', '))+
+          metric('WordPress Core rétegek',m.core_layers,(s.core_layers||[]).join(', '))+
+          metric('Saját WP pluginek a forrásban',m.source_wp_plugins,(s.plugins||[]).map(p=>p.name+' '+p.version).join('; '))+
+          metric('Implementált WP opciókulcsok',m.implemented_wp_option_keys,'Kódban azonosított írási célok; nem futási audit')+
+          metric('Igazolt éles telepített pluginek',m.verified_installed_wp_plugins,'Éles környezeti leltár nincs')+
+          metric('Igazolt WP-beállításváltozások',m.verified_wp_setting_changes,'Végrehajtási audit nincs')+
+          metric('Külön mért demó forrássorai',number(m.prototype_lines),m.prototype_file_count+' fájl a realabu/ringato-pwa-demo repóban');
+        const names={frontend:'React PWA',wordpress_plugins:'Saját WP pluginek',local_mu_plugins:'Helyi MU-plugin',tests:'Tesztek (külön)',generated:'Generált kód (külön)',tooling:'Fejlesztési eszközök (külön)'};
+        $('measurement').innerHTML='<h3>Mérési bontás és bizonyítékok</h3><div style="overflow-x:auto"><table style="width:100%;text-align:left;line-height:1.8;font-size:13px"><thead><tr><th>Kategória</th><th>Fájl</th><th>Fizikai sor</th><th>Nem üres sor</th></tr></thead><tbody>'+Object.entries(s.breakdown||{}).map(([k,v])=>'<tr><td>'+escape(names[k]||k)+'</td><td>'+number(v.files)+'</td><td>'+number(v.lines)+'</td><td>'+number(v.nonblank)+'</td></tr>').join('')+'</tbody></table></div><p class="small">A fő összeg az első három sor összege. '+sourceLink('./status.json','Géppel olvasható adat és teljes fájlleltár')+'</p><p class="small">'+(s.plugins||[]).map(p=>sourceLink(p.url,p.name+' '+p.version)).join(' · ')+'</p><p class="small">Helyi telepítés: '+sourceLink(s.local_installation_report.url,'MF06 teszt- és telepítési jelentés')+'. Ez dokumentált helyi eredmény, nem aktuális éles pluginleltár.</p><details><summary>WP opciókulcsok írási bizonyítékkal</summary>'+Object.entries(s.wp_option_keys||{}).map(([k,urls])=>'<p class="small">'+sourceLink(urls[0],k)+'</p>').join('')+'</details>';
+        $('method-notes').innerHTML=(s.notes||[]).map(n=>'<p>'+escape(n)+'</p>').join('');
+        $('provenance').innerHTML='<p><b>Forráspontok:</b> '+(s.repositories||[]).map(r=>sourceLink(r.url,r.name+' @ '+r.sha.slice(0,10))).join(' · ')+'</p><p>'+sourceLink(s.links.plan,'Mérföldkőterv')+' · Terv szerinti átadás: '+s.plan_completed+'/14; kiadási bizonyíték alapján: '+completed+'/14. Az eltérés oka: a fejlesztési repó újabb MF05/MF06 kiadást is tartalmaz.</p>';
+        if(Date.now()-Date.parse(s.generated_at)>3*3600000) $('stamp').textContent+=' · Elavult pillanatkép, frissítés ellenőrizendő';
         $('milestones').innerHTML=(s.milestones||[]).map(x=>{
           const ready=x.state==='Ellenőrzésre kész';
-          return '<div class="milestone '+(ready?'ready':'')+'"><div class="num">'+escape(x.id)+'</div><div><strong>'+escape(x.name)+'</strong><div class="status">'+(ready?'✓ ':'')+escape(x.state)+'</div></div></div>';
+          return '<div class="milestone '+(ready?'ready':'')+'"><div class="num">'+escape(x.id)+'</div><div><strong>'+escape(x.name)+'</strong><div class="status">'+(ready?'✓ ':'')+escape(x.state)+'</div><div class="small">'+Object.entries(x.evidence||{}).map(([k,url])=>sourceLink(url,k==='release'?'Kiadás':'Tesztek')).join(' · ')+'</div></div></div>';
         }).join('');
         const events=s.progress_events||[];
         let activity='';
         if(s.last_observable_progress_at) {
           let elapsed=(Date.now()-Date.parse(s.last_observable_progress_at))/3600000;
           let stale=Number.isFinite(elapsed)&&elapsed>=12;
-          activity='<p><span class="pill '+(stale?'stale':'working')+'">'+(stale?'12+ óra megfigyelhető előrelépés nélkül':'Utóbbi előrelépés 12 órán belül')+'</span></p>'+
+          activity='<p><span class="pill '+(stale?'stale':'working')+'">'+(stale?'12+ óra megfigyelt kódváltozás nélkül':'Utóbbi kódváltozás 12 órán belül')+'</span></p>'+
             '<p class="small muted">Utolsó forrásalapú változás: '+escape(fmt(s.last_observable_progress_at))+'</p>';
         } else {
           activity='<p class="empty">Még nincs GitHubon kimutatható implementációs mérföldkő- vagy kódváltozás. Ez nem jelenti azt, hogy nem folyik helyi fejlesztés.</p>';
         }
-        activity+=events.slice(0,4).map(e=>'<div class="event"><strong>'+escape(e.title)+'</strong><time>'+escape(fmt(e.at))+' · '+escape(e.sha)+'</time></div>').join('');
+        activity+=events.slice(0,4).map(e=>'<div class="event"><strong>'+sourceLink(e.url,e.title)+'</strong><time>'+escape(fmt(e.at))+' · '+escape(e.sha)+'</time></div>').join('');
         $('activity').innerHTML=activity;
       };
       load().catch(() => {
         $('stamp').textContent='Élő adat most nem érhető el';
-        $('milestones').innerHTML='<div class="empty">A mérföldkőadatokat a GitHub Actions első sikeres futása tölti fel. A dokumentáció alapján jelenleg MF01–MF04 ellenőrzésre kész.</div>';
+        $('milestones').innerHTML='<div class="empty">A mérföldkőadatokat a GitHub Actions első sikeres futása tölti fel. A friss állapothoz a forrásadatok sikeres beolvasása szükséges.</div>';
         $('activity').innerHTML='<p class="empty">Az időbélyeg és az aktivitás nem érhető el. Az oldal nem állít bizonyítatlan friss státuszt.</p>';
       });
     })();

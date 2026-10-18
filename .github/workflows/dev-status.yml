@@ -12,6 +12,7 @@ on:
       - "apps/**"
       - "packages/**"
       - "scripts/dev_status.py"
+      - "scripts/test_dev_status.py"
       - "docs/dev-status/**"
       - ".github/workflows/dev-status.yml"
   schedule:
@@ -29,14 +30,24 @@ jobs:
   build:
     name: Generate status snapshot
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout full Git history
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
           persist-credentials: false
-      - name: Generate factual metrics
-        run: python3 scripts/dev_status.py
+      - name: Checkout primary development repository (public, read only)
+        uses: actions/checkout@v4
+        with:
+          repository: nmarton/ringato-dev
+          path: _sources/ringato-dev
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Verify generator behavior
+        run: python3 -m unittest discover -s scripts -p 'test_dev_status.py'
+      - name: Generate factual metrics from both pinned checkouts
+        run: python3 scripts/dev_status.py --dev-repo _sources/ringato-dev
       - name: Prepare static Pages artifact
         run: |
           mkdir -p _site
