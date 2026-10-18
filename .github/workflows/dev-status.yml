@@ -42,6 +42,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: nmarton/ringato-dev
+          # Fine-grained token with Contents: read for the development repo.
+          # GITHUB_TOKEN cannot read a private repository in another account.
+          token: ${{ secrets.RINGATO_DEV_READ_TOKEN || github.token }}
           path: _sources/ringato-dev
           fetch-depth: 0
           persist-credentials: false
@@ -51,14 +54,38 @@ jobs:
       - name: Generate factual metrics from both pinned checkouts
         if: steps.devcheckout.outcome == 'success'
         run: python3 scripts/dev_status.py --dev-repo _sources/ringato-dev
-      - name: Mark unavailable development source without claiming inactivity
+      - name: Publish transparent unavailable-source snapshot
         if: steps.devcheckout.outcome != 'success'
         run: |
           python3 - <<'PY'
-          import json,datetime,pathlib
-          labels=['PWA projektalap','Arculat és közös UI','WordPress Core és session','Fiók és belépés','Valós katalógus és programok','Médialejátszó alap','Jegyek, bérletek és beléptetés','Programfoglalás','Havi prémium','Védett Bunny médiatár','Virág kérdezi','Szülő–Virág üzenetek','Push és értesítések','Pilot és éles átadás']
-          data={'schema':2,'generated_at':datetime.datetime.now(datetime.timezone.utc).isoformat(),'completed':4,'total':14,'source_unavailable':True,'milestones':[{'id':f'MF{i:02d}','name':name,'state':'Ellenőrzésre kész' if i<=4 else 'Tervezett'} for i,name in enumerate(labels,1)],'metrics':{},'progress_events':[],'notes':['A fejlesztői repo nem hozzáférhető; a fejlesztési statisztikák nem frissültek.']}
-          pathlib.Path('docs/dev-status/status.json').write_text(json.dumps(data,ensure_ascii=False,indent=2))
+          import datetime, json, pathlib
+          from scripts.dev_status import ROOT, LABELS, measure, tracked, plan_ready_count
+          plan = plan_ready_count()
+          demo = measure(ROOT, [p for p in tracked(ROOT) if p in {'app.html','index.html','app.js','v13.js','sw.js'}])
+          data = {
+              'schema': 2,
+              'generated_at': datetime.datetime.now(datetime.timezone.utc).isoformat(timespec='seconds'),
+              'source_unavailable': True,
+              'completed': None,
+              'plan_completed': plan,
+              'total': 14,
+              'milestones': [
+                  {'id': f'MF{i:02d}', 'name': name,
+                   'state': 'A tervben ellenőrzésre kész' if i <= plan else 'Fejlesztői állapot nem ellenőrizhető'}
+                  for i, name in enumerate(LABELS, 1)
+              ],
+              'metrics': {'prototype_lines': demo['lines'], 'prototype_file_count': demo['files']},
+              'progress_events': [],
+              'notes': [
+                  'A nmarton/ringato-dev nem hozzáférhető a GitHub Actions számára. A forráskód, az MF05+ mérföldkövek és a kódsorstatisztikák most nem ellenőrizhetők.',
+                  'A terv szerinti érték nem a tényleges fejlesztési készültség. Nem állítunk stagnálást vagy hiányzó fejlesztést.'
+              ],
+              'links': {
+                  'repo': 'https://github.com/nmarton/ringato-dev',
+                  'plan': 'https://github.com/realabu/ringato-pwa-demo/blob/main/docs/implementation-plan/10-inkrementalis-merfoldkovek.md'
+              }
+          }
+          pathlib.Path('docs/dev-status/status.json').write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\\n')
           PY
       - name: Prepare static Pages artifact
         run: |
