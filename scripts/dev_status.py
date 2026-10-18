@@ -52,10 +52,23 @@ def link(repo, sha, path):
     return f'https://github.com/{repo}/blob/{sha}/{path}'
 
 
+def plan_ready_ids():
+    """Read the plan's explicitly declared local handoff range, not the release evidence."""
+    text = (ROOT / PLAN).read_text(encoding='utf-8')
+    match = re.search(
+        r'\*\*Állapot:\*\*\s*MF01[–-]MF(\d{2})\s+implementálva,\s*lokális ellenőrzésre kész',
+        text, re.I)
+    if not match:
+        # Backward compatibility with the earlier wording of the plan.
+        match = re.search(r'MF01[–-]MF(\d{2}) állapota \*\*ellenőrzésre kész', text)
+    if not match:
+        return []
+    last = int(match[1])
+    return [f'MF{i:02d}' for i in range(1, min(last, len(LABELS)) + 1)]
+
+
 def plan_ready_count():
-    text = (ROOT / PLAN).read_text()
-    match = re.search(r'MF01[–-]MF(\d{2}) állapota \*\*ellenőrzésre kész', text)
-    return int(match[1]) if match else 0
+    return len(plan_ready_ids())
 
 
 def release_states(root):
@@ -126,6 +139,7 @@ def generate(dev):
             for key in re.findall(r"\b(?:add|update)_option\(\s*['\"]([^'\"]+)['\"]", content):
                 option_keys.setdefault(key, []).append(link(DEV, dev_sha, p))
     states = release_states(dev)
+    plan_ids = plan_ready_ids()
     events = source_events(dev)
     if not events:
         raise ValueError('No source history: fetch complete history')
@@ -158,7 +172,8 @@ def generate(dev):
         'wp_option_keys': option_keys,
         'local_installation_report': {'scope': 'Kiadási dokumentáció szerinti helyi WP-klón; most nem újramért állapot',
                                       'url': link(DEV, dev_sha, 'docs/releases/mf06/local-test-results.md')},
-        'plan_completed': plan_ready_count(),
+        'plan_completed': len(plan_ids), 'plan_ready_milestone_ids': plan_ids,
+        'plan_status_source': 'A mérföldkőterv deklarált lokális készültsége; nem önálló kód-, teszt- vagy éles bizonyíték.',
         'last_observable_progress_at': events[0]['at'], 'progress_events': events[:20],
         'progress_fingerprint': fingerprint.hexdigest(),
         'source_commit': dev_sha,
