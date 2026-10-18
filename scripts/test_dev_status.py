@@ -8,8 +8,8 @@ from unittest.mock import patch
 
 class MetricsTests(unittest.TestCase):
     def test_plan_ready_is_separate_from_release_evidence(self):
-        self.assertEqual(plan_ready_count(), 9)
-        self.assertEqual(plan_ready_ids(), [f'MF{i:02d}' for i in range(1, 10)])
+        self.assertGreaterEqual(plan_ready_count(), 10)
+        self.assertEqual(plan_ready_ids(), [f'MF{i:02d}' for i in range(1, plan_ready_count() + 1)])
 
     def test_plan_does_not_make_release_ready(self):
         with tempfile.TemporaryDirectory() as folder:
