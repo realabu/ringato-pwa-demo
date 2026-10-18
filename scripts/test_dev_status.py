@@ -2,7 +2,7 @@ import pathlib
 import subprocess
 import tempfile
 import unittest
-from dev_status import is_source, measure, source_events, generate, preserved_snapshot, plan_ready_ids, plan_ready_count
+from dev_status import is_source, measure, source_events, generate, preserved_snapshot, plan_ready_ids, plan_ready_count, release_states
 from unittest.mock import patch
 
 
@@ -10,6 +10,19 @@ class MetricsTests(unittest.TestCase):
     def test_plan_ready_is_separate_from_release_evidence(self):
         self.assertEqual(plan_ready_count(), 9)
         self.assertEqual(plan_ready_ids(), [f'MF{i:02d}' for i in range(1, 10)])
+
+    def test_plan_does_not_make_release_ready(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = pathlib.Path(folder)
+            subprocess.run(['git', 'init', '-q', str(root)], check=True)
+            release = root / 'docs/releases/mf07/RELEASE.md'
+            release.parent.mkdir(parents=True)
+            release.write_text('Tervezett kiadás, további munka szükséges')
+            (release.parent / 'local-test-results.md').write_text('Tesztek még nincsenek')
+            subprocess.run(['git', 'add', '-A'], cwd=root, check=True)
+            self.assertNotIn('MF07', release_states(root))
+            release.write_text('MF07 implementálva, lokálisan ellenőrzésre kész')
+            self.assertIn('MF07', release_states(root))
 
     def test_source_boundary(self):
         for path in ['ringato-pwa/src/pages/HomePage.tsx', 'wordpress-plugins/core/foo.php', 'wordpress-local/mu-plugins/dev.php']:
