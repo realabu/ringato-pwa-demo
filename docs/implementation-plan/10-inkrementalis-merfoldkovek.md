@@ -2,7 +2,7 @@
 
 **Kötelező tartalomkezelés (2026-10-16):** minden jelenlegi és későbbi PWA-blokk és szerkeszthető szöveg WordPressből, ACF Free mezőkből jön; a közös layoutszövegek és menüikonok is módosíthatók. A blokkok oldalanként csoportosítandók. A React sablon az eredeti megjelenést őrzi. Minden mérföldkő átadási feltétele a WP-szerkesztés build nélküli ellenőrzése. [Részletes szabály és kész-feltételek](12-wordpress-tartalomkezeles.md).
 
-**Készült:** 2026-10-15. **Állapot:** MF01–MF08 implementálva, lokális ellenőrzésre kész (MF05: 2026-10-17); az MF09–MF14 továbbra is tervezett. A fizikai mobilpróba és a távoli manuális telepítés külön igazolandó.
+**Készült:** 2026-10-15. **Állapot:** MF01–MF09 implementálva, lokális ellenőrzésre kész (MF05: 2026-10-17); az MF10–MF14 továbbra is tervezett. A fizikai mobilpróba és a távoli manuális telepítés külön igazolandó.
 
 A cél minden lépés végén külön kipróbálható, ellenőrizhető és visszaállítható növekmény. Először a már eldöntött architektúrára épülő feladatok következnek; a nyitott üzleti szabályokat csak az érintett modul előtt kell lezárni. A regisztráció és belépés önálló, korai mérföldkő, a meglévő WordPress/WooCommerce-fiókrendszerre építve.
 
@@ -249,3 +249,7 @@ Nyílt programon nincs foglalás; alapdíjason foglalás és külön jegy/bérle
 A korábbi programok explicit besorolása/befejezése telepítési feladat, automatikus besorolás nincs. [Kiadás](../../../ringato-dev/docs/releases/mf08/RELEASE.md), [tesztek](../../../ringato-dev/docs/releases/mf08/local-test-results.md), [telepítés](../../../ringato-dev/docs/releases/mf08/INSTALL.md). A helyi tesztek szintetikus fizetési boundaryt is használnak; távoli HTTPS/IPN, Billingo-helyesbítés és fizikai mobil/naptárimport külön célkörnyezeti kapu marad.
 
 MF08 0.8.1: az eseményoldali ACF Free post_object kereshető listája az egyetlen szerkeszthető termékkapcsolat. A terméken automatikus programnév/időpont/hivatkozás szerepel, fordított ID-mező nincs. A régi eseményoldali kapcsolatok megmaradnak; a terméken lévő régi fordított meta nem jogosultsági vagy kapcsolati forrás. Egy termék két programhoz rendelését szerveroldali validáció és sorosított adminmentés védi.
+
+## MF09 implementáció – 2026-10-18
+
+0.9.0: manuális havi prémium, hiteles fizetéshez és egyedi rendeléstételhez kötött időszaktörténet, eredeti fordulónap, Budapest naptári clamp/DST, késő callback és tranzakciós duplikációvédelem. Mindkét csatornán login, normál vendégvásárlás megőrizve. Saját státusz/pontos lejárat/hét napos kiemelés és újravásárlás; nincs automatikus terhelés/e-mail/push. Lokális teszttermék projektgazdai kérésre 8999 Ft, ID 8503; célkörnyezeti ár/mapping és Barion/Billingo/HTTPS/fizikai mobil külön kapu. Schema 4, tartalom 14. [Kiadás](../../../ringato-dev/docs/releases/mf09/RELEASE.md), [tesztek](../../../ringato-dev/docs/releases/mf09/local-test-results.md).
