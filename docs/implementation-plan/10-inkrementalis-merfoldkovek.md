@@ -2,7 +2,7 @@
 
 **Kötelező tartalomkezelés (2026-10-16):** minden jelenlegi és későbbi PWA-blokk és szerkeszthető szöveg WordPressből, ACF Free mezőkből jön; a közös layoutszövegek és menüikonok is módosíthatók. A blokkok oldalanként csoportosítandók. A React sablon az eredeti megjelenést őrzi. Minden mérföldkő átadási feltétele a WP-szerkesztés build nélküli ellenőrzése. [Részletes szabály és kész-feltételek](12-wordpress-tartalomkezeles.md).
 
-**Készült:** 2026-10-15. **Állapot:** MF01–MF07 implementálva, lokális ellenőrzésre kész (MF05: 2026-10-17); az MF08–MF14 továbbra is tervezett. A fizikai mobilpróba és a távoli manuális telepítés külön igazolandó.
+**Készült:** 2026-10-15. **Állapot:** MF01–MF08 implementálva, lokális ellenőrzésre kész (MF05: 2026-10-17); az MF09–MF14 továbbra is tervezett. A fizikai mobilpróba és a távoli manuális telepítés külön igazolandó.
 
 A cél minden lépés végén külön kipróbálható, ellenőrizhető és visszaállítható növekmény. Először a már eldöntött architektúrára épülő feladatok következnek; a nyitott üzleti szabályokat csak az érintett modul előtt kell lezárni. A regisztráció és belépés önálló, korai mérföldkő, a meglévő WordPress/WooCommerce-fiókrendszerre építve.
 
@@ -239,3 +239,13 @@ A 0.7.0 helyi növekmény elkészült: biztonságos WC-pénztárátadás és saj
 Az MF07/MF08 kiadási határ érvényes: staff csak local + tesztkapcsoló; nem-local kódban tiltott. Férőhelyes termék nem vásárolható egyik checkoutcsatornán sem, külön eseményjogot a közös motor tesztjében szintetikus adattal ellenőrzünk. D05 kapacitás/foglalás/időablak MF08. T24/T25 foglalási részei későbbi kapuk; teljes éles staff-elfogadást az MF07 nem állít.
 
 Barion sandbox siker/hiba, teljes és részleges gateway refund lokálisan igazolt. Távoli szolgáltatói IPN, Billingo helyesbítés és fizikai mobil még külön ellenőrizendő. [Kiadás](../../../ringato-dev/docs/releases/mf07/RELEASE.md), [telepítés](../../../ringato-dev/docs/releases/mf07/INSTALL.md), [tesztbizonyíték](../../../ringato-dev/docs/releases/mf07/local-test-results.md).
+
+## MF08 implementációs állapot – 2026-10-18
+
+0.8.0: ACF Free programtípus/befejezés/kapacitás/termékmapping és staff időablak; saját inventory/reservation/hold táblák, prefixelt InnoDB, family → inventory → entitlement zársorrend és aktuális zároló olvasások. A programkonfiguráció a meglévő event postmeta mezőkben marad; ACF-mentés inventory-zárban, kapacitás-/szerkezetvédelemmel és audittal. Schema 3, tartalom 13.
+
+Nyílt programon nincs foglalás; alapdíjason foglalás és külön jegy/bérlet; kezdésig lemondás, belépés után tiltás, idempotens helyfelszabadítás. Minden checkoutcsatornán 15 perces fizetős hold; lejárat cron nélkül, késő fizetés kapacitásellenőrzéssel vagy tartós paid_capacity_conflict. Igazolt fel nem használt teljes refund egyszer szabadít helyet. Staff tesztkapcsoló helyett valós esemény/foglalás/időablak és D03 visszatérés. ICS valódi befejezéssel; PWA-feliratok WordPressből.
+
+A korábbi programok explicit besorolása/befejezése telepítési feladat, automatikus besorolás nincs. [Kiadás](../../../ringato-dev/docs/releases/mf08/RELEASE.md), [tesztek](../../../ringato-dev/docs/releases/mf08/local-test-results.md), [telepítés](../../../ringato-dev/docs/releases/mf08/INSTALL.md). A helyi tesztek szintetikus fizetési boundaryt is használnak; távoli HTTPS/IPN, Billingo-helyesbítés és fizikai mobil/naptárimport külön célkörnyezeti kapu marad.
+
+MF08 0.8.1: az eseményoldali ACF Free post_object kereshető listája az egyetlen szerkeszthető termékkapcsolat. A terméken automatikus programnév/időpont/hivatkozás szerepel, fordított ID-mező nincs. A régi eseményoldali kapcsolatok megmaradnak; a terméken lévő régi fordított meta nem jogosultsági vagy kapcsolati forrás. Egy termék két programhoz rendelését szerveroldali validáció és sorosított adminmentés védi.
