@@ -147,19 +147,19 @@
         const planIds = Array.isArray(s.plan_ready_milestone_ids) ? s.plan_ready_milestone_ids : Array.from({length:Math.min(Number(s.plan_completed)||0,total)},(_,i)=>'MF'+String(i+1).padStart(2,'0'));
         const planSet = new Set(planIds);
         const releaseSet = new Set((s.milestones||[]).filter(x=>x.state==='Ellenőrzésre kész').map(x=>x.id));
-        const stale = s.source_unavailable || (s.refresh && s.refresh.source_access===false);
+        const stale = s.source_unavailable || (s.refresh && s.refresh.source_access===false) || (Date.now()-Date.parse(s.generated_at)>3*3600000);
         const primary = (s.repositories||[]).find(r=>r.role==='primary');
         const secondary = (s.repositories||[]).find(r=>r.role==='plan_and_prototype');
         const sourceFoot = (url,label) => url ? sourceLink(url,label) : escape(label);
         $('source-progress').innerHTML =
           sourceCard('Mérföldkőterv',planIds.length+' / '+total,'A tervben deklarált lokális készültség; nem független tesztigazolás',
-            sourceFoot(s.links?.plan,'Tervdokumentum')+' · '+sourceFoot(secondary?.url,'Tervforrás SHA')) +
+            sourceFoot(s.links?.plan,'Tervdokumentum')+' · '+sourceFoot(secondary?.url,secondary?.sha?'Terv SHA '+secondary.sha.slice(0,10):'Tervforrás')) +
           sourceCard('Fejlesztői kiadás és tesztek',completed+' / '+total,(stale?'Korábban ellenőrzött, most nem frissíthető':'Kiadási és helyi tesztdokumentum alapján felismert átadás'),
-            sourceFoot(primary?.url,'Fejlesztői forrás SHA')+' · '+sourceFoot('./status.json','Mérési pillanatkép')) +
+            sourceFoot(primary?.url,primary?.sha?'Forrás SHA '+primary.sha.slice(0,10):'Fejlesztői forrás')+' · '+sourceFoot('./status.json','Mérés: '+fmt(s.generated_at))) +
           sourceCard('Alkalmazás- és backend-kód',
             m.implementation_file_count==null?'Nem mérhető':number(m.implementation_file_count)+' fájl',
             (m.implementation_lines==null?'Forrásmérés nem érhető el':number(m.implementation_lines)+' fizikai sor · '+number(m.implementation_nonblank_lines)+' nem üres sor')+'; nem /14-es készültségi érték',
-            sourceFoot(primary?.url,'Elsődleges forrás')+(stale?' · Utolsó igazolt mérés':' · Aktuális lekérés')) +
+            sourceFoot(primary?.url,primary?.sha?'Forrás SHA '+primary.sha.slice(0,10):'Elsődleges forrás')+(stale?' · Korábbi mérés':' · Mérés: '+fmt(s.generated_at))) +
           sourceCard('Éles telepítés és elfogadás','Nem igazolt','Nincs auditált mérföldkőszám; az ismeretlen nem 0/14',
             'Helyi implementáció és teszt nem bizonyít éles átadást');
         $('next-steps').innerHTML = (s.milestones||[]).filter(x=>planSet.has(x.id)&&!releaseSet.has(x.id)).map(x=>
@@ -192,7 +192,7 @@
         $('stamp').textContent='Adatfrissítés: '+fmt(s.generated_at);
         $('milestone-summary').textContent=completed+' / '+s.total+' · kiadási és tesztbizonyíték';
         $('stats').innerHTML=
-          metric('Implementált mérföldkövek',completed+' / '+s.total,'Kiadási és tesztdokumentáció; elfogadás még szükséges')+
+          metric('Kiadási/tesztbizonyítékkal jelölt mérföldkövek',completed+' / '+s.total,'Dokumentumfelismerés, nem éles elfogadás')+
           metric('Alkalmazás- és WP-forrássorok',number(m.implementation_lines),number(m.implementation_file_count)+' fájl · '+number(m.implementation_nonblank_lines)+' nem üres sor')+
           metric('Frontend funkciókönyvtárak',m.feature_modules,(s.features||[]).join(', '))+
           metric('WordPress Core rétegek',m.core_layers,(s.core_layers||[]).join(', '))+
