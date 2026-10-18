@@ -43,6 +43,7 @@
     .panel{background:#fff;border:1px solid #e4e9e5;border-radius:18px;padding:25px;min-width:0}
     .panel h3{margin-bottom:15px}.event{padding:13px 0;border-bottom:1px solid #edf0ec;font-size:13px;line-height:1.6}
     .event:last-child{border:0}.event time{display:block;font-size:11px;color:#7f8b84}.empty{font-size:13px;color:#708078;line-height:1.7}
+    .notice{background:#fff2d6;border:1px solid #e8cb80;color:#654c18;border-radius:16px;padding:18px 22px;margin:0 0 30px;font-size:14px;line-height:1.65}.notice strong{display:block;font-size:16px;margin-bottom:4px}.notice[hidden]{display:none}
     .note{background:#eaf0e9;border:1px solid #d8e3d8;border-radius:17px;padding:21px 25px;font-size:13px;line-height:1.75;color:#3d5248}
     .note strong{display:block;margin-bottom:6px}.note p{margin:6px 0}
     .footer{display:flex;justify-content:space-between;flex-wrap:wrap;gap:15px;padding:24px 0 38px;border-top:1px solid #e0e7df;font-size:12px;color:#78867d}
@@ -82,6 +83,7 @@
     </div>
   </header>
   <main class="wrap">
+    <div class="notice" id="source-warning" role="status" hidden></div>
     <section class="section" aria-labelledby="stats-title">
       <div class="section-head"><h2 id="stats-title">Projekt számokban</h2><span class="muted small">Nem becslések: forrásalapú mérés vagy külön jelölt adat</span></div>
       <div class="grid" id="stats"><p class="empty">Forrásadatok betöltése…</p></div>
@@ -127,6 +129,27 @@
         const response = await fetch('./status.json?ts='+Date.now(),{cache:'no-store'});
         if (!response.ok) throw new Error('HTTP '+response.status);
         const s = await response.json(), m = s.metrics || {}, completed = Number(s.completed)||0;
+        if (s.source_unavailable) {
+          $('source-warning').hidden = false;
+          $('source-warning').innerHTML = '<strong>A tényleges fejlesztési státusz jelenleg nem ellenőrizhető</strong>A GitHub Actions nem fér hozzá a nmarton/ringato-dev repóhoz. Az oldal frissen publikált, de a fejlesztési adatok nem frissültek. A korábbi tervadat nem az aktuális készültség.';
+          $('done').textContent = '?';
+          $('orb').style.background = '#526863';
+          $('stamp').textContent = 'Utolsó sikertelen adatlekérés: '+fmt(s.generated_at);
+          $('milestone-summary').className = 'pill stale';
+          $('milestone-summary').textContent = 'Fejlesztői állapot: nem ellenőrizhető';
+          $('stats').innerHTML =
+            metric('Tervben ellenőrzésre kész', (s.plan_completed == null ? '—' : s.plan_completed+' / '+s.total), 'Csak a specifikáció régebbi állapota, nem az aktuális implementáció') +
+            metric('Valós fejlesztési kódsorok', '—', 'A fejlesztői repo jelenleg nem olvasható') +
+            metric('Frontend modulok és WP rétegek', '—', 'Nincs ellenőrizhető forrásleltár') +
+            metric('Saját WP pluginek', '—', 'Nincs ellenőrizhető forrásleltár') +
+            metric('Külön mért demó forrássorai', m.prototype_lines == null ? '—' : number(m.prototype_lines), (m.prototype_file_count == null ? '—' : m.prototype_file_count)+' fájl; csak a demó repó');
+          $('measurement').innerHTML = '<h3>Mi hiányzik a frissítéshez?</h3><p class="empty">A két repó külön tulajdonoshoz tartozik. A GitHub Actions számára olvasási hozzáférést kell adni a fejlesztői repóhoz (RINGATO_DEV_READ_TOKEN titkos változó, kizárólag Contents: read jogosultsággal). Amíg ez hiányzik, nem közlünk kitalált fejlesztési statisztikákat.</p>';
+          $('milestones').innerHTML = (s.milestones||[]).map(x => '<div class="milestone"><div class="num">'+escape(x.id)+'</div><div><strong>'+escape(x.name)+'</strong><div class="status">'+escape(x.state)+'</div></div></div>').join('');
+          $('activity').innerHTML = '<p class="empty">A fejlesztői commitok nem olvashatók, ezért a legutóbbi előrelépés ideje és a 12 órás aktivitási állapot nem állapítható meg. Ez nem bizonyít fejlesztési leállást.</p>';
+          $('method-notes').innerHTML = (s.notes||[]).map(n=>'<p>'+escape(n)+'</p>').join('');
+          $('provenance').innerHTML = '<p>'+sourceLink(s.links?.plan || 'https://github.com/realabu/ringato-pwa-demo','Régebbi mérföldkőterv')+' · '+sourceLink(s.links?.repo || 'https://github.com/nmarton/ringato-dev','Elsődleges fejlesztési repó')+'</p>';
+          return;
+        }
         $('done').textContent=completed;
         $('orb').style.background='conic-gradient(#c2e4aa 0 '+(completed/14*100)+'%,#526863 '+(completed/14*100)+'% 100%)';
         $('stamp').textContent='Adatfrissítés: '+fmt(s.generated_at);
