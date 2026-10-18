@@ -52,3 +52,11 @@ A generált `catalog.json` nem kerül a Gitbe. A `main` ágra commitoláskor a P
 **Elővigyázatosság:** offline beléptetésnél duplikációvédelem, prémium médiánál szolgáltatói/licencvizsgálat, gyermekes felhasználói körnél adatminimalizálás szükséges. Titkot, ügyféllistát, éles QR-tokent ne tegyünk az ötlettárba.
 
 **Első feltöltés:** 11 felhasználói ötlet, 2026. október 18. Az összes státusz „ötlet”, a RICE nem pontozott; a becslések alacsony bizonyosságúak.
+
+## Bővítés – 2026. október 19.
+
+A 2026-10-19-i tíz új szabad szöveges felvetésből **kilenc új ötletlap** (IDEA-013–021) készült, a látogatási sorozatokra és gyors bérletfelhasználásra épülő hűségjutalmazás pedig a meglévő **IDEA-007**-be került (a korábbi eredeti felvetés megtartásával). Az IDEA-012 országos lefedettségi kutatással együtt így **21 egyedi ötletlap** van.
+
+A Zeneovi-részvételi és motivációs jelzéseket (IDEA-017) tudatosan külön kezeljük a potenciálisan érzékeny gyermekmegfigyelési naplótól (IDEA-018). Az IDEA-019 gyűjtőalbum ötlete önálló Ringató-arculatot feltételez, nem harmadik fél márkájának használatát. Az IDEA-021 napi AI-programkeresése **csak jóváhagyásra váró piszkozatot** hozhat létre, nem automatikusan publikált programot. Az új ötletek „elemzett” státusza nem fejlesztési megrendelés; a RICE mindenhol adat hiányában üres.
+
+**Következő szabad azonosító:** `IDEA-022` (új ötlet előtt ismét ellenőrizendő).

@@ -7,7 +7,7 @@ header{background:#173b31;color:#fff;padding:34px max(20px,calc((100vw - 1120px)
 nav{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;font-size:13px}nav b{letter-spacing:.1em}
 h1{font-size:clamp(32px,5vw,53px);letter-spacing:-.045em;line-height:1.12;margin:34px 0 12px}
 header p{color:#d8e7dd;max-width:690px}.wrap{max-width:1120px;padding:0 20px;margin:auto}
-.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:-23px}.metric,.panel,.card{background:white;border:1px solid #dfe8df;border-radius:15px;box-shadow:0 4px 12px #123b270a}
+.metrics{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:-23px}.metric,.panel,.card{background:white;border:1px solid #dfe8df;border-radius:15px;box-shadow:0 4px 12px #123b270a}
 .metric{padding:16px}.metric strong{display:block;font-size:29px}.metric span{color:#63786b;font-size:12px}
 .controls{margin:20px 0;padding:18px;display:grid;grid-template-columns:2fr 1fr 1fr;gap:12px}
 label{font-size:12px;color:#557063;font-weight:700;display:block}input,select{width:100%;font:inherit;padding:11px;border:1px solid #c4d8ca;border-radius:8px;background:white;color:#21392f}
@@ -33,7 +33,7 @@ footer{margin:32px 0;color:#667a6c;font-size:12px}
 <main class="wrap">
 <div class="metrics" id="metrics"><div class="metric">Betöltés…</div></div>
 <section class="panel controls">
-<div><label for="search">Keresés</label><input id="search" type="search" placeholder="QR, offline, család…"></div>
+<div><label for="search">Keresés</label><input id="search" type="search" placeholder="QR, Zeneovi, mondóka, program…"></div>
 <div><label for="lane">Besorolás</label><select id="lane"><option value="">Összes</option><option value="mvp-review">MVP-vizsgálat</option><option value="later-feature">Későbbi fejlesztés</option><option value="business-experiment">Üzleti kísérlet</option><option value="research">Kutatás</option></select></div>
 <div><label for="sort">Rendezés</label><select id="sort"><option value="id">Azonosító</option><option value="effort">Munka</option><option value="value">Felhasználói + működési érték</option></select></div>
 </section>
@@ -56,7 +56,7 @@ var names={"mvp-review":"MVP-vizsgálat","later-feature":"Későbbi fejlesztés"
 function make(tag,text,cl){var n=document.createElement(tag);if(text!==undefined)n.textContent=String(text);if(cl)n.className=cl;return n}
 function clean(s){return s.replace(/\*\*/g,"")}
 function metrics(){
-var a=[["Ötlet",items.length],["MVP-vizsgálat",items.filter(x=>x.lane==="mvp-review").length],["Későbbi funkció",items.filter(x=>x.lane==="later-feature").length],["Üzleti kísérlet",items.filter(x=>x.lane==="business-experiment").length]];
+var a=[["Ötlet",items.length],["MVP-vizsgálat",items.filter(x=>x.lane==="mvp-review").length],["Későbbi funkció",items.filter(x=>x.lane==="later-feature").length],["Üzleti kísérlet",items.filter(x=>x.lane==="business-experiment").length],["Kutatás",items.filter(x=>x.lane==="research").length]];
 $("metrics").replaceChildren();a.forEach(v=>{var n=make("div",undefined,"metric");n.append(make("strong",v[1]),make("span",v[0]));$("metrics").append(n)})
 }
 function render(){
