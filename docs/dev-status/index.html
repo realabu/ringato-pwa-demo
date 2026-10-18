@@ -29,6 +29,15 @@
     main{padding:47px 0 70px}.section-head{display:flex;justify-content:space-between;gap:18px;align-items:baseline;margin:6px 0 23px}
     h2{margin:0;font-size:24px;letter-spacing:-.04em}h3{margin:0;font-size:16px}
     .muted{color:#6e7c77}.small{font-size:12px}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:20px 0 42px}
+    .source-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:20px 0}
+    .source-card{background:#fff;border:1px solid #dce5df;border-radius:17px;padding:22px;min-width:0}
+    .source-title{font-size:14px;font-weight:750}.source-value{font-size:34px;font-weight:800;letter-spacing:-.05em;margin:10px 0 5px}
+    .source-detail{font-size:12px;color:#66786e;line-height:1.6}.source-foot{font-size:11px;margin-top:12px;line-height:1.7;overflow-wrap:anywhere}
+    .source-legend{font-size:12px;color:#64746d;line-height:1.6;margin:10px 0 30px}
+    .milestone-badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}
+    .milestone-badges span{border-radius:8px;padding:4px 7px;font-size:10px;background:#eef1ef;color:#54675c}
+    .milestone-badges .plan-ready{background:#e6edfc;color:#37578d}
+    .milestone-badges .release-ready{background:#e0f1e0;color:#25683c}
     .stat{border:1px solid #e3e8e3;border-radius:16px;background:#fff;padding:23px;min-height:155px}
     .stat-label{font-size:12px;color:#6c7d75;font-weight:650;line-height:1.45;min-height:33px}
     .stat-value{font-size:32px;letter-spacing:-.055em;font-weight:780;margin:13px 0 3px;line-height:1.1}
@@ -51,7 +60,7 @@
     .pill{background:#e9eee6;border-radius:100px;padding:5px 10px;font-weight:700;font-size:11px}
     .pill.working{background:#dbedda;color:#1c6b42}.pill.stale{background:#fff2d6;color:#785d19}
     @media(max-width:850px){.hero{grid-template-columns:1fr;gap:30px;padding:40px 0 54px}.visual{max-width:230px;justify-self:start}.grid{grid-template-columns:repeat(2,1fr)}.panels{grid-template-columns:1fr}}
-    @media(max-width:570px){.wrap{padding:0 16px}.toplink{font-size:11px;padding:8px 10px}.hero{gap:28px}.milestones{grid-template-columns:1fr}.grid{gap:9px}.stat{padding:17px;min-height:138px}.stat-value{font-size:27px}.panel{padding:19px}.section-head{align-items:flex-start;flex-direction:column}.meta{margin-top:20px}}
+    @media(max-width:570px){.source-grid{grid-template-columns:1fr}.wrap{padding:0 16px}.toplink{font-size:11px;padding:8px 10px}.hero{gap:28px}.milestones{grid-template-columns:1fr}.grid{gap:9px}.stat{padding:17px;min-height:138px}.stat-value{font-size:27px}.panel{padding:19px}.section-head{align-items:flex-start;flex-direction:column}.meta{margin-top:20px}}
     @media(prefers-reduced-motion:no-preference){.orb{animation:appear .8s ease-out both}@keyframes appear{from{opacity:.3;transform:scale(.96)}to{opacity:1;transform:scale(1)}}}
   </style>
 </head>
@@ -76,7 +85,7 @@
         <div class="visual" aria-label="Megvalósított mérföldkövek aránya">
           <div class="orb" id="orb"><div class="orb-inner">
             <div class="big"><span id="done">—</span><small> / 14</small></div>
-            <div class="orb-note">implementálva,<br>ellenőrzésre kész</div>
+            <div class="orb-note">kiadási és teszt-<br>dokumentummal jelölt</div>
           </div></div>
         </div>
       </div>
@@ -85,6 +94,11 @@
   <main class="wrap">
     <div class="notice" id="source-warning" role="status" hidden></div>
     <div class="note" id="refresh-warning" role="status" hidden></div>
+    <section class="section" aria-labelledby="sources-title">
+      <div class="section-head"><h2 id="sources-title">Előrehaladás forrásonként</h2><span class="muted small">Eltérő bizonyítékok, eltérő készültségi szintek</span></div>
+      <div class="source-grid" id="source-progress"><p class="empty">Források összevetése…</p></div>
+      <p class="source-legend">A 14 mérföldkő a fejlesztési terv felosztása. A terv szerinti készültség, a fejlesztői kiadás és az éles elfogadás nem ugyanaz. A forráskód mennyisége nem alakítható át megbízhatóan mérföldkőszámmá.</p>
+    </section>
     <section class="section" aria-labelledby="stats-title">
       <div class="section-head"><h2 id="stats-title">Projekt számokban</h2><span class="muted small">Nem becslések: forrásalapú mérés vagy külön jelölt adat</span></div>
       <div class="grid" id="stats"><p class="empty">Forrásadatok betöltése…</p></div>
@@ -103,9 +117,7 @@
       </div>
       <div class="panel">
         <h3>Mi következik?</h3>
-        <div class="event"><strong>MF07 · Jegyek és beléptetés</strong><div class="muted">Vásárlás, jegy/bérlet, QR és személyzeti ellenőrzés</div></div>
-        <div class="event"><strong>MF08 · Programfoglalás</strong><div class="muted">Férőhelyek, foglalás és időablakok</div></div>
-        <div class="event"><strong>Integrációs próbák</strong><div class="muted">Barion/Billingo, Bunny Stream, Better Messages, push</div></div>
+        <div id="next-steps" class="empty">A források közötti eltérések betöltése…</div>
       </div>
     </section>
     <section class="note" aria-labelledby="method-title">
@@ -125,11 +137,34 @@
       const fmt = s => s ? new Date(s).toLocaleString('hu-HU',{timeZone:'Europe/Budapest',dateStyle:'medium',timeStyle:'short'}) : 'nem állapítható meg';
       const number = n => Number(n).toLocaleString('hu-HU');
       const sourceLink = (url, label) => '<a href="'+escape(url)+'">'+escape(label)+'</a>';
+      const sourceCard = (name, value, detail, foot) => '<article class="source-card"><div class="source-title">'+escape(name)+'</div><div class="source-value">'+escape(value)+'</div><div class="source-detail">'+escape(detail)+'</div><div class="source-foot">'+foot+'</div></article>';
       const metric = (name, value, foot) => '<div class="stat"><div class="stat-label">'+escape(name)+'</div><div class="stat-value">'+escape(value == null?'—':value)+'</div><div class="stat-foot">'+escape(foot)+'</div></div>';
       const load = async () => {
         const response = await fetch('./status.json?ts='+Date.now(),{cache:'no-store'});
         if (!response.ok) throw new Error('HTTP '+response.status);
         const s = await response.json(), m = s.metrics || {}, completed = Number(s.completed)||0;
+        const total = Number(s.total)||14;
+        const planIds = Array.isArray(s.plan_ready_milestone_ids) ? s.plan_ready_milestone_ids : Array.from({length:Math.min(Number(s.plan_completed)||0,total)},(_,i)=>'MF'+String(i+1).padStart(2,'0'));
+        const planSet = new Set(planIds);
+        const releaseSet = new Set((s.milestones||[]).filter(x=>x.state==='Ellenőrzésre kész').map(x=>x.id));
+        const stale = s.source_unavailable || (s.refresh && s.refresh.source_access===false);
+        const primary = (s.repositories||[]).find(r=>r.role==='primary');
+        const secondary = (s.repositories||[]).find(r=>r.role==='plan_and_prototype');
+        const sourceFoot = (url,label) => url ? sourceLink(url,label) : escape(label);
+        $('source-progress').innerHTML =
+          sourceCard('Mérföldkőterv',planIds.length+' / '+total,'A tervben deklarált lokális készültség; nem független tesztigazolás',
+            sourceFoot(s.links?.plan,'Tervdokumentum')+' · '+sourceFoot(secondary?.url,'Tervforrás SHA')) +
+          sourceCard('Fejlesztői kiadás és tesztek',completed+' / '+total,(stale?'Korábban ellenőrzött, most nem frissíthető':'Kiadási és helyi tesztdokumentum alapján felismert átadás'),
+            sourceFoot(primary?.url,'Fejlesztői forrás SHA')+' · '+sourceFoot('./status.json','Mérési pillanatkép')) +
+          sourceCard('Alkalmazás- és backend-kód',
+            m.implementation_file_count==null?'Nem mérhető':number(m.implementation_file_count)+' fájl',
+            (m.implementation_lines==null?'Forrásmérés nem érhető el':number(m.implementation_lines)+' fizikai sor · '+number(m.implementation_nonblank_lines)+' nem üres sor')+'; nem /14-es készültségi érték',
+            sourceFoot(primary?.url,'Elsődleges forrás')+(stale?' · Utolsó igazolt mérés':' · Aktuális lekérés')) +
+          sourceCard('Éles telepítés és elfogadás','Nem igazolt','Nincs auditált mérföldkőszám; az ismeretlen nem 0/14',
+            'Helyi implementáció és teszt nem bizonyít éles átadást');
+        $('next-steps').innerHTML = (s.milestones||[]).filter(x=>planSet.has(x.id)&&!releaseSet.has(x.id)).map(x=>
+          '<div class="event"><strong>'+escape(x.id+' · '+x.name)+'</strong><div class="muted">A terv szerint kész; a kiadási/tesztbizonyíték felismerése még hiányzik</div></div>'
+        ).join('') || '<p class="empty">Nincs eltérés a terv szerinti és a dokumentummal jelölt lokális átadások között. A következő fejlesztési feladatokhoz a mérföldkőtervet kell követni.</p>';
         if (s.source_unavailable) {
           $('source-warning').hidden = false;
           $('source-warning').innerHTML = '<strong>A tényleges fejlesztési státusz jelenleg nem ellenőrizhető</strong>A GitHub Actions nem fér hozzá a nmarton/ringato-dev repóhoz. Az oldal frissen publikált, de a fejlesztési adatok nem frissültek. A korábbi tervadat nem az aktuális készültség.';
@@ -155,7 +190,7 @@
         $('done').textContent=completed;
         $('orb').style.background='conic-gradient(#c2e4aa 0 '+(completed/14*100)+'%,#526863 '+(completed/14*100)+'% 100%)';
         $('stamp').textContent='Adatfrissítés: '+fmt(s.generated_at);
-        $('milestone-summary').textContent=completed+' / '+s.total+' · helyi implementációs átadás';
+        $('milestone-summary').textContent=completed+' / '+s.total+' · kiadási és tesztbizonyíték';
         $('stats').innerHTML=
           metric('Implementált mérföldkövek',completed+' / '+s.total,'Kiadási és tesztdokumentáció; elfogadás még szükséges')+
           metric('Alkalmazás- és WP-forrássorok',number(m.implementation_lines),number(m.implementation_file_count)+' fájl · '+number(m.implementation_nonblank_lines)+' nem üres sor')+
@@ -169,11 +204,11 @@
         const names={frontend:'React PWA',wordpress_plugins:'Saját WP pluginek',local_mu_plugins:'Helyi MU-plugin',tests:'Tesztek (külön)',generated:'Generált kód (külön)',tooling:'Fejlesztési eszközök (külön)'};
         $('measurement').innerHTML='<h3>Mérési bontás és bizonyítékok</h3><div style="overflow-x:auto"><table style="width:100%;text-align:left;line-height:1.8;font-size:13px"><thead><tr><th>Kategória</th><th>Fájl</th><th>Fizikai sor</th><th>Nem üres sor</th></tr></thead><tbody>'+Object.entries(s.breakdown||{}).map(([k,v])=>'<tr><td>'+escape(names[k]||k)+'</td><td>'+number(v.files)+'</td><td>'+number(v.lines)+'</td><td>'+number(v.nonblank)+'</td></tr>').join('')+'</tbody></table></div><p class="small">A fő összeg az első három sor összege. '+sourceLink('./status.json','Géppel olvasható adat és teljes fájlleltár')+'</p><p class="small">'+(s.plugins||[]).map(p=>sourceLink(p.url,p.name+' '+p.version)).join(' · ')+'</p><p class="small">Helyi telepítés: '+sourceLink(s.local_installation_report.url,'MF06 teszt- és telepítési jelentés')+'. Ez dokumentált helyi eredmény, nem aktuális éles pluginleltár.</p><details><summary>WP opciókulcsok írási bizonyítékkal</summary>'+Object.entries(s.wp_option_keys||{}).map(([k,urls])=>'<p class="small">'+sourceLink(urls[0],k)+'</p>').join('')+'</details>';
         $('method-notes').innerHTML=(s.notes||[]).map(n=>'<p>'+escape(n)+'</p>').join('');
-        $('provenance').innerHTML='<p><b>Forráspontok:</b> '+(s.repositories||[]).map(r=>sourceLink(r.url,r.name+' @ '+r.sha.slice(0,10))).join(' · ')+'</p><p>'+sourceLink(s.links.plan,'Mérföldkőterv')+' · Terv szerinti átadás: '+s.plan_completed+'/14; kiadási bizonyíték alapján: '+completed+'/14. Az eltérés oka: a fejlesztési repó újabb MF05/MF06 kiadást is tartalmaz.</p>';
+        $('provenance').innerHTML='<p><b>Forráspontok:</b> '+(s.repositories||[]).map(r=>sourceLink(r.url,r.name+' @ '+r.sha.slice(0,10))).join(' · ')+'</p><p>'+sourceLink(s.links.plan,'Mérföldkőterv')+' · Terv szerinti lokális készültség: '+planIds.length+'/'+total+'; kiadási/tesztdokumentummal felismert: '+completed+'/'+total+'. A két érték külön forrásból származik; az eltérést mérföldkövenként mutatjuk.</p>';
         if(Date.now()-Date.parse(s.generated_at)>3*3600000) $('stamp').textContent+=' · Elavult pillanatkép, frissítés ellenőrizendő';
         $('milestones').innerHTML=(s.milestones||[]).map(x=>{
           const ready=x.state==='Ellenőrzésre kész';
-          return '<div class="milestone '+(ready?'ready':'')+'"><div class="num">'+escape(x.id)+'</div><div><strong>'+escape(x.name)+'</strong><div class="status">'+(ready?'✓ ':'')+escape(x.state)+'</div><div class="small">'+Object.entries(x.evidence||{}).map(([k,url])=>sourceLink(url,k==='release'?'Kiadás':'Tesztek')).join(' · ')+'</div></div></div>';
+          return '<div class="milestone '+(ready?'ready':'')+'"><div class="num">'+escape(x.id)+'</div><div><strong>'+escape(x.name)+'</strong><div class="milestone-badges"><span class="'+(planSet.has(x.id)?'plan-ready':'')+'">Terv: '+(planSet.has(x.id)?'késznek jelölt':'tervezett')+'</span><span class="'+(ready?'release-ready':'')+'">Kiadás: '+(ready?'dokumentált':'nem igazolt')+'</span></div><div class="small">'+Object.entries(x.evidence||{}).map(([k,url])=>sourceLink(url,k==='release'?'Kiadás':'Tesztek')).join(' · ')+'</div></div></div>';
         }).join('');
         const events=s.progress_events||[];
         let activity='';
