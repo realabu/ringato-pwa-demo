@@ -1,10 +1,10 @@
 # Új IDEA-sablon
 
-Másold a következőt egy új `IDEA-012-rovid-cim.md` fájlba (az azonosítót és minden tartalmat cseréld ki). Ne tárolj valós személyes adatot.
+Másold a következőt egy új `IDEA-022-rovid-cim.md` fájlba (az azonosítót és minden tartalmat cseréld ki). Ne tárolj valós személyes adatot.
 
 ```yaml
 ---
-id: "IDEA-012"
+id: "IDEA-022"
 title: "Új ötlet"
 area: "UX"
 lane: "later-feature"
@@ -24,8 +24,8 @@ rice_impact: null
 rice_confidence: null
 rice_effort: null
 related_milestones: ["MF07"]
-created: "2026-10-18"
-updated: "2026-10-18"
+created: "2026-10-19"
+updated: "2026-10-19"
 origin: "Szabad szöveges ötlet"
 communication_angle: "Későbbi kommunikációs téma"
 ---
