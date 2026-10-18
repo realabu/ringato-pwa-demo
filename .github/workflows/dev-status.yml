@@ -14,6 +14,10 @@ on:
       - "scripts/dev_status.py"
       - "scripts/test_dev_status.py"
       - "docs/dev-status/**"
+      - "docs/ideas/**"
+      - "AGENTS.md"
+      - "scripts/build_ideas.py"
+      - "scripts/test_build_ideas.py"
       - ".github/workflows/dev-status.yml"
   schedule:
     # GitHub Actions cron is UTC, and execution may be delayed.
@@ -66,13 +70,19 @@ jobs:
       - name: Preserve verified snapshot when private source is unavailable
         if: steps.development.outcome != 'success'
         run: python3 scripts/dev_status.py --fallback
+      - name: Validate ideas catalog
+        run: python3 -m unittest discover -s scripts -p 'test_build_ideas.py'
+      - name: Generate ideas catalog
+        run: python3 scripts/build_ideas.py --output docs/ideas/catalog.json
       - name: Prepare static Pages artifact
         run: |
-          mkdir -p _site/dev-status
+          mkdir -p _site/dev-status _site/ideas
           cp docs/dev-status/index.html docs/dev-status/status.json _site/dev-status/
+          cp docs/ideas/index.html docs/ideas/catalog.json _site/ideas/
           cp index.html app.html app.js v13.js sw.js icon.svg manifest.webmanifest virag-terv.html _site/
           touch _site/.nojekyll
           python3 -m json.tool _site/dev-status/status.json > /dev/null
+          python3 -m json.tool _site/ideas/catalog.json > /dev/null
       - name: Upload site
         uses: actions/upload-pages-artifact@v4
         with:
