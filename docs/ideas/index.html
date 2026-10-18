@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="hu"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ringató Virággal · Termékötlettár</title>
+<style>
+:root{font-family:system-ui,-apple-system,sans-serif;background:#f6f7f3;color:#21392f}*{box-sizing:border-box}body{margin:0;line-height:1.55}a{color:#166b56}
+header{background:#173b31;color:#fff;padding:34px max(20px,calc((100vw - 1120px)/2)) 52px}header a{color:#d5f1df}
+nav{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;font-size:13px}nav b{letter-spacing:.1em}
+h1{font-size:clamp(32px,5vw,53px);letter-spacing:-.045em;line-height:1.12;margin:34px 0 12px}
+header p{color:#d8e7dd;max-width:690px}.wrap{max-width:1120px;padding:0 20px;margin:auto}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:-23px}.metric,.panel,.card{background:white;border:1px solid #dfe8df;border-radius:15px;box-shadow:0 4px 12px #123b270a}
+.metric{padding:16px}.metric strong{display:block;font-size:29px}.metric span{color:#63786b;font-size:12px}
+.controls{margin:20px 0;padding:18px;display:grid;grid-template-columns:2fr 1fr 1fr;gap:12px}
+label{font-size:12px;color:#557063;font-weight:700;display:block}input,select{width:100%;font:inherit;padding:11px;border:1px solid #c4d8ca;border-radius:8px;background:white;color:#21392f}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 275px;gap:15px}.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.card{padding:18px;display:flex;flex-direction:column;gap:9px;min-height:235px}.card h2{font-size:18px;line-height:1.3;margin:0}.card p{font-size:13px;color:#50695b;margin:0;flex:1}
+.small{font-size:12px;color:#647c6d}.chip{font-size:11px;background:#edf5ee;border-radius:20px;color:#3a654e;padding:4px 8px;margin-right:6px}.mvp{background:#fff0d9;color:#7f581d}
+button{cursor:pointer}.card button{border:0;background:none;color:#176c55;font-weight:750;text-align:left;padding:7px 0}
+aside{position:sticky;top:15px;padding:20px}aside h2{font-size:18px;margin-top:0}aside p{font-size:13px;color:#52685b}
+.note{padding:12px;border-left:3px solid #cdb078;background:#faf5e9}
+#detail{margin:18px 0;padding:23px;scroll-margin-top:17px}#detail[hidden]{display:none}
+.head{display:flex;justify-content:space-between;gap:15px}.head h2{font-size:25px;margin:4px 0 12px;line-height:1.2}
+.close,.print{background:white;border:1px solid #c8d9ca;border-radius:8px;padding:9px}
+.values{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0}.values div{text-align:center;background:#eff5f0;border-radius:8px;padding:11px}.values b{display:block}.values small{font-size:10px}
+.sales{border-radius:12px;border:1px solid #c4dfcb;background:linear-gradient(110deg,#e8f5ea,#f8f9f2);padding:16px;margin:18px 0}.sales h3{margin:5px 0}.sales p{font-size:14px}
+.article h1{font-size:22px}.article h2{font-size:17px;margin:21px 0 6px}.article p,.article li{font-size:14px}.article blockquote{margin:9px 0;padding:8px 13px;background:#f4faf6;border-left:3px solid #9bcab0}
+footer{margin:32px 0;color:#667a6c;font-size:12px}
+@media(max-width:920px){.layout{grid-template-columns:1fr}aside{position:static}}
+@media(max-width:650px){.metrics{grid-template-columns:repeat(2,1fr)}.controls,.cards{grid-template-columns:1fr}.values{grid-template-columns:repeat(2,1fr)}}
+@media print{header,.controls,.metrics,.cards,aside,footer,.article,.close,.print{display:none!important}.layout{display:block}#detail{border:0;box-shadow:none}.sales{break-inside:avoid}}
+</style></head><body>
+<header><nav><b>✦ RINGATÓ · TERMÉKROADMAP</b><a href="../dev-status/">Fejlesztési státusz ↗</a></nav><h1>Ötletekből jobb<br>Ringató-élmény</h1>
+<p>UX-javítások, későbbi funkciók és üzleti lehetőségek. Az ötletek nem automatikusan megrendelt fejlesztések.</p></header>
+<main class="wrap">
+<div class="metrics" id="metrics"><div class="metric">Betöltés…</div></div>
+<section class="panel controls">
+<div><label for="search">Keresés</label><input id="search" type="search" placeholder="QR, offline, család…"></div>
+<div><label for="lane">Besorolás</label><select id="lane"><option value="">Összes</option><option value="mvp-review">MVP-vizsgálat</option><option value="later-feature">Későbbi fejlesztés</option><option value="business-experiment">Üzleti kísérlet</option><option value="research">Kutatás</option></select></div>
+<div><label for="sort">Rendezés</label><select id="sort"><option value="id">Azonosító</option><option value="effort">Munka</option><option value="value">Felhasználói + működési érték</option></select></div>
+</section>
+<div class="layout"><div><div class="cards" id="cards"></div>
+<section class="panel" id="detail" hidden><div class="head"><div><div class="small" id="detailid"></div><h2 id="detailtitle"></h2></div><button class="close" id="close">Bezárás ×</button></div>
+<div class="values" id="values"></div><p class="small" id="detailmeta"></p>
+<div class="sales"><div class="small">VIRÁGNAK SZÓLÓ AJÁNLATI ELŐZETES</div><h3 id="salestitle"></h3><p id="salesbody"></p><button class="print" id="print">Nyomtatható kártya</button><p class="small">Nem árajánlat vagy vállalt kiadási dátum.</p></div>
+<div class="article" id="article"></div><p><a id="source" target="_blank" rel="noopener">Markdown-forrás a GitHubon ↗</a></p></section></div>
+<aside class="panel"><h2>Hogyan működik?</h2><p>Az MVP-vizsgálat meglévő hibát vagy alapvető UX-gondot is jelezhet. Először a tényleges specifikációt kell ellenőrizni.</p>
+<div class="note"><p><b>Becslések:</b> a munkanapok és az 1–5 pontszámok hipotézisek. RICE csak megalapozott eléréssel, hatással, bizonyossággal és efforttal.</p></div>
+<p>Új ötletet egy GitHub-hozzáféréssel rendelkező AI-asszisztens az <strong>AGENTS.md</strong> szerint dolgozhat fel; a HTML automatikusan frissül.</p>
+<p><a href="https://github.com/realabu/ringato-pwa-demo/tree/main/docs/ideas" target="_blank" rel="noopener">Ötletlapok és útmutató ↗</a></p></aside></div>
+<footer>A Markdown az elsődleges adatforrás. Az ötletek nem módosítják a vállalt MVP-t.</footer>
+</main>
+<script>
+(function(){
+"use strict";
+var items=[];var $=id=>document.getElementById(id);
+var names={"mvp-review":"MVP-vizsgálat","later-feature":"Későbbi fejlesztés","business-experiment":"Üzleti kísérlet","research":"Kutatás"};
+function make(tag,text,cl){var n=document.createElement(tag);if(text!==undefined)n.textContent=String(text);if(cl)n.className=cl;return n}
+function clean(s){return s.replace(/\*\*/g,"")}
+function metrics(){
+var a=[["Ötlet",items.length],["MVP-vizsgálat",items.filter(x=>x.lane==="mvp-review").length],["Későbbi funkció",items.filter(x=>x.lane==="later-feature").length],["Üzleti kísérlet",items.filter(x=>x.lane==="business-experiment").length]];
+$("metrics").replaceChildren();a.forEach(v=>{var n=make("div",undefined,"metric");n.append(make("strong",v[1]),make("span",v[0]));$("metrics").append(n)})
+}
+function render(){
+var q=$("search").value.toLocaleLowerCase("hu-HU"),l=$("lane").value,s=$("sort").value;
+var arr=items.filter(x=>(!l||x.lane===l)&&(!q||(x.title+" "+x.area+" "+x.markdown).toLocaleLowerCase("hu-HU").includes(q)));
+if(s==="effort")arr.sort((a,b)=>a.effort_min_days-b.effort_min_days);
+else if(s==="value")arr.sort((a,b)=>(b.user_value+b.operations_value)-(a.user_value+a.operations_value));
+else arr.sort((a,b)=>a.id.localeCompare(b.id));
+$("cards").replaceChildren();
+if(!arr.length){$("cards").append(make("p","Nincs ilyen ötlet."));return}
+arr.forEach(x=>{
+var n=make("article",undefined,"card"),intro=(x.markdown.split("## Megoldandó probléma")[1]||"").split("##")[0].trim();
+var labels=make("div");labels.append(make("span",names[x.lane],"chip"+(x.lane==="mvp-review"?" mvp":"")),make("span",x.effort_size+" · "+x.effort_min_days+"–"+x.effort_max_days+" nap","chip"));
+var b=make("button","Részletek és ajánlat →");b.addEventListener("click",()=>{location.hash=x.id;show(x)});
+n.append(make("div",x.id+" · "+x.area,"small"),make("h2",x.title),labels,make("p",intro),b);$("cards").append(n)
+})
+}
+function markdown(md){
+var root=$("article"),ul=null,q=null;root.replaceChildren();
+md.split(/\r?\n/).forEach(line=>{
+var t=line.trim();if(!t){ul=null;q=null;return}
+if(t.startsWith("# ")){ul=null;q=null;root.append(make("h1",clean(t.slice(2))));return}
+if(t.startsWith("## ")){ul=null;q=null;root.append(make("h2",clean(t.slice(3))));return}
+if(t.startsWith("> ")){ul=null;if(!q){q=make("blockquote");root.append(q)}q.append(make("p",clean(t.slice(2))));return}
+if(t.startsWith("- ")){q=null;if(!ul){ul=make("ul");root.append(ul)}ul.append(make("li",clean(t.slice(2))));return}
+ul=null;q=null;root.append(make("p",clean(t)))
+})
+}
+function show(x){
+$("detail").hidden=false;$("detailid").textContent=x.id+" · "+x.area+" · "+names[x.lane];$("detailtitle").textContent=x.title;
+$("detailmeta").textContent=x.effort_size+" · "+x.effort_min_days+"–"+x.effort_max_days+" nap (előzetes) · RICE: "+(x.rice_score===null?"nincs adat":x.rice_score)+" · "+x.related_milestones.join(", ");
+$("values").replaceChildren();
+[["Ügyfélérték",x.user_value],["Üzemeltetés",x.operations_value],["Bevétel",x.revenue_value],["Kommunikáció",x.communication_value]].forEach(v=>{var d=make("div");d.append(make("b",v[1]+"/5"),make("small",v[0]));$("values").append(d)});
+$("salestitle").textContent=x.title;
+$("salesbody").textContent=(x.markdown.split("## Virágnak szóló rövid ajánlat")[1]||"").split("## ")[0].trim();
+markdown(x.markdown);
+$("source").href="https://github.com/realabu/ringato-pwa-demo/blob/main/docs/ideas/"+encodeURIComponent(x.filename);
+$("detail").scrollIntoView({behavior:"smooth",block:"start"})
+}
+function openHash(){var x=items.find(x=>x.id===decodeURIComponent(location.hash.slice(1)));if(x)show(x)}
+["search","lane","sort"].forEach(id=>$(id).addEventListener(id==="search"?"input":"change",render));
+$("close").addEventListener("click",()=>{$("detail").hidden=true;history.replaceState(null,"",location.pathname+location.search)});
+$("print").addEventListener("click",()=>window.print());window.addEventListener("hashchange",openHash);
+fetch("catalog.json",{cache:"no-cache"}).then(r=>{if(!r.ok)throw Error(r.status);return r.json()}).then(d=>{items=d.ideas;metrics();render();openHash()}).catch(()=>{$("cards").replaceChildren(make("p","A katalógus nem tölthető be. A Markdown-források a GitHubon elérhetők."))})
+})();
+</script></body></html>
