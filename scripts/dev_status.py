@@ -7,6 +7,7 @@ import json
 import pathlib
 import re
 import subprocess
+import urllib.request
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 PLAN = 'docs/implementation-plan/10-inkrementalis-merfoldkovek.md'
@@ -142,7 +143,7 @@ def generate(dev):
         fingerprint.update(p.encode() + b'\0' + re.sub(rb'\s+', b'', (dev / p).read_bytes()) + b'\0')
     fingerprint.update(json.dumps(sorted(states)).encode())
     return {
-        'schema': 2, 'generated_at': dt.datetime.now(dt.timezone.utc).isoformat(timespec='seconds'),
+        'schema': 2, 'refresh': {'source_access': True}, 'generated_at': dt.datetime.now(dt.timezone.utc).isoformat(timespec='seconds'),
         'completed': len(states), 'total': 14, 'milestones': milestones,
         'repositories': [
             {'name': DEV, 'role': 'primary', 'sha': dev_sha, 'branch': git(dev, 'branch', '--show-current'), 'url': f'https://github.com/{DEV}/commit/{dev_sha}'},
@@ -173,12 +174,33 @@ def generate(dev):
     }
 
 
+def preserved_snapshot():
+    """Keep original measurement date; never turn a failed read into fresh numbers."""
+    baseline = json.loads((ROOT / 'docs/dev-status/baseline.json').read_text())
+    candidates = [baseline]
+    try:
+        with urllib.request.urlopen('https://realabu.github.io/ringato-pwa-demo/dev-status/status.json', timeout=15) as response:
+            previous = json.load(response)
+        if previous.get('schema') == 2 and previous.get('source_commit') and previous.get('metrics', {}).get('implementation_lines') is not None:
+            candidates.append(previous)
+    except (OSError, ValueError):
+        pass
+    snapshot = max(candidates, key=lambda s: dt.datetime.fromisoformat(s['generated_at']))
+    snapshot['refresh'] = {'source_access': False,
+                           'attempted_at': dt.datetime.now(dt.timezone.utc).isoformat(timespec='seconds'),
+                           'message': 'A privát fejlesztési repó nem olvasható a frissítőből. Az utolsó igazolt mérés látható; ez nem inaktivitási bizonyíték. RINGATO_DEV_READ_TOKEN hozzáférés szükséges.'}
+    return snapshot
+
+
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--dev-repo', required=True, type=pathlib.Path)
+    parser.add_argument('--dev-repo', type=pathlib.Path)
+    parser.add_argument('--fallback', action='store_true')
     parser.add_argument('--output', default='docs/dev-status/status.json')
     args = parser.parse_args()
-    result = generate(args.dev_repo.resolve())
+    if not args.fallback and not args.dev_repo:
+        parser.error('--dev-repo is required unless --fallback is used')
+    result = preserved_snapshot() if args.fallback else generate(args.dev_repo.resolve())
     target = ROOT / args.output
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n')

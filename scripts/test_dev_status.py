@@ -2,7 +2,8 @@ import pathlib
 import subprocess
 import tempfile
 import unittest
-from dev_status import is_source, measure, source_events, generate
+from dev_status import is_source, measure, source_events, generate, preserved_snapshot
+from unittest.mock import patch
 
 
 class MetricsTests(unittest.TestCase):
@@ -42,6 +43,14 @@ class MetricsTests(unittest.TestCase):
             path.unlink()
             commit('remove code')
             self.assertEqual([e['title'] for e in source_events(root)], ['remove code', 'source'])
+
+    def test_failed_refresh_preserves_verified_time_and_numbers(self):
+        with patch('dev_status.urllib.request.urlopen', side_effect=OSError('offline')):
+            result = preserved_snapshot()
+        self.assertFalse(result['refresh']['source_access'])
+        self.assertEqual(result['metrics']['implementation_lines'], 4464)
+        self.assertEqual(result['source_commit'], '960319f6c0e66836068cd12cec20023f15a69a20')
+        self.assertNotEqual(result['generated_at'], result['refresh']['attempted_at'])
 
     def test_missing_source_fails_closed(self):
         with tempfile.TemporaryDirectory() as folder:

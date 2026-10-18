@@ -1,11 +1,12 @@
 # Dev Status mérési szabályok
 
-Az óránkénti `dev-status.yml` két teljes Git-checkoutból olvas: elsődleges a
+Az óránkénti `dev-status.yml` két teljes Git-checkoutból olvas, ha a privát forrásrepo hitelesítése elérhető: elsődleges a
 `nmarton/ringato-dev` alapértelmezett ága, terv és demó a `realabu/ringato-pwa-demo/main`.
 A JSON mindkettő pontos commitját közli; a bizonyítéklinkek ezekhez kötöttek.
 A fejlesztői repó kódját a generátor nem futtatja. Hibás vagy hiányzó checkout
-esetén a futás hibával megáll; nem publikál nullákkal helyettesített adatokat.
-A Pages korábbi pillanatképe megmarad, három óra után elavultságjelzést kap.
+esetén nem készül új mérés: a korábbi ellenőrzött pillanatkép eredeti mérési idejével
+és feltűnő hozzáférési hibaüzenettel marad látható. Nincs nullával helyettesített
+adat vagy mesterségesen friss mérési idő. Három óra után elavultságjelzés is látszik.
 
 ## Mit mérünk?
 
@@ -36,6 +37,8 @@ is látszanak, a kizárólag dokumentációs és formázási commitok nem.
 A commit címe változatlanul forrásidézet; nem a generátor funkcionális minősítése.
 A `progress_fingerprint` segédjel a forrás és a kész mérföldkőhalmaz változásához;
 a ChatGPT-figyelés tartalmi diffellenőrzése dönti el, történt-e érdemi előrelépés.
+A dashboard címe: https://realabu.github.io/ringato-pwa-demo/dev-status/ ; a PWA gyökere megmarad.
+
 A Pages generálás nem küld értesítést és nem ír automatikus commitot.
 A meglévő óránkénti ChatGPT-feladat külön kezeli az utoljára feldolgozott változást
 és az egyszer már jelzett 12 órás inaktivitási ciklust. Hiányzó hozzáférés/előzmény
@@ -65,5 +68,13 @@ python3 scripts/dev_status.py --dev-repo /path/to/ringato-dev
 ```
 
 GitHub cron: minden óra 17. perce UTC szerint, késés lehetséges.
-A publikus fejlesztői repóhoz nem adunk új hitelesítést; ha a repó priváttá válik,
-a frissítés megáll, és külön, megfelelő olvasási jogosultság beállítása szükséges.
+A fejlesztői repó **privát**. A dashboard repóban a `RINGATO_DEV_READ_TOKEN`
+Actions secret szükséges, amelynek a `nmarton/ringato-dev` tartalmához olvasási joga van.
+A GitHub App/installation token kizárólag ehhez a repóhoz tartozó read-only tartalomjoggal
+előnyös; a sima dashboard `GITHUB_TOKEN` nem lát át a másik privát repóba.
+A munkamenet szélesebb személyes OAuth-tokenjét nem másoljuk Actions-secretbe.
+A helyi, hitelesített auditból származó `baseline.json` publikálható mérési leltárt
+őriz (forráskód és titkok nélkül). Hozzáférési hiba esetén a generátor az utolsó
+publikált, schema 2 pillanatkép és e baseline közül az újabbat tartja meg.
+A `refresh.source_access=false` egyértelműen jelzi, hogy az óránkénti mérés nem sikerült.
+Az értesítő ezt nem értelmezheti 12 órás inaktivitásként.

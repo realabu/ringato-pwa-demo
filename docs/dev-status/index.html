@@ -84,6 +84,7 @@
   </header>
   <main class="wrap">
     <div class="notice" id="source-warning" role="status" hidden></div>
+    <div class="note" id="refresh-warning" role="status" hidden></div>
     <section class="section" aria-labelledby="stats-title">
       <div class="section-head"><h2 id="stats-title">Projekt számokban</h2><span class="muted small">Nem becslések: forrásalapú mérés vagy külön jelölt adat</span></div>
       <div class="grid" id="stats"><p class="empty">Forrásadatok betöltése…</p></div>
@@ -150,6 +151,7 @@
           $('provenance').innerHTML = '<p>'+sourceLink(s.links?.plan || 'https://github.com/realabu/ringato-pwa-demo','Régebbi mérföldkőterv')+' · '+sourceLink(s.links?.repo || 'https://github.com/nmarton/ringato-dev','Elsődleges fejlesztési repó')+'</p>';
           return;
         }
+        if(s.refresh && !s.refresh.source_access) { $('refresh-warning').hidden=false; $('refresh-warning').textContent=s.refresh.message; }
         $('done').textContent=completed;
         $('orb').style.background='conic-gradient(#c2e4aa 0 '+(completed/14*100)+'%,#526863 '+(completed/14*100)+'% 100%)';
         $('stamp').textContent='Adatfrissítés: '+fmt(s.generated_at);
@@ -175,7 +177,9 @@
         }).join('');
         const events=s.progress_events||[];
         let activity='';
-        if(s.last_observable_progress_at) {
+        if(s.refresh && !s.refresh.source_access) {
+          activity='<p class="empty">A forrásfrissítés most nem ellenőrizhető. Ebből nem állapítható meg inaktivitás.</p><p class="small muted">Az utolsó igazolt pillanatkép kódváltozása: '+escape(fmt(s.last_observable_progress_at))+'</p>';
+        } else if(s.last_observable_progress_at) {
           let elapsed=(Date.now()-Date.parse(s.last_observable_progress_at))/3600000;
           let stale=Number.isFinite(elapsed)&&elapsed>=12;
           activity='<p><span class="pill '+(stale?'stale':'working')+'">'+(stale?'12+ óra megfigyelt kódváltozás nélkül':'Utóbbi kódváltozás 12 órán belül')+'</span></p>'+

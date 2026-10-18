@@ -1,0 +1,685 @@
+{
+  "schema": 2,
+  "refresh": {
+    "source_access": true
+  },
+  "generated_at": "2026-10-18T07:29:29+00:00",
+  "completed": 6,
+  "total": 14,
+  "milestones": [
+    {
+      "id": "MF01",
+      "name": "PWA projektalap",
+      "state": "Ellenőrzésre kész",
+      "evidence": {
+        "release": "https://github.com/nmarton/ringato-dev/blob/960319f6c0e66836068cd12cec20023f15a69a20/docs/releases/mf01-mf03/RELEASE.md",
+        "tests": "https://github.com/nmarton/ringato-dev/blob/960319f6c0e66836068cd12cec20023f15a69a20/docs/releases/mf01-mf03/local-test-results.md"
+      }
+    },
+    {
+      "id": "MF02",
+      "name": "Arculat és közös UI",
+      "state": "Ellenőrzésre kész",
+      "evidence": {
+        "release": "https://github.com/nmarton/ringato-dev/blob/960319f6c0e66836068cd12cec20023f15a69a20/docs/releases/mf01-mf03/RELEASE.md",
+        "tests": "https://github.com/nmarton/ringato-dev/blob/960319f6c0e66836068cd12cec20023f15a69a20/docs/releases/mf01-mf03/local-test-results.md"
+      }
+    },
+    {
+      "id": "MF03",
+      "name": "WordPress Core és session",
+      "state": "Ellenőrzésre kész",
+      "evidence": {
+        "release": "https://github.com/nmarton/ringato-dev/blob/960319f6c0e66836068cd12cec20023f15a69a20/docs/releases/mf01-mf03/RELEASE.md",
+        "tests": "https://github.com/nmarton/ringato-dev/blob/960319f6c0e66836068cd12cec20023f15a69a20/docs/releases/mf01-mf03/local-test-results.md"
+      }
+    },
+    {
+      "id": "MF04",
+      "name": "Fiók és belépés",
+      "state": "Ellenőrzésre kész",
+      "evidence": {
+        "release": "https://github.com/nmarton/ringato-dev/blob/960319f6c0e66836068cd12cec20023f15a69a20/docs/releases/mf04/RELEASE.md",
+        "tests": "https://github.com/nmarton/ringato-dev/blob/960319f6c0e66836068cd12cec20023f15a69a20/docs/releases/mf04/local-test-results.md"
+      }
+    },
+    {
+      "id": "MF05",
+      "name": "Valós katalógus és programok",
+      "state": "Ellenőrzésre kész",
+      "evidence": {
+        "release": "https://github.com/nmarton/ringato-dev/blob/960319f6c0e66836068cd12cec20023f15a69a20/docs/releases/mf05/RELEASE.md",
+        "tests": "https://github.com/nmarton/ringato-dev/blob/960319f6c0e66836068cd12cec20023f15a69a20/docs/releases/mf05/local-test-results.md"
+      }
+    },
+    {
+      "id": "MF06",
+      "name": "Médialejátszó alap",
+      "state": "Ellenőrzésre kész",
+      "evidence": {
+        "release": "https://github.com/nmarton/ringato-dev/blob/960319f6c0e66836068cd12cec20023f15a69a20/docs/releases/mf06/RELEASE.md",
+        "tests": "https://github.com/nmarton/ringato-dev/blob/960319f6c0e66836068cd12cec20023f15a69a20/docs/releases/mf06/local-test-results.md"
+      }
+    },
+    {
+      "id": "MF07",
+      "name": "Jegyek, bérletek és beléptetés",
+      "state": "Tervezett",
+      "evidence": {}
+    },
+    {
+      "id": "MF08",
+      "name": "Programfoglalás",
+      "state": "Tervezett",
+      "evidence": {}
+    },
+    {
+      "id": "MF09",
+      "name": "Havi prémium",
+      "state": "Tervezett",
+      "evidence": {}
+    },
+    {
+      "id": "MF10",
+      "name": "Védett Bunny médiatár",
+      "state": "Tervezett",
+      "evidence": {}
+    },
+    {
+      "id": "MF11",
+      "name": "Virág kérdezi",
+      "state": "Tervezett",
+      "evidence": {}
+    },
+    {
+      "id": "MF12",
+      "name": "Szülő–Virág üzenetek",
+      "state": "Tervezett",
+      "evidence": {}
+    },
+    {
+      "id": "MF13",
+      "name": "Push és értesítések",
+      "state": "Tervezett",
+      "evidence": {}
+    },
+    {
+      "id": "MF14",
+      "name": "Pilot és éles átadás",
+      "state": "Tervezett",
+      "evidence": {}
+    }
+  ],
+  "repositories": [
+    {
+      "name": "nmarton/ringato-dev",
+      "role": "primary",
+      "sha": "960319f6c0e66836068cd12cec20023f15a69a20",
+      "branch": "main",
+      "url": "https://github.com/nmarton/ringato-dev/commit/960319f6c0e66836068cd12cec20023f15a69a20"
+    },
+    {
+      "name": "realabu/ringato-pwa-demo",
+      "role": "plan_and_prototype",
+      "sha": "b1816d02e2f517d0b16a1352576b1501d6bbc224",
+      "branch": "main",
+      "url": "https://github.com/realabu/ringato-pwa-demo/commit/b1816d02e2f517d0b16a1352576b1501d6bbc224"
+    }
+  ],
+  "metrics": {
+    "implementation_file_count": 50,
+    "implementation_lines": 4464,
+    "implementation_nonblank_lines": 4401,
+    "feature_modules": 7,
+    "core_layers": 9,
+    "source_wp_plugins": 2,
+    "verified_installed_wp_plugins": null,
+    "verified_wp_setting_changes": null,
+    "implemented_wp_option_keys": 4,
+    "prototype_lines": 312,
+    "prototype_file_count": 5
+  },
+  "breakdown": {
+    "frontend": {
+      "files": 37,
+      "lines": 3798,
+      "nonblank": 3751,
+      "inventory": [
+        {
+          "path": "ringato-pwa/index.html",
+          "lines": 1,
+          "nonblank": 1
+        },
+        {
+          "path": "ringato-pwa/public/offline.html",
+          "lines": 1,
+          "nonblank": 1
+        },
+        {
+          "path": "ringato-pwa/src/app/App.tsx",
+          "lines": 16,
+          "nonblank": 15
+        },
+        {
+          "path": "ringato-pwa/src/app/layout/AppFooter.tsx",
+          "lines": 30,
+          "nonblank": 28
+        },
+        {
+          "path": "ringato-pwa/src/app/layout/AppHeader.tsx",
+          "lines": 19,
+          "nonblank": 18
+        },
+        {
+          "path": "ringato-pwa/src/app/layout/AppLayout.tsx",
+          "lines": 31,
+          "nonblank": 29
+        },
+        {
+          "path": "ringato-pwa/src/app/layout/AppNavigation.tsx",
+          "lines": 34,
+          "nonblank": 32
+        },
+        {
+          "path": "ringato-pwa/src/app/layout/ConnectionNotice.tsx",
+          "lines": 26,
+          "nonblank": 24
+        },
+        {
+          "path": "ringato-pwa/src/app/routing/AppRoutes.tsx",
+          "lines": 90,
+          "nonblank": 89
+        },
+        {
+          "path": "ringato-pwa/src/app/routing/placeholderRoutes.ts",
+          "lines": 12,
+          "nonblank": 11
+        },
+        {
+          "path": "ringato-pwa/src/app/routing/usePageNavigation.ts",
+          "lines": 34,
+          "nonblank": 31
+        },
+        {
+          "path": "ringato-pwa/src/app/session.tsx",
+          "lines": 106,
+          "nonblank": 106
+        },
+        {
+          "path": "ringato-pwa/src/features/auth/AccountAccess.tsx",
+          "lines": 60,
+          "nonblank": 57
+        },
+        {
+          "path": "ringato-pwa/src/features/browsing/useBrowsing.ts",
+          "lines": 58,
+          "nonblank": 57
+        },
+        {
+          "path": "ringato-pwa/src/features/content/ContentProvider.tsx",
+          "lines": 57,
+          "nonblank": 54
+        },
+        {
+          "path": "ringato-pwa/src/features/events/AddToCalendar.tsx",
+          "lines": 46,
+          "nonblank": 45
+        },
+        {
+          "path": "ringato-pwa/src/features/events/calendar.ts",
+          "lines": 76,
+          "nonblank": 74
+        },
+        {
+          "path": "ringato-pwa/src/features/media/MediaRows.tsx",
+          "lines": 332,
+          "nonblank": 331
+        },
+        {
+          "path": "ringato-pwa/src/features/media/Player.tsx",
+          "lines": 327,
+          "nonblank": 327
+        },
+        {
+          "path": "ringato-pwa/src/features/media/controller.ts",
+          "lines": 267,
+          "nonblank": 267
+        },
+        {
+          "path": "ringato-pwa/src/features/media/fixtures.ts",
+          "lines": 25,
+          "nonblank": 25
+        },
+        {
+          "path": "ringato-pwa/src/features/profile/useProfile.ts",
+          "lines": 13,
+          "nonblank": 12
+        },
+        {
+          "path": "ringato-pwa/src/features/pwa/UpdateNotice.tsx",
+          "lines": 50,
+          "nonblank": 49
+        },
+        {
+          "path": "ringato-pwa/src/main.tsx",
+          "lines": 15,
+          "nonblank": 15
+        },
+        {
+          "path": "ringato-pwa/src/pages/AccountPage.tsx",
+          "lines": 204,
+          "nonblank": 202
+        },
+        {
+          "path": "ringato-pwa/src/pages/BrowsingPage.tsx",
+          "lines": 389,
+          "nonblank": 387
+        },
+        {
+          "path": "ringato-pwa/src/pages/ComponentsPage.tsx",
+          "lines": 27,
+          "nonblank": 26
+        },
+        {
+          "path": "ringato-pwa/src/pages/HomePage.tsx",
+          "lines": 71,
+          "nonblank": 70
+        },
+        {
+          "path": "ringato-pwa/src/pages/PlaceholderPage.tsx",
+          "lines": 18,
+          "nonblank": 17
+        },
+        {
+          "path": "ringato-pwa/src/pages/ProfilePage.tsx",
+          "lines": 80,
+          "nonblank": 79
+        },
+        {
+          "path": "ringato-pwa/src/pages/StaffCheckinPage.tsx",
+          "lines": 14,
+          "nonblank": 13
+        },
+        {
+          "path": "ringato-pwa/src/shared/api/client.ts",
+          "lines": 194,
+          "nonblank": 194
+        },
+        {
+          "path": "ringato-pwa/src/shared/design/app.css",
+          "lines": 900,
+          "nonblank": 893
+        },
+        {
+          "path": "ringato-pwa/src/shared/hooks/useOnlineStatus.ts",
+          "lines": 17,
+          "nonblank": 14
+        },
+        {
+          "path": "ringato-pwa/src/shared/ui/index.tsx",
+          "lines": 110,
+          "nonblank": 110
+        },
+        {
+          "path": "ringato-pwa/src/sw.js",
+          "lines": 47,
+          "nonblank": 47
+        },
+        {
+          "path": "ringato-pwa/src/vite-env.d.ts",
+          "lines": 1,
+          "nonblank": 1
+        }
+      ]
+    },
+    "wordpress_plugins": {
+      "files": 12,
+      "lines": 638,
+      "nonblank": 623,
+      "inventory": [
+        {
+          "path": "wordpress-plugins/ringato-app-shell/offline-template.php",
+          "lines": 2,
+          "nonblank": 2
+        },
+        {
+          "path": "wordpress-plugins/ringato-app-shell/ringato-app-shell.php",
+          "lines": 136,
+          "nonblank": 135
+        },
+        {
+          "path": "wordpress-plugins/ringato-core/ringato-core.php",
+          "lines": 30,
+          "nonblank": 27
+        },
+        {
+          "path": "wordpress-plugins/ringato-core/src/Admin/Diagnostics.php",
+          "lines": 14,
+          "nonblank": 14
+        },
+        {
+          "path": "wordpress-plugins/ringato-core/src/Application/Configuration.php",
+          "lines": 12,
+          "nonblank": 12
+        },
+        {
+          "path": "wordpress-plugins/ringato-core/src/Auth/Accounts.php",
+          "lines": 95,
+          "nonblank": 94
+        },
+        {
+          "path": "wordpress-plugins/ringato-core/src/Content/Pages.php",
+          "lines": 130,
+          "nonblank": 121
+        },
+        {
+          "path": "wordpress-plugins/ringato-core/src/Domain/Capabilities.php",
+          "lines": 6,
+          "nonblank": 6
+        },
+        {
+          "path": "wordpress-plugins/ringato-core/src/Http/Routes.php",
+          "lines": 46,
+          "nonblank": 46
+        },
+        {
+          "path": "wordpress-plugins/ringato-core/src/Infrastructure/CurrentUser.php",
+          "lines": 10,
+          "nonblank": 10
+        },
+        {
+          "path": "wordpress-plugins/ringato-core/src/Migrations/Runner.php",
+          "lines": 18,
+          "nonblank": 18
+        },
+        {
+          "path": "wordpress-plugins/ringato-core/src/Read/Browsing.php",
+          "lines": 139,
+          "nonblank": 138
+        }
+      ]
+    },
+    "local_mu_plugins": {
+      "files": 1,
+      "lines": 28,
+      "nonblank": 27,
+      "inventory": [
+        {
+          "path": "wordpress-local/mu-plugins/local-development.php",
+          "lines": 28,
+          "nonblank": 27
+        }
+      ]
+    },
+    "tests": {
+      "files": 16,
+      "lines": 2658,
+      "nonblank": 2642,
+      "inventory": [
+        {
+          "path": "ringato-pwa/src/features/events/calendar.test.ts",
+          "lines": 64,
+          "nonblank": 64
+        },
+        {
+          "path": "ringato-pwa/src/features/media/controller.test.ts",
+          "lines": 199,
+          "nonblank": 198
+        },
+        {
+          "path": "ringato-pwa/src/shared/api/client.test.ts",
+          "lines": 171,
+          "nonblank": 170
+        },
+        {
+          "path": "ringato-pwa/src/sw.test.ts",
+          "lines": 96,
+          "nonblank": 96
+        },
+        {
+          "path": "ringato-pwa/tests/browser/app.spec.ts",
+          "lines": 133,
+          "nonblank": 133
+        },
+        {
+          "path": "ringato-pwa/tests/browser/auth.spec.ts",
+          "lines": 392,
+          "nonblank": 387
+        },
+        {
+          "path": "ringato-pwa/tests/browser/browsing.spec.ts",
+          "lines": 347,
+          "nonblank": 345
+        },
+        {
+          "path": "ringato-pwa/tests/browser/content.spec.ts",
+          "lines": 279,
+          "nonblank": 276
+        },
+        {
+          "path": "ringato-pwa/tests/browser/dev-proxy.spec.ts",
+          "lines": 77,
+          "nonblank": 75
+        },
+        {
+          "path": "ringato-pwa/tests/browser/media.spec.ts",
+          "lines": 505,
+          "nonblank": 504
+        },
+        {
+          "path": "ringato-pwa/tests/browser/session.spec.ts",
+          "lines": 76,
+          "nonblank": 76
+        },
+        {
+          "path": "ringato-pwa/tests/browser/update.spec.ts",
+          "lines": 79,
+          "nonblank": 79
+        },
+        {
+          "path": "tests/browsing-fixture.php",
+          "lines": 48,
+          "nonblank": 48
+        },
+        {
+          "path": "tests/browsing.py",
+          "lines": 87,
+          "nonblank": 87
+        },
+        {
+          "path": "tests/integration.py",
+          "lines": 89,
+          "nonblank": 88
+        },
+        {
+          "path": "tests/session-fixture.php",
+          "lines": 16,
+          "nonblank": 16
+        }
+      ]
+    },
+    "generated": {
+      "files": 2,
+      "lines": 566,
+      "nonblank": 564,
+      "inventory": [
+        {
+          "path": "ringato-pwa/src/features/content/schema.ts",
+          "lines": 464,
+          "nonblank": 464
+        },
+        {
+          "path": "ringato-pwa/src/shared/api/contracts.ts",
+          "lines": 102,
+          "nonblank": 100
+        }
+      ]
+    },
+    "tooling": {
+      "files": 10,
+      "lines": 599,
+      "nonblank": 598,
+      "inventory": [
+        {
+          "path": "clone-wordpress.sh",
+          "lines": 32,
+          "nonblank": 32
+        },
+        {
+          "path": "compose.sh",
+          "lines": 10,
+          "nonblank": 10
+        },
+        {
+          "path": "ringato-pwa/scripts/build-sw.mjs",
+          "lines": 38,
+          "nonblank": 38
+        },
+        {
+          "path": "ringato-pwa/scripts/content-types.mjs",
+          "lines": 42,
+          "nonblank": 42
+        },
+        {
+          "path": "ringato-pwa/scripts/contracts.mjs",
+          "lines": 283,
+          "nonblank": 283
+        },
+        {
+          "path": "ringato-pwa/scripts/create-test-media.mjs",
+          "lines": 115,
+          "nonblank": 114
+        },
+        {
+          "path": "scripts/configure-account.php",
+          "lines": 4,
+          "nonblank": 4
+        },
+        {
+          "path": "scripts/install-local.sh",
+          "lines": 17,
+          "nonblank": 17
+        },
+        {
+          "path": "scripts/package-release.py",
+          "lines": 46,
+          "nonblank": 46
+        },
+        {
+          "path": "scripts/restore-mf04-website.php",
+          "lines": 12,
+          "nonblank": 12
+        }
+      ]
+    }
+  },
+  "features": [
+    "auth",
+    "browsing",
+    "content",
+    "events",
+    "media",
+    "profile",
+    "pwa"
+  ],
+  "core_layers": [
+    "Admin",
+    "Application",
+    "Auth",
+    "Content",
+    "Domain",
+    "Http",
+    "Infrastructure",
+    "Migrations",
+    "Read"
+  ],
+  "plugins": [
+    {
+      "name": "Ringató App Shell",
+      "version": "0.6.2",
+      "path": "wordpress-plugins/ringato-app-shell/ringato-app-shell.php",
+      "url": "https://github.com/nmarton/ringato-dev/blob/960319f6c0e66836068cd12cec20023f15a69a20/wordpress-plugins/ringato-app-shell/ringato-app-shell.php"
+    },
+    {
+      "name": "Ringató Core",
+      "version": "0.6.2",
+      "path": "wordpress-plugins/ringato-core/ringato-core.php",
+      "url": "https://github.com/nmarton/ringato-dev/blob/960319f6c0e66836068cd12cec20023f15a69a20/wordpress-plugins/ringato-core/ringato-core.php"
+    }
+  ],
+  "wp_option_keys": {
+    "ringato_content_pages": [
+      "https://github.com/nmarton/ringato-dev/blob/960319f6c0e66836068cd12cec20023f15a69a20/wordpress-plugins/ringato-core/src/Content/Pages.php",
+      "https://github.com/nmarton/ringato-dev/blob/960319f6c0e66836068cd12cec20023f15a69a20/wordpress-plugins/ringato-core/src/Content/Pages.php"
+    ],
+    "ringato_content_version": [
+      "https://github.com/nmarton/ringato-dev/blob/960319f6c0e66836068cd12cec20023f15a69a20/wordpress-plugins/ringato-core/src/Content/Pages.php"
+    ],
+    "ringato_core_config": [
+      "https://github.com/nmarton/ringato-dev/blob/960319f6c0e66836068cd12cec20023f15a69a20/wordpress-plugins/ringato-core/src/Migrations/Runner.php"
+    ],
+    "ringato_schema_version": [
+      "https://github.com/nmarton/ringato-dev/blob/960319f6c0e66836068cd12cec20023f15a69a20/wordpress-plugins/ringato-core/src/Migrations/Runner.php"
+    ]
+  },
+  "local_installation_report": {
+    "scope": "Kiadási dokumentáció szerinti helyi WP-klón; most nem újramért állapot",
+    "url": "https://github.com/nmarton/ringato-dev/blob/960319f6c0e66836068cd12cec20023f15a69a20/docs/releases/mf06/local-test-results.md"
+  },
+  "plan_completed": 4,
+  "last_observable_progress_at": "2026-10-17T16:58:56+00:00",
+  "progress_events": [
+    {
+      "sha": "960319f6c0e66836068cd12cec20023f15a69a20",
+      "at": "2026-10-17T16:58:56+00:00",
+      "title": "MF06 implementation done",
+      "type": "code",
+      "repository": "nmarton/ringato-dev",
+      "url": "https://github.com/nmarton/ringato-dev/commit/960319f6c0e66836068cd12cec20023f15a69a20",
+      "changed_source_files": 13
+    },
+    {
+      "sha": "2ea63cce9ff44197e7a0f0d12388b4b9fe0a8211",
+      "at": "2026-10-17T13:15:55+00:00",
+      "title": "MF03 implementation done",
+      "type": "code",
+      "repository": "nmarton/ringato-dev",
+      "url": "https://github.com/nmarton/ringato-dev/commit/2ea63cce9ff44197e7a0f0d12388b4b9fe0a8211",
+      "changed_source_files": 18
+    },
+    {
+      "sha": "8f3ed6aa65da794a6e21a08869756f975f5f1dd9",
+      "at": "2026-10-17T10:35:09+00:00",
+      "title": "mf04 implementation",
+      "type": "code",
+      "repository": "nmarton/ringato-dev",
+      "url": "https://github.com/nmarton/ringato-dev/commit/8f3ed6aa65da794a6e21a08869756f975f5f1dd9",
+      "changed_source_files": 13
+    },
+    {
+      "sha": "7262c9804884f4791a398beb52bb0e5b0e6b85a9",
+      "at": "2026-10-16T14:47:47+00:00",
+      "title": "basics, M01-M03 implemented",
+      "type": "code",
+      "repository": "nmarton/ringato-dev",
+      "url": "https://github.com/nmarton/ringato-dev/commit/7262c9804884f4791a398beb52bb0e5b0e6b85a9",
+      "changed_source_files": 38
+    }
+  ],
+  "progress_fingerprint": "cb4a045094452760b730b62adb8e57ff51c8f9f7451639e9328b8a3a21cf1e7c",
+  "source_commit": "960319f6c0e66836068cd12cec20023f15a69a20",
+  "notes": [
+    "A mérföldkő helyi implementációs átadás, nem éles elfogadás. A terv és a kiadások eltérését külön jelezzük.",
+    "Kódsor = UTF-8 fizikai sor, kommentekkel és üres sorokkal. A nem üres sorok külön látszanak.",
+    "Teszt, generált kód, eszközök, függőségek, lockfile, média és dokumentáció nincs a fő kódsorszámban.",
+    "Modul = forrást tartalmazó features alkönyvtár; réteg = Core src alkönyvtár; nem önállóan kész üzleti funkció.",
+    "WP opciókulcs = a saját plugin kódjában literállal add_option/update_option hívásnak átadott különböző kulcs; nem végrehajtott beállításváltozás.",
+    "Éles pluginleltár és WP-audit nem érhető el; ezek értéke ismeretlen, nem nulla.",
+    "A forrásváltozás megfigyelt kódaktivitás; önmagában nem bizonyít kész funkciót vagy működést."
+  ],
+  "links": {
+    "repo": "https://github.com/nmarton/ringato-dev",
+    "plan": "https://github.com/realabu/ringato-pwa-demo/blob/b1816d02e2f517d0b16a1352576b1501d6bbc224/docs/implementation-plan/10-inkrementalis-merfoldkovek.md",
+    "decisions": "https://github.com/realabu/ringato-pwa-demo/blob/b1816d02e2f517d0b16a1352576b1501d6bbc224/docs/implementation-plan/09-nyitott-kerdesek-es-dontesek.md"
+  }
+}
