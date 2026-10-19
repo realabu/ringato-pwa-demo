@@ -2,7 +2,7 @@
 
 **Kötelező tartalomkezelés (2026-10-16):** minden jelenlegi és későbbi PWA-blokk és szerkeszthető szöveg WordPressből, ACF Free mezőkből jön; a közös layoutszövegek és menüikonok is módosíthatók. A blokkok oldalanként csoportosítandók. A React sablon az eredeti megjelenést őrzi. Minden mérföldkő átadási feltétele a WP-szerkesztés build nélküli ellenőrzése. [Részletes szabály és kész-feltételek](12-wordpress-tartalomkezeles.md).
 
-**Készült:** 2026-10-15. **Állapot:** MF01–MF12 implementálva, lokális ellenőrzésre kész (MF05: 2026-10-17); az MF13–MF14 továbbra is tervezett. A fizikai mobilpróba és a távoli manuális telepítés külön igazolandó.
+**Készült:** 2026-10-15. **Állapot:** MF01–MF13 implementálva, lokális ellenőrzésre kész (MF05: 2026-10-17); az MF14 továbbra is tervezett. A fizikai mobilpróba és a távoli manuális telepítés külön igazolandó.
 
 A cél minden lépés végén külön kipróbálható, ellenőrizhető és visszaállítható növekmény. Először a már eldöntött architektúrára épülő feladatok következnek; a nyitott üzleti szabályokat csak az érintett modul előtt kell lezárni. A regisztráció és belépés önálló, korai mérföldkő, a meglévő WordPress/WooCommerce-fiókrendszerre építve.
 
@@ -264,3 +264,7 @@ Core/Shell/PWA 0.10.0, schema 5, ACF 15. Valós Bunny Stream védett path tokene
 
 
 MF12 0.12.0 (2026-10-19): ingyenes Better Messages 3.1.3 megfelelőségi próba és Core-adapter, saját szülő–Virág beszélgetés, WordPresses válaszfelület, read/unread, idempotens retry és látható chathez kötött 10s polling implementálva. Schema 7, ACF-tartalom 18. [Kiadás](../../../ringato-dev/docs/releases/mf12/RELEASE.md), [lokális tesztek](../../../ringato-dev/docs/releases/mf12/local-test-results.md). Fizikai mobil, távoli telepítés és D12 adatkezelési eljárás külön átadási kapu.
+
+### MF13 végrehajtási állapot – 2026-10-19
+
+MF13 0.13.0 a külön fejlesztői WordPressen implementálva és lokálisan tesztelve: D06 csoportkezelés WP Users/user_meta alapon, kézi deduplikált kampányelőnézet és címzettpillanatkép, pushfüggetlen fiókszintű receipt, szerverkurzor és 365 napos konfigurálható megjelenítés, explicit VAPID-eszközfeliratkozás és háttérküldő. [Kiadás és tesztek](../../../ringato-dev/docs/releases/mf13/RELEASE.md). A fizikai telefonos push, célkörnyezeti cron/HTTPS/egress és D12 éles adatkezelői feltételek külön átadási kapuk; MF14 még nincs implementálva. A fentebb szereplő korábbi végrehajtási teendőket ez a megvalósulási feljegyzés pontosítja.

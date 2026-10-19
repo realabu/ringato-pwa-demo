@@ -306,3 +306,11 @@ MF12 0.12.0 (2026-10-19): D11 ingyenes Better Messages 3.1.3 lokális megfelelő
 
 
 MF12 0.12.1 – megrendelői pontosítás (2026-10-19): a „Virág WordPress-fiókja” beállításban kijelölt felhasználó a PWA `/app/staff/messages` oldalán is kezelheti a beszélgetéseket. Ezt az oldalt és API-t kizárólag ő használhatja, más admin/staff sem. WordPressben és PWA-ban minden másik WP-fiók bal oldali listában szerepel; jobb oldalon a kiválasztott beszélgetés, Virág is kezdeményezhet. Mindkét lista utolsó küldött vagy fogadott üzenet szerint csökkenő; üzenet nélküli fiókok a lista végén név/ID szerint. A szülő–szülő küldés tiltása és a D11 polling/read/retry szabályai megmaradnak.
+
+### D06 végrehajtási állapot – MF13, 2026-10-19
+
+MF13 0.13.0 lokálisan implementálva: saját WP Users-admin, option-alapú csoportnevek és user_meta többes tagságok (a telepített bővítmények nem biztosítanak megfelelő általános csoportkezelést); deduplikált küldési előnézet és változatlan címzettpillanatkép; push nélküli fiókelőzmény, monoton kurzor és konfigurálható 365 napos alap megjelenítés. VAPID, titkosított sessionhöz kötött eszközök és 404/410/backoff/unknown worker-állapotok elkészültek. [Bizonyítékok és korlátok](../../../ringato-dev/docs/releases/mf13/local-test-results.md). A fizikai iOS/Android push, célkörnyezeti ütemező/HTTPS/egress és D12 adatkezelői eljárás továbbra is külön kapu. A D06 üzleti szabályai nem változtak.
+
+### D06 felületi és olvasottsági pontosítás – megrendelői kérés, 2026-10-19
+
+MF13 0.13.1: az értesítéslista csak címet és dátumot mutat, olvasatlan üzenetnél ikonnal. A teljes üzenet külön részletoldalon nyílik meg; az olvasottság csak ennek megnyitásakor mentődik, receiptként és fiókszinten közösen. A korábbi panelkurzor technikai kompatibilitásból megmarad, de nem jelöl más üzeneteket olvasottnak. A WordPress Új kampány űrlapon a csoportmezők az egyéni címzett előtt vannak, Apphivatkozás mező nincs; a push az értesítés saját részletéhez navigál. Ez a későbbi megrendelői pontosítás a korábbi panelmegnyitás-alapú UI-jelölést felülírja.

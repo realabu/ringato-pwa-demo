@@ -4,7 +4,7 @@
 
 A kiegészítő alkalmazás önálló React/TypeScript PWA. A meglévő WordPress/WooCommerce marad a felhasználók, termékek, rendelések és programok központi rendszere. Az eredeti publikus oldal megjelenése, útvonalai, témája és meglévő vásárlási folyamata változatlan marad. Új backendképességeket elkülönített bővítmények és saját táblák adnak hozzá.
 
-Ez a csomag **megvalósítási terv és döntési napló**. Az MF01–MF12 a külön fejlesztői WordPress-klónon implementálva, lokális ellenőrzésre kész; az MF13–MF14 tervezett. Az aktuális MF12 kiadás 0.12.0 (2026-10-19); a célkörnyezeti SMTP/HTTPS és fizikai mobilpróba külön igazolandó. Az elfogadott döntések és a nyitott részletszabályok állapotát a 09. dokumentum, a fejleszthető mérföldköveket és a fennmaradó átadási kapukat a 10. dokumentum tartalmazza.
+Ez a csomag **megvalósítási terv és döntési napló**. Az MF01–MF13 a külön fejlesztői WordPress-klónon implementálva, lokális ellenőrzésre kész; az MF14 tervezett. Az aktuális MF13 kiadás 0.13.1 (2026-10-19); a célkörnyezeti SMTP/HTTPS és fizikai mobilpróba külön igazolandó. Az elfogadott döntések és a nyitott részletszabályok állapotát a 09. dokumentum, a fejleszthető mérföldköveket és a fennmaradó átadási kapukat a 10. dokumentum tartalmazza.
 
 ## Dokumentumok és olvasási sorrend
 
@@ -78,3 +78,5 @@ MF11 0.11.0: a D13/01–04 szavazás implementálva; schema 6, ACF-tartalom 17. 
 
 
 MF12 0.12.0 (2026-10-19): ingyenes Better Messages 3.1.3 megfelelőségi próba és Core-adapter, saját szülő–Virág beszélgetés, WordPresses válaszfelület, read/unread, idempotens retry és látható chathez kötött 10s polling implementálva. Schema 7, ACF-tartalom 18. [Kiadás](../../../ringato-dev/docs/releases/mf12/RELEASE.md), [lokális tesztek](../../../ringato-dev/docs/releases/mf12/local-test-results.md). Fizikai mobil, távoli telepítés és D12 adatkezelési eljárás külön átadási kapu.
+
+MF13 0.13.0 (2026-10-19): D06 szerinti szabad kézi WordPress-csoportok, kampányelőnézet/pillanatkép és pushfüggetlen fiókszintű receipt, közös cursor, explicit eszközfeliratkozás és VAPID worker lokálisan implementálva. [Kiadás](../../../ringato-dev/docs/releases/mf13/RELEASE.md), [tesztbizonyítékok](../../../ringato-dev/docs/releases/mf13/local-test-results.md). Fizikai iOS/Android, célkörnyezeti cron/egress/HTTPS és D12 adatkezelői eljárás külön kapu.
