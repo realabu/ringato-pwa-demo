@@ -296,3 +296,7 @@ A 0.10.0 implementációban elkészült a Stream-only hivatalos bunnycdn 3.1.1 b
 ## MF10 felhasználói UX-pontosítás – 2026-10-18
 
 Kifejezett projektgazdai kérés: prémium előfizetés nélkül a prémium borító play ikonja helyett áttetsző lakat jelenik meg. A média részletoldalán aktív prémiumtag számára nincs prémiumállapot-blokk; jogosultság nélkül kizárólag a „Még nincs prémium-hozzáférésed” ajánló jelenik meg, lejátszó nélkül. Ez a korábbi minden oldalas prémiumállapot-kijelzés média-részletoldali kivétele; más oldal és szerveroldali jogosultsági szabály változatlan. A szív kedvencet kapcsol; külön listaikon adja/veszi ki a sorból, szürke/piros állapottal. A kedvencek a sor közös soros megjelenését használják, rendezés és automatikus sorfolytatás nélkül.
+
+### D13 végrehajtási állapot – 2026-10-19
+
+Az MF11 0.11.0 a D13/01–04 szabályokat implementálja a külön fejlesztői környezetben. Kézi WordPress/ACF-kezelés, egy végleges fiókszavazat, véletlen megválaszolatlan főoldali kérdés és kizárólag admin összesítés. Nyitás után a szöveg/opciók védettek; lezárt kérdés újranyitása nincs bevezetve. Nincs időzített állapotváltás vagy automatikus értesítés. A korábbi bekezdések implementációt hátralévőként említő részei történeti tervezési állapotot írnak le. [Kiadás és tesztbizonyítékok](../../../ringato-dev/docs/releases/mf11/RELEASE.md). Fizikai mobil és célkörnyezeti telepítés külön ellenőrzendő.

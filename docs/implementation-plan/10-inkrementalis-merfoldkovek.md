@@ -2,7 +2,7 @@
 
 **Kötelező tartalomkezelés (2026-10-16):** minden jelenlegi és későbbi PWA-blokk és szerkeszthető szöveg WordPressből, ACF Free mezőkből jön; a közös layoutszövegek és menüikonok is módosíthatók. A blokkok oldalanként csoportosítandók. A React sablon az eredeti megjelenést őrzi. Minden mérföldkő átadási feltétele a WP-szerkesztés build nélküli ellenőrzése. [Részletes szabály és kész-feltételek](12-wordpress-tartalomkezeles.md).
 
-**Készült:** 2026-10-15. **Állapot:** MF01–MF10 implementálva, lokális ellenőrzésre kész (MF05: 2026-10-17); az MF11–MF14 továbbra is tervezett. A fizikai mobilpróba és a távoli manuális telepítés külön igazolandó.
+**Készült:** 2026-10-15. **Állapot:** MF01–MF11 implementálva, lokális ellenőrzésre kész (MF05: 2026-10-17); az MF12–MF14 továbbra is tervezett. A fizikai mobilpróba és a távoli manuális telepítés külön igazolandó.
 
 A cél minden lépés végén külön kipróbálható, ellenőrizhető és visszaállítható növekmény. Először a már eldöntött architektúrára épülő feladatok következnek; a nyitott üzleti szabályokat csak az érintett modul előtt kell lezárni. A regisztráció és belépés önálló, korai mérföldkő, a meglévő WordPress/WooCommerce-fiókrendszerre építve.
 
@@ -257,3 +257,7 @@ MF08 0.8.1: az eseményoldali ACF Free post_object kereshető listája az egyetl
 ## MF10 implementáció – 2026-10-18
 
 Core/Shell/PWA 0.10.0, schema 5, ACF 15. Valós Bunny Stream védett path tokenek, audio/fekvő/álló videó, prémiumledger-ellenőrzés és grantfrissítés; tartós kedvencek, revision/If-Match sor. Hivatalos bunnycdn 3.1.1 Stream-only. A valós szolgáltatói és helyi böngészős bizonyítékok, valamint a fennmaradó fizikai mobilos és tartós terhelési kapuk a [teszteredményekben](../../../ringato-dev/docs/releases/mf10/local-test-results.md) szerepelnek. A rövid 30 olvasós CDN-próba nem teljes 30 készülékes elfogadás. [Kiadás](../../../ringato-dev/docs/releases/mf10/RELEASE.md), [telepítés](../../../ringato-dev/docs/releases/mf10/INSTALL.md).
+
+### MF11 implementáció – 2026-10-19
+
+0.11.0: kézi WordPress/ACF Free kérdés-opció kezelés, draft → open → closed, sok tartósan nyitott kérdés, szerveroldali véletlen megválaszolatlan kiválasztás. Dashboardon közvetlen válaszgomb, tranzakciós UNIQUE fiók/poll, azonos retry és eltérő/párhuzamos válasz védelme; helyben köszönet, új kérdés csak új dashboard-látogatáskor. Eredmény csak jogosult WP-adminnak, egyedi válaszadat nélkül. Nincs időzítés vagy értesítés. Schema 6 és ACF 17, generált szerződés és kézi kiadáscsomag. [Kiadás](../../../ringato-dev/docs/releases/mf11/RELEASE.md), [tesztbizonyíték](../../../ringato-dev/docs/releases/mf11/local-test-results.md). Fizikai mobil és távoli telepítés külön átadási ellenőrzés.
