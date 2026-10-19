@@ -4,7 +4,7 @@
 
 A kiegészítő alkalmazás önálló React/TypeScript PWA. A meglévő WordPress/WooCommerce marad a felhasználók, termékek, rendelések és programok központi rendszere. Az eredeti publikus oldal megjelenése, útvonalai, témája és meglévő vásárlási folyamata változatlan marad. Új backendképességeket elkülönített bővítmények és saját táblák adnak hozzá.
 
-Ez a csomag **megvalósítási terv és döntési napló**. Az MF01–MF11 a külön fejlesztői WordPress-klónon implementálva, lokális ellenőrzésre kész; az MF12–MF14 tervezett. Az aktuális MF11 kiadás 0.11.0 (2026-10-19); a célkörnyezeti SMTP/HTTPS és fizikai mobilpróba külön igazolandó. Az elfogadott döntések és a nyitott részletszabályok állapotát a 09. dokumentum, a fejleszthető mérföldköveket és a fennmaradó átadási kapukat a 10. dokumentum tartalmazza.
+Ez a csomag **megvalósítási terv és döntési napló**. Az MF01–MF12 a külön fejlesztői WordPress-klónon implementálva, lokális ellenőrzésre kész; az MF13–MF14 tervezett. Az aktuális MF12 kiadás 0.12.0 (2026-10-19); a célkörnyezeti SMTP/HTTPS és fizikai mobilpróba külön igazolandó. Az elfogadott döntések és a nyitott részletszabályok állapotát a 09. dokumentum, a fejleszthető mérföldköveket és a fennmaradó átadási kapukat a 10. dokumentum tartalmazza.
 
 ## Dokumentumok és olvasási sorrend
 
@@ -75,3 +75,6 @@ MF05 0.5.0 (2026-10-17): valós katalógus/program/saját HPOS rendelés olvasá
 MF07 0.7.0 (2026-10-17): vásárlási átadás, jegytárca/QR, idempotens paid provisioning, közös staff-visszatérés és auditált admin korrekció implementálva. Staff az MF08-ig csak lokális tesztkapcsolóval; férőhelyes vásárlás tiltott. Barion sandbox siker/hiba és teljes/részleges refund helyben igazolt; Billingo/távoli IPN/fizikai mobil külön átadási kapu. [Kiadás](../../../ringato-dev/docs/releases/mf07/RELEASE.md), [tesztek](../../../ringato-dev/docs/releases/mf07/local-test-results.md).
 
 MF11 0.11.0: a D13/01–04 szavazás implementálva; schema 6, ACF-tartalom 17. Kiadás és lokális bizonyítékok: [MF11](../../../ringato-dev/docs/releases/mf11/RELEASE.md).
+
+
+MF12 0.12.0 (2026-10-19): ingyenes Better Messages 3.1.3 megfelelőségi próba és Core-adapter, saját szülő–Virág beszélgetés, WordPresses válaszfelület, read/unread, idempotens retry és látható chathez kötött 10s polling implementálva. Schema 7, ACF-tartalom 18. [Kiadás](../../../ringato-dev/docs/releases/mf12/RELEASE.md), [lokális tesztek](../../../ringato-dev/docs/releases/mf12/local-test-results.md). Fizikai mobil, távoli telepítés és D12 adatkezelési eljárás külön átadási kapu.

@@ -300,3 +300,9 @@ Kifejezett projektgazdai kérés: prémium előfizetés nélkül a prémium bor�
 ### D13 végrehajtási állapot – 2026-10-19
 
 Az MF11 0.11.0 a D13/01–04 szabályokat implementálja a külön fejlesztői környezetben. Kézi WordPress/ACF-kezelés, egy végleges fiókszavazat, véletlen megválaszolatlan főoldali kérdés és kizárólag admin összesítés. Nyitás után a szöveg/opciók védettek; lezárt kérdés újranyitása nincs bevezetve. Nincs időzített állapotváltás vagy automatikus értesítés. A korábbi bekezdések implementációt hátralévőként említő részei történeti tervezési állapotot írnak le. [Kiadás és tesztbizonyítékok](../../../ringato-dev/docs/releases/mf11/RELEASE.md). Fizikai mobil és célkörnyezeti telepítés külön ellenőrzendő.
+
+
+MF12 0.12.0 (2026-10-19): D11 ingyenes Better Messages 3.1.3 lokális megfelelőségi próba sikeres; kétirányú szöveg, saját thread, read/unread, idempotens retry és aktív nézeti polling implementálva. [Bizonyítékok](../../../ringato-dev/docs/releases/mf12/local-test-results.md). Fizikai mobil és célkörnyezeti átadás külön igazolandó. A D12 technikai leltárban rögzítettük a BM beépített törlési lehetőségét és a teljes WP export/erase integráció hiányát; az éles kezelési eljárás és szükséges kiegészítő funkció scope-ja külső átadási kapu, nem új jogi modul része.
+
+
+MF12 0.12.1 – megrendelői pontosítás (2026-10-19): a „Virág WordPress-fiókja” beállításban kijelölt felhasználó a PWA `/app/staff/messages` oldalán is kezelheti a beszélgetéseket. Ezt az oldalt és API-t kizárólag ő használhatja, más admin/staff sem. WordPressben és PWA-ban minden másik WP-fiók bal oldali listában szerepel; jobb oldalon a kiválasztott beszélgetés, Virág is kezdeményezhet. Mindkét lista utolsó küldött vagy fogadott üzenet szerint csökkenő; üzenet nélküli fiókok a lista végén név/ID szerint. A szülő–szülő küldés tiltása és a D11 polling/read/retry szabályai megmaradnak.
