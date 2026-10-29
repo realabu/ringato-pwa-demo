@@ -268,3 +268,14 @@ MF12 0.12.0 (2026-10-19): ingyenes Better Messages 3.1.3 megfelelőségi próba 
 ### MF13 végrehajtási állapot – 2026-10-19
 
 MF13 0.13.0 a külön fejlesztői WordPressen implementálva és lokálisan tesztelve: D06 csoportkezelés WP Users/user_meta alapon, kézi deduplikált kampányelőnézet és címzettpillanatkép, pushfüggetlen fiókszintű receipt, szerverkurzor és 365 napos konfigurálható megjelenítés, explicit VAPID-eszközfeliratkozás és háttérküldő. [Kiadás és tesztek](../../../ringato-dev/docs/releases/mf13/RELEASE.md). A fizikai telefonos push, célkörnyezeti cron/HTTPS/egress és D12 éles adatkezelői feltételek külön átadási kapuk; MF14 még nincs implementálva. A fentebb szereplő korábbi végrehajtási teendőket ez a megvalósulási feljegyzés pontosítja.
+
+## 2026-10-29 – MF02–MF05 belépés előtti kezdőképernyő (felülvizsgálati tétel)
+
+A [#2](https://github.com/realabu/ringato-pwa-demo/issues/2) felhasználói észrevétel alapján az `/app/` anonim felülete jelenlegi, menüt mutató koncepcióját **login/regisztráció és eszközfüggő installmagyarázatot tartalmazó arculatos welcome felületre** javasolt cserélni. Ez **a korábban elfogadott vendégként böngészhető MF05/D12 UX-et érinti; nem automatikus scope-döntés**. Kifejezett jóváhagyásig tervmódosítási/elfogadási kapu, nem lezárt megvalósítás.
+
+- **MF01/MF02:** manifest/standalone és platform-UX, arculatos, mobilreszponzív, alkalmazásmenü nélküli welcome + ACF Free tartalom.
+- **MF03/MF04:** hiteles sessiontől függő app shell/route guard, belépés, regisztráció, jelszó-visszaállítás, biztonságos deep-link visszatérés, logout/expired-session, menüvillanás és cache-adatszivárgás kizárása.
+- **MF05 és további modulok:** csak bejelentkezve legyenek böngészhetők az `/app/` program-/shop-/média- és egyéb belső felületek; a meglévő webes nyilvános WC termék-/eseménymegjelenítés nem változik. A védett szerveroldali API-khoz továbbra is kötelező a megfelelő jogosultság.
+- **Teszt/telepítés:** anonim/aktív/lejárt session, közvetlen `/app/*` link, böngésző Back, több lap, iOS/Android és desktop install, telepített PWA/standalone, offline, WP/WC vendégcheckout regresszió. Kötelező verziózott, kézzel telepíthető csomag és környezeten végzett próba a jóváhagyott megvalósítás után.
+
+A javaslat nem írja át automatikusan az MF01–MF13 korábbi készültségi állapotát, a D12 vagy D01 jóváhagyott üzleti szabályát. Kapcsolódó ötlet: IDEA-022.
