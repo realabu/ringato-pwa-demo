@@ -41,6 +41,8 @@ def get_pr(repo, number, token):
 
 def parse_name_status(raw):
     """The -z diff format is status\0path\0, for added/modified files."""
+    if not raw:
+        return []
     if not raw.endswith(b"\x00"):
         raise ValueError("Unterminated git diff fields")
     fields = raw.decode("utf-8").split("\x00")[:-1]
