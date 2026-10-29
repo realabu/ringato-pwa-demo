@@ -59,4 +59,8 @@ A 2026-10-19-i tíz új szabad szöveges felvetésből **kilenc új ötletlap** 
 
 A Zeneovi-részvételi és motivációs jelzéseket (IDEA-017) tudatosan külön kezeljük a potenciálisan érzékeny gyermekmegfigyelési naplótól (IDEA-018). Az IDEA-019 gyűjtőalbum ötlete önálló Ringató-arculatot feltételez, nem harmadik fél márkájának használatát. Az IDEA-021 napi AI-programkeresése **csak jóváhagyásra váró piszkozatot** hozhat létre, nem automatikusan publikált programot. Az új ötletek „elemzett” státusza nem fejlesztési megrendelés; a RICE mindenhol adat hiányában üres.
 
-**Következő szabad azonosító:** `IDEA-022` (új ötlet előtt ismét ellenőrizendő).
+**Következő szabad azonosító:** `IDEA-023` (új ötlet előtt ismét ellenőrizendő).
+
+## Felülvizsgálati UX-észrevétel – 2026. október 29.
+
+A **22. ötletlap: IDEA-022** a kijelentkezett PWA üdvözlőoldaláról és az eszközfüggő telepítési segítségről szól. **`mvp-review`, nem automatikusan elfogadott scope-változtatás.** A korábbi D12/MF04–MF05 vendégböngészési irányt érinti, ezért a pontosítást [#2 fejlesztési feladatban](https://github.com/realabu/ringato-pwa-demo/issues/2) és a megvalósítási terv PR-jában külön jóváhagyási kapuval kezeljük. Az IDEA-009 későbbi érdeklődői guest módot továbbra is külön kezeljük.
