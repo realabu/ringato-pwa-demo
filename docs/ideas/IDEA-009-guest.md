@@ -20,7 +20,7 @@ rice_confidence: null
 rice_effort: null
 related_milestones: ["MF04","MF05","MF10"]
 created: "2026-10-18"
-updated: "2026-10-18"
+updated: "2026-10-29"
 origin: "Szabad szöveges ötlet – 2026-10-18"
 communication_angle: "Próbáld ki a Ringatót regisztráció nélkül"
 ---
@@ -75,3 +75,5 @@ Publikus tartalmak és konverziós cél meghatározása.
 ## Kapcsolódás a fejlesztéshez
 
 MF04, MF05, MF10. Az MF-mérföldkövek és D-döntések nem változnak külön jóváhagyás nélkül.
+
+**2026-10-29 – elkülönítés az IDEA-022-től:** A projektgazda az MVP kijelentkezett `/app/` nézetéhez menü nélküli, kizárólag belépés/regisztráció/telepítési tájékoztató jellegű nyitólapot javasolt. Ez a korábbi vendégböngészési UX módosítása, külön jóváhagyandó (D12/MF04–MF05). Ez az IDEA-009 **továbbra is csak későbbi, önállóan jóváhagyható guest mód**, amely nem kerülhet vissza az MVP-be automatikusan. Kapcsolódó [IDEA-022](IDEA-022-anonim-nyitooldal-telepitesi-utmutato.md), [feladat #2](https://github.com/realabu/ringato-pwa-demo/issues/2).
