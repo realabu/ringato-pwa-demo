@@ -85,4 +85,6 @@ A projektgazdai irány jóváhagyása a korábbi D12 vendégapp-UX felülírás�
 
 ## Kapcsolódás a fejlesztéshez
 
-**MF01–MF05 / D12:** PWA manifest és install támogatás, layout és session, fiókfolyamat, publikus appkatalógus helyett bejelentkezés előtti üdvözlés. Kifejezett jóváhagyásig a meglévő döntési pontok nem tekinthetők módosítottnak. **IDEA-009:** későbbi választható guest mód; az anonim landing nem guest mód. A fő WordPress-webhely, WooCommerce guest checkout és D01/D09 prémium vásárlási szabályok változatlanok.
+**MF01–MF05 / D12:** PWA manifest és install támogatás, layout és session, fiókfolyamat, publikus appkatalógus helyett bejelentkezés előtti üdvözlés. Kifejezett jóváhagyásig a meglévő döntési pontok nem tekinthetők módosítottnak. **IDEA-009:** későbbi választható guest mód; az anonim landing nem guest mód.
+
+**Publikálási szabály:** az IDEA-lap automatikus `main`-ra kerülése csak a termékötlettár megjelenítését jelenti; a D12/MF04–MF05 megvalósítási szabályait kizárólag a külön jóváhagyott specifikációs PR módosíthatja. A fő WordPress-webhely, WooCommerce guest checkout és D01/D09 prémium vásárlási szabályok változatlanok.
