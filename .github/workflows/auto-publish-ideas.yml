@@ -47,13 +47,13 @@ jobs:
       - name: Publish only allowed, conflict-free IDEA Markdown
         id: promote
         env:
-          GITHUB_TOKEN: \${{ secrets.GITHUB_TOKEN }}
-          PR_NUMBER: \${{ github.event.pull_request.number || inputs.pr_number }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number || inputs.pr_number }}
         run: python3 scripts/promote_ideas.py --pr "$PR_NUMBER"
       # Pushes made with GITHUB_TOKEN deliberately do not trigger push Actions.
       # Explicit workflow_dispatch triggers the existing build/Pages workflow.
       - name: Rebuild and deploy the public HTML catalog
         if: steps.promote.outputs.promoted == 'true'
         env:
-          GH_TOKEN: \${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: gh workflow run dev-status.yml --ref main
