@@ -65,6 +65,16 @@ A felhasználó a tesztkörnyezet kijelentkezett PWA-nézetében jelenleg az alk
 - WordPressben a nyitóoldal és útmutató valamennyi szerkesztői mezője ACF Free-ből új frontend build nélkül módosítható, a jogosultsági szabály viszont nem szerkesztői tartalom.
 - 320–430px, tablet, desktop, offline, képernyőolvasó és különböző sessionállapotok tesztelve; a normál webes vendégcheckout és a WP nyilvános oldal változatlan.
 
+## Belépés utáni céloldal – 2026-10-29-i kiegészítő észrevétel
+
+> észrevétel, hogy login után ne a profil-ra navigáljon hanem a nyitó oldalra.
+
+- **Alapértelmezés:** a sikeres bejelentkezés után az alkalmazás **bejelentkezett főoldala** (`/app/`) jelenjen meg, ne a `/app/profile`. A bejelentkezésre szolgáló publikus üdvözlőoldal és az autentikált főoldal a session szerint külön nézet.
+- **Kivétel:** ha a felhasználó egy védett belső mélylinket nyitott meg, és emiatt kellett belépnie, sikeres azonosítás után a biztonságosan ellenőrzött, alkalmazáson belüli eredeti célra térhet vissza. Külső vagy manipulált `returnTo`/redirect paraméter nem használható, nincs open redirect.
+- **Profil:** csak a felhasználó kifejezett profilmenü-választására vagy érvényes profil-mélylinkre nyíljon meg; a regisztráció utáni első céloldal kérdése a tényleges onboarding-folyamat figyelembevételével ugyanezen UX-szabály szerint tesztelendő.
+- **Elfogadás:** normál login → bejelentkezett főoldal; védett médiatár mélylink → sikeres login → az eredeti jogosult útvonal; lejárt/tiltott mélylink → biztonságos főoldali fallback; logout és új login → főoldal. Böngésző Back, frissítés, telepített PWA és több fül esetén nincs véletlen profilátirányítás.
+- **Határ:** ez MF04 route-/post-login UX hibaészrevétel, az IDEA-022 nyitólapjához kapcsolódó kiegészítés, nem új termékfunkció. Az éles kódbeli okot a fejlesztői repóban kell ellenőrizni.
+
 ## Előzetes ráfordítás és értékelés
 
 - **MVP-vizsgálat / Should**, nem automatikus vállalt scope. Ügyfél 5/5, üzemeltetés 4/5, bevétel 4/5, kommunikáció 5/5: kizárólag szubjektív értékhipotézisek.
