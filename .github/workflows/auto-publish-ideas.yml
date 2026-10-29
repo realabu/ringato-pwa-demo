@@ -1,0 +1,59 @@
+name: Publish validated IDEA docs to main
+
+# Idea records are product backlog entries, not approvals of implementation scope.
+# Mixed PRs are safe: this workflow copies ONLY docs/ideas/IDEA-*.md,
+# never specifications, decisions, scripts, or PR-authored executable code.
+on:
+  pull_request_target:
+    types: [opened, reopened, synchronize, ready_for_review]
+    branches: [main]
+    paths:
+      - "docs/ideas/IDEA-*.md"
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: "Same-repository PR number to publish IDEA files from"
+        required: true
+        type: number
+
+permissions:
+  contents: write
+  pull-requests: read
+  actions: write
+
+concurrency:
+  group: ringato-ideas-main-promotion
+  cancel-in-progress: false
+
+jobs:
+  promote:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.pull_request.head.repo.full_name == github.repository &&
+       github.event.pull_request.draft == false)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout trusted main (never the PR head)
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: true
+      - name: Validate existing ideas and promotion safeguards
+        run: |
+          python3 -m unittest discover -s scripts -p 'test_build_ideas.py'
+          python3 -m unittest discover -s scripts -p 'test_promote_ideas.py'
+      - name: Publish only allowed, conflict-free IDEA Markdown
+        id: promote
+        env:
+          GITHUB_TOKEN: \${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: \${{ github.event.pull_request.number || inputs.pr_number }}
+        run: python3 scripts/promote_ideas.py --pr "$PR_NUMBER"
+      # Pushes made with GITHUB_TOKEN deliberately do not trigger push Actions.
+      # Explicit workflow_dispatch triggers the existing build/Pages workflow.
+      - name: Rebuild and deploy the public HTML catalog
+        if: steps.promote.outputs.promoted == 'true'
+        env:
+          GH_TOKEN: \${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run dev-status.yml --ref main
