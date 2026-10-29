@@ -63,6 +63,6 @@ A Zeneovi-részvételi és motivációs jelzéseket (IDEA-017) tudatosan külön
 
 ## Független ötletpublikálás – 2026. október 29.
 
-Az **IDEA-022** (kijelentkezett PWA-nyitóoldal) már a `main` ágon van az IDEA-009 kapcsolódó hivatkozásának frissítésével. A fejlesztési specifikáció módosítása ettől **független, nyitott [PR #3](https://github.com/realabu/ringato-pwa-demo/pull/3)**, nem automatikus jóváhagyás. A katalógusban a lap `mvp-review` és `elemzett` státuszú.
+Az **IDEA-022** (kijelentkezett PWA-nyitóoldal) már a `main` ágon van az IDEA-009 kapcsolódó hivatkozásának frissítésével. A fejlesztési specifikáció módosítása ettől **független, nyitott [PR #4](https://github.com/realabu/ringato-pwa-demo/pull/4)**, nem automatikus jóváhagyás. A katalógusban a lap `mvp-review` és `elemzett` státuszú.
 
 **Következő azonosító:** mindig az aktuális `main` ágon lévő `IDEA-*.md` lapok legnagyobb száma +1; a sablonban nincs rögzített következő szám. A PR-alapú automatizmus nem automatikus specifikáció-merge és nem hirdetési/megrendelési jóváhagyás.
